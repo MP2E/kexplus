@@ -9,7 +9,7 @@ find_package(FluidSynth REQUIRED)
 find_package(SDL_net REQUIRED)
 find_package(OpenGL REQUIRED)
 
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/Ext ${FluidSynth_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext ${FluidSynth_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
 # Get around a issue
 add_definitions(-Ddprintf=_dprintf -D__cdecl=)
@@ -18,9 +18,9 @@ if(APPLE)
 	set(EXTRA_SOURCES Ext/SDLMain.m)
 endif(APPLE)
 if(MSVC)
-	set(EXTRA_SOURCES i_exception.c i_opndir.c i_cpu.c)
+	set(EXTRA_SOURCES src/i_exception.c src/i_opndir.c src/i_cpu.c)
 else (MSVC)
-	set(EXTRA_SOURCES i_cpu_posix.c)
+	set(EXTRA_SOURCES src/i_cpu_posix.c)
 endif(MSVC)
 
 execute_process(
@@ -34,96 +34,96 @@ execute_process(
 execute_process(
 	COMMAND sed -e "s/\\$WCREV\\$/${GITREVISION}/g" revconfig.txt
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	OUTPUT_FILE version.h
+	OUTPUT_FILE src/version.h
 )
 
 add_executable(doom64ex
 	${EXTRA_SOURCES}
-	am_draw.c
-	am_map.c
-	con_console.c
-	con_cvar.c
-	d_devstat.c
-	d_main.c
-	d_net.c
-	dgl.c
-	f_finale.c
-	g_actions.c
-	g_game.c
-	g_settings.c
-	gl_draw.c
-	gl_main.c
-	gl_texture.c
-	i_audio.c
+	src/am_draw.c
+	src/am_map.c
+	src/con_console.c
+	src/con_cvar.c
+	src/d_devstat.c
+	src/d_main.c
+	src/d_net.c
+	src/dgl.c
+	src/f_finale.c
+	src/g_actions.c
+	src/g_game.c
+	src/g_settings.c
+	src/gl_draw.c
+	src/gl_main.c
+	src/gl_texture.c
+	src/i_audio.c
 #	i_cpu.c
 #	i_cpu_posix.c
 #	i_exception.c
-	i_main.c
+	src/i_main.c
 #	i_opndir.c
-	i_png.c
-	i_system.c
-	i_video.c
-	i_xinput.c
-	in_stuff.c
-	info.c
-	m_cheat.c
-	m_fixed.c
-	m_keys.c
-	m_menu.c
-	m_misc.c
-	m_password.c
-	m_random.c
-	m_shift.c
-	p_ceilng.c
-	p_doors.c
-	p_enemy.c
-	p_floor.c
-	p_inter.c
-	p_lights.c
-	p_macros.c
-	p_map.c
-	p_maputl.c
-	p_mobj.c
-	p_plats.c
-	p_pspr.c
-	p_saveg.c
-	p_setup.c
-	p_sight.c
-	p_spec.c
-	p_switch.c
-	p_telept.c
-	p_tick.c
-	p_user.c
-	psnprntf.c
-	r_bsp.c
-	r_clipper.c
-	r_drawlist.c
-	r_lights.c
-	r_main.c
-	r_scene.c
-	r_sky.c
-	r_things.c
-	r_wipe.c
-	s_sound.c
-	sc_main.c
-	st_stuff.c
-	tables.c
-	w_file.c
-	w_merge.c
-	w_wad.c
-	wi_stuff.c
-	z_zone.c
-	Ext/md5.c
-	Ext/ChocolateDoom/net_client.c
-	Ext/ChocolateDoom/net_common.c
-	Ext/ChocolateDoom/net_dedicated.c
-	Ext/ChocolateDoom/net_io.c
-	Ext/ChocolateDoom/net_loop.c
-	Ext/ChocolateDoom/net_packet.c
-	Ext/ChocolateDoom/net_query.c
-	Ext/ChocolateDoom/net_sdl.c
-	Ext/ChocolateDoom/net_server.c
-	Ext/ChocolateDoom/net_structrw.c
+	src/i_png.c
+	src/i_system.c
+	src/i_video.c
+	src/i_xinput.c
+	src/in_stuff.c
+	src/info.c
+	src/m_cheat.c
+	src/m_fixed.c
+	src/m_keys.c
+	src/m_menu.c
+	src/m_misc.c
+	src/m_password.c
+	src/m_random.c
+	src/m_shift.c
+	src/p_ceilng.c
+	src/p_doors.c
+	src/p_enemy.c
+	src/p_floor.c
+	src/p_inter.c
+	src/p_lights.c
+	src/p_macros.c
+	src/p_map.c
+	src/p_maputl.c
+	src/p_mobj.c
+	src/p_plats.c
+	src/p_pspr.c
+	src/p_saveg.c
+	src/p_setup.c
+	src/p_sight.c
+	src/p_spec.c
+	src/p_switch.c
+	src/p_telept.c
+	src/p_tick.c
+	src/p_user.c
+	src/psnprntf.c
+	src/r_bsp.c
+	src/r_clipper.c
+	src/r_drawlist.c
+	src/r_lights.c
+	src/r_main.c
+	src/r_scene.c
+	src/r_sky.c
+	src/r_things.c
+	src/r_wipe.c
+	src/s_sound.c
+	src/sc_main.c
+	src/st_stuff.c
+	src/tables.c
+	src/w_file.c
+	src/w_merge.c
+	src/w_wad.c
+	src/wi_stuff.c
+	src/z_zone.c
+	src/Ext/md5.c
+	src/Ext/ChocolateDoom/net_client.c
+	src/Ext/ChocolateDoom/net_common.c
+	src/Ext/ChocolateDoom/net_dedicated.c
+	src/Ext/ChocolateDoom/net_io.c
+	src/Ext/ChocolateDoom/net_loop.c
+	src/Ext/ChocolateDoom/net_packet.c
+	src/Ext/ChocolateDoom/net_query.c
+	src/Ext/ChocolateDoom/net_sdl.c
+	src/Ext/ChocolateDoom/net_server.c
+	src/Ext/ChocolateDoom/net_structrw.c
 )
 
 target_link_libraries(doom64ex ${ZLIB_LIBRARY} ${PNG_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})

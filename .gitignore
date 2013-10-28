@@ -38,4 +38,4 @@ ehthumbs.db
 Thumbs.db
 
 # Kex Engine files #
-version.h
+src/version.h

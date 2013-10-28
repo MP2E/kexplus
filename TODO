@@ -1,0 +1,10 @@
+To Do List for KexPlus
+======================
+- Refactor code to C++11
+- Write doxygen documentation
+- Port to SDL2
+- Make libretro/GL port
+- Purge unneeded code
+- Android/iOS ports(most likely through RetroArch)
+- Investigate Timidity++ integration
+- WadGen integration?
