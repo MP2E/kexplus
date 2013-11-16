@@ -25,7 +25,7 @@
 
 // 20120107 bkw: Linux users can change the default FluidSynth backend here:
 #ifndef _WIN32
-#define DEFAULT_FLUID_DRIVER "sndio"
+#define DEFAULT_FLUID_DRIVER "alsa"
 
 // 20120203 villsa: add default for windows
 #else

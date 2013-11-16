@@ -56,7 +56,7 @@ CVAR(s_soundfont, DOOMSND.SF2);
 #ifdef _WIN32
 CVAR_CMD(s_driver, dsound)
 #else
-CVAR_CMD(s_driver, sndio)
+CVAR_CMD(s_driver, alsa)
 #endif
 {
     char* driver = cvar->string;
