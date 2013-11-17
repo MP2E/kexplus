@@ -19,7 +19,7 @@ if(APPLE)
 endif(APPLE)
 if(MSVC)
 	set(EXTRA_SOURCES src/i_exception.c src/i_opndir.c src/i_cpu.c)
-else (MSVC)
+else(MSVC)
 	set(EXTRA_SOURCES src/i_cpu_posix.c)
 endif(MSVC)
 
@@ -126,4 +126,8 @@ add_executable(doom64ex
 	src/Ext/ChocolateDoom/net_structrw.c
 )
 
+if(MSVC)
 target_link_libraries(doom64ex ${ZLIB_LIBRARY} ${PNG_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
+else(MSVC)
+target_link_libraries(doom64ex ${ZLIB_LIBRARY} ${PNG_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
+endif(MSVC)
