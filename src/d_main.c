@@ -867,7 +867,7 @@ static void D_Init(void)
     respawnitem     = M_CheckParm("-respawnitem");
     fastparm        = M_CheckParm("-fast");
 
-    if(p = M_CheckParm("-setvars"))
+    if((p = M_CheckParm("-setvars")))
     {
         p++;
 

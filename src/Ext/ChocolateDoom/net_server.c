@@ -32,6 +32,7 @@
 #include "i_system.h"
 //#include "i_timer.h"
 #include "m_misc.h"
+#include "z_zone.h"
 
 #include "net_client.h"
 #include "net_common.h"
@@ -420,7 +421,7 @@ static void NET_SV_InitNewClient(net_client_t *client,
     NET_Conn_InitServer(&client->connection, addr);
     client->addr = addr;
     client->last_send_time = -1;
-    client->name = strdup(player_name);
+    client->name = Z_Strdup(player_name, PU_STATIC, NULL);
 
     // init the ticcmd send queue
 

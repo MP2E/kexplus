@@ -321,7 +321,7 @@ net_addr_t *NET_SDL_ResolveAddress(char *address)
 
     if (colon != NULL)
     {
-	addr_hostname = strdup(address);
+	addr_hostname = Z_Strdup(address, PU_STATIC, NULL);
 	addr_hostname[colon - address] = '\0';
 	addr_port = atoi(colon + 1);
     }
