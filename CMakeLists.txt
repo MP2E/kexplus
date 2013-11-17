@@ -128,6 +128,6 @@ add_executable(doom64ex
 
 if(MSVC)
 target_link_libraries(doom64ex ${ZLIB_LIBRARY} ${PNG_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
-else(MSVC)
+else()
 target_link_libraries(doom64ex ${ZLIB_LIBRARY} ${PNG_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
-endif(MSVC)
+endif()
