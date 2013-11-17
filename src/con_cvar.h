@@ -31,7 +31,7 @@ typedef struct cvar_s
     char*           name;
     char*           string;
     dboolean        nonclient;
-    void            (*callback)(void*);
+    void          (*callback)(struct cvar_s *);
     float           value;
     char*           defvalue;
     struct cvar_s*  next;
