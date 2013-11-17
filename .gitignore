@@ -39,3 +39,6 @@ Thumbs.db
 
 # Kex Engine files #
 src/version.h
+
+# Build directory
+build
