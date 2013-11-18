@@ -50,9 +50,9 @@ int gl_max_texture_units;
 int gl_max_texture_size;
 dboolean gl_has_combiner;
 
-const char *gl_vendor;
-const char *gl_renderer;
-const char *gl_version;
+unsigned const char *gl_vendor;
+unsigned const char *gl_renderer;
+unsigned const char *gl_version;
 
 static float glScaleFactor = 1.0f;
 
@@ -124,7 +124,7 @@ static dboolean FindExtension(const char *ext)
     start = extensions;
     for(;;)
     {
-        where = (byte *)strstr(start, ext);
+        where = (byte *)strstr((char *)start, ext);
         if(!where)
             break;
         terminator = where + dstrlen(ext);
@@ -536,7 +536,7 @@ typedef enum
     OPENGL_VERSION_2_1,
 } glversion_t;
 
-static int GetVersionInt(const char* version)
+static int GetVersionInt(const unsigned char* version)
 {
     int MajorVersion;
     int MinorVersion;
@@ -544,7 +544,7 @@ static int GetVersionInt(const char* version)
 
     versionvar = OPENGL_VERSION_1_0;
 
-    if(sscanf(version, "%d.%d", &MajorVersion, &MinorVersion) == 2)
+    if(sscanf((char *)version, "%d.%d", &MajorVersion, &MinorVersion) == 2)
     {
         if(MajorVersion > 1)
         {

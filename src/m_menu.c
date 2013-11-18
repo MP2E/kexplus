@@ -38,6 +38,7 @@
 #endif
 
 #include <fcntl.h>
+#include <unistd.h>
 #include "doomdef.h"
 #include "i_video.h"
 #include "d_englsh.h"
@@ -370,7 +371,7 @@ enum
     quityes = 0,
     quitno,
     quitend
-}; quitprompt_e;
+}; int quitprompt_e;
 
 menuitem_t QuitGameMenu[]=
 {
@@ -426,7 +427,7 @@ enum
     quit2yes = 0,
     quit2no,
     quit2end
-}; quit2prompt_e;
+}; int quit2prompt_e;
 
 menuitem_t QuitGameMenu2[]=
 {
@@ -546,7 +547,7 @@ enum
     RMainYes = 0,
     RMainNo,
     RMain_end
-}; rlprompt_e;
+}; int rlprompt_e;
 
 menuitem_t RestartConfirmMain[]=
 {
@@ -604,7 +605,7 @@ enum
 {
     SNN_Ok = 0,
     SNN_End
-}; startnewnotify_e;
+}; int startnewnotify_e;
 
 menuitem_t StartNewNotify[]=
 {
@@ -3366,7 +3367,7 @@ enum
 {
     QS_Ok = 0,
     QS_End
-}; qsconfirm_e;
+}; int qsconfirm_e;
 
 menuitem_t QuickSaveConfirm[]=
 {
@@ -3410,7 +3411,7 @@ enum
 {
     NLN_Ok = 0,
     NLN_End
-}; netloadnotify_e;
+}; int netloadnotify_e;
 
 menuitem_t NetLoadNotify[]=
 {
@@ -3454,7 +3455,7 @@ enum
 {
     SDN_Ok = 0,
     SDN_End
-}; savedeadnotify_e;
+}; int savedeadnotify_e;
 
 menuitem_t SaveDeadNotify[]=
 {
@@ -3759,7 +3760,7 @@ enum
     QSP_Yes = 0,
     QSP_No,
     QSP_End
-}; quicksaveprompt_e;
+}; int quicksaveprompt_e;
 
 menuitem_t QuickSavePrompt[]=
 {
@@ -3804,7 +3805,7 @@ enum
     QLP_Yes = 0,
     QLP_No,
     QLP_End
-}; quickloadprompt_e;
+}; int quickloadprompt_e;
 
 menuitem_t QuickLoadPrompt[]=
 {
@@ -5446,7 +5447,7 @@ void M_Drawer(void)
         // if menu item is static but has text, then display it as gray text
         // used for subcategories
         //
-        else if(currentMenu->menuitems[i].name != "")
+        else if(!strcmp(currentMenu->menuitems[i].name, ""))
         {
             if(!currentMenu->smallfont)
             {
@@ -5733,7 +5734,7 @@ void M_Ticker (void)
 
     // auto-adjust itemOn and page offset if the first menu item is being used as a header
     if(currentMenu->menuitems[0].status == -1 &&
-        currentMenu->menuitems[0].name != "")
+        !strcmp(currentMenu->menuitems[0].name, ""))
     {
         // bump page offset up
         if(itemOn == 1)
