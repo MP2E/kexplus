@@ -432,6 +432,8 @@ dboolean G_ActionResponder(event_t *ev)
         I_XInputReadActions(ev);
         break;
 #endif
+    default: // ev_mousedown, ev_mouseup, ev_gamepad
+       break;
     }
 
     return false;
@@ -661,6 +663,8 @@ dboolean G_BindActionByEvent(event_t *ev, char *action)
         button = GetBitNum(ev->data1);
         if((button >= 0) && (button < MOUSE_BUTTONS))
             plist = &MouseActions[button];
+        break;
+    default:
         break;
     }
     if(plist)

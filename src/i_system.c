@@ -27,6 +27,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -591,7 +592,7 @@ void I_Printf(char* string, ...)
     }
 #endif
 
-    printf(buff);
+    printf("%s", buff);
     if(console_initialized)
         CON_AddText(buff);
 }

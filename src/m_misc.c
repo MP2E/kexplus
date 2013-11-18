@@ -39,6 +39,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "doomstat.h"
 #include "m_misc.h"
