@@ -50,7 +50,7 @@
 #include "con_console.h"    // for cvars
 
 // 20120203 villsa - cvar for soundfont location
-CVAR(s_soundfont, DOOMSND.SF2);
+CVAR(s_soundfont, doomsnd.sf2);
 
 // 20120203 villsa - cvar for audio driver
 #ifdef _WIN32
@@ -1251,14 +1251,14 @@ void I_InitSequencer(void)
         
         // 20120126 bkw: stat the files instead of trying to fluid_synth_sfload
         // each one, to avoid "fluidsynth: cant't load soundfont" messages.
-        if(!stat("DOOMSND.SF2", &buf))
-            sfpath = "DOOMSND.SF2";
-        else if(!stat("/usr/local/share/games/doom64/DOOMSND.SF2", &buf))
-            sfpath = "/usr/local/share/games/doom64/DOOMSND.SF2";
-        else if(!stat("/usr/share/games/doom64/DOOMSND.SF2", &buf))
-            sfpath = "/usr/share/games/doom64/DOOMSND.SF2";
-        else if(!stat("/usr/local/share/doom64/DOOMSND.SF2", &buf))
-            sfpath = "/usr/local/share/doom64/DOOMSND.SF2";
+        if(!stat("doomsnd.sf2", &buf))
+            sfpath = "doomsnd.sf2";
+        else if(!stat("/usr/local/share/games/doom/doomsnd.sf2", &buf))
+            sfpath = "/usr/local/share/games/doom/doomsnd.sf2";
+        else if(!stat("/usr/share/games/doom/doomsnd.sf2", &buf))
+            sfpath = "/usr/share/games/doom/doomsnd.sf2";
+        else if(!stat("/usr/local/share/doom/doomsnd.sf2", &buf))
+            sfpath = "/usr/local/share/doom/doomsnd.sf2";
         else
             sfpath = s_soundfont.string;
 

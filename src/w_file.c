@@ -161,9 +161,9 @@ static void BuildIWADDirList(void)
 
     // Standard places where IWAD files are installed under Unix.
 
-    AddIWADDir("/usr/share/games/doom64");
-    AddIWADDir("/usr/local/share/games/doom64");
-    AddIWADDir("/usr/local/share/doom64");
+    AddIWADDir("/usr/share/games/doom");
+    AddIWADDir("/usr/local/share/games/doom");
+    AddIWADDir("/usr/local/share/doom");
 
 #endif
 
@@ -182,7 +182,7 @@ static char *SearchDirectoryForIWAD(char *dir)
     char *filename; 
     char *iwadname;
     
-    iwadname = "DOOM64.WAD";
+    iwadname = "doom64.wad";
     filename = malloc(strlen(dir) + strlen(iwadname) + 3);
 
     if(!strcmp(dir, "."))
