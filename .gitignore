@@ -42,3 +42,6 @@ src/version.h
 
 # Build directory
 build
+
+# Exuberant ctags output
+*tags
