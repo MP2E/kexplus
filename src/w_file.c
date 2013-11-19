@@ -31,6 +31,13 @@
 #include <ctype.h>
 #include <string.h>
 
+#ifndef _WINDOWS
+#include <sys/types.h>
+#include <dirent.h>
+#else
+#include "i_opndir.h"
+#endif // _WINDOWS
+
 #include "doomtype.h"
 #include "i_system.h"
 #include "z_zone.h"
@@ -173,27 +180,42 @@ static void BuildIWADDirList(void)
 }
 
 //
-// SearchDirectoryForIWAD
-// Search a directory to try to find an IWAD
-// Returns the location of the IWAD if found, otherwise NULL.
+// W_SearchDirectoryForFile
+// Search a directory to try to find any specified file, case-insensitive
+// Returns the location of the file if found, otherwise NULL.
 
-static char *SearchDirectoryForIWAD(char *dir)
+char *W_SearchDirectoryForFile(char *dir, char *filename)
 {
-    char *filename; 
-    char *iwadname;
+    char *name;
+    DIR *dh;
+    struct dirent *file;
+    int match = 0;
     
-    iwadname = "DOOM64.WAD";
-    filename = malloc(strlen(dir) + strlen(iwadname) + 3);
+    name = malloc(strlen(dir) + strlen(filename) + 3);
 
-    if(!strcmp(dir, "."))
-        strcpy(filename, iwadname);
-    else
-        sprintf(filename, "%s%c%s", dir, '/', iwadname);
+    if((dh = opendir(dir)))
+    {
+        while(!match && (file = readdir(dh)))
+	    if(!strcasecmp(filename, file->d_name))
+	        match = 1;
+    }
 
-    if(M_FileExists(filename))
-        return filename;
+    if(match)
+    {
+        if(!strcmp(dir, "."))
+            strncpy(name, file->d_name, strlen(filename)+1);
+        else
+            sprintf(name, "%s%c%s", dir, '/', file->d_name);
 
-    free(filename);
+        if(M_FileExists(name))
+	{
+            closedir(dh);
+            return name;
+	}
+    }
+    closedir(dh);
+
+    free(name);
 
     return NULL;
 }
@@ -290,7 +312,7 @@ char *W_FindIWAD(void)
         BuildIWADDirList();
     
         for(i = 0; result == NULL && i < num_iwad_dirs; ++i)
-            result = SearchDirectoryForIWAD(iwad_dirs[i]);
+            result = W_SearchDirectoryForFile(iwad_dirs[i], "doom64.wad");
     }
 
     return result;

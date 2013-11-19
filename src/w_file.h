@@ -83,5 +83,7 @@ size_t W_Read(wad_file_t *wad, unsigned int offset,
 char *W_FindWADByName(char *filename);
 char *W_TryFindWADByName(char *filename);
 char *W_FindIWAD(void);
+char *W_SearchDirectoryForFile(char *dir, char *filename);
 
 #endif /*__W_FILE__*/
+

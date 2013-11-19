@@ -48,9 +48,10 @@
 #include "z_zone.h"
 #include "i_swap.h"
 #include "con_console.h"    // for cvars
+#include "w_file.h"
 
 // 20120203 villsa - cvar for soundfont location
-CVAR(s_soundfont, DOOMSND.SF2);
+CVAR(s_soundfont, doomsnd.sf2);
 
 // 20120203 villsa - cvar for audio driver
 #ifdef _WIN32
@@ -1246,21 +1247,16 @@ void I_InitSequencer(void)
     // to be a config file setting and not hard-coded.
     // 20120203 villsa - done :)
     {
-        struct stat buf;
-        char *sfpath;
-        
-        // 20120126 bkw: stat the files instead of trying to fluid_synth_sfload
-        // each one, to avoid "fluidsynth: cant't load soundfont" messages.
-        if(!stat("DOOMSND.SF2", &buf))
-            sfpath = "DOOMSND.SF2";
-        else if(!stat("/usr/local/share/games/doom64/DOOMSND.SF2", &buf))
-            sfpath = "/usr/local/share/games/doom64/DOOMSND.SF2";
-        else if(!stat("/usr/share/games/doom64/DOOMSND.SF2", &buf))
-            sfpath = "/usr/share/games/doom64/DOOMSND.SF2";
-        else if(!stat("/usr/local/share/doom64/DOOMSND.SF2", &buf))
-            sfpath = "/usr/local/share/doom64/DOOMSND.SF2";
-        else
-            sfpath = s_soundfont.string;
+        char *sfpath = NULL;
+	char *sfdirs[] = { ".", "/usr/local/share/games/doom", "/usr/share/games/doom", "/usr/local/share/doom" };
+	int ndirs;
+
+        // TODO: Change 4 to be the number of elements in sfdirs at compile-time
+	for(ndirs = 0; ndirs < 4; ndirs++)
+	{
+	    if (!sfpath)
+	        sfpath = W_SearchDirectoryForFile(sfdirs[ndirs], s_soundfont.string);
+	}
 
         I_Printf("Found SoundFont %s\n", sfpath);
         doomseq.sfont_id = fluid_synth_sfload(doomseq.synth, sfpath, 1);
