@@ -7,7 +7,7 @@
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext ${FluidSynth_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
 if(APPLE)
-	set(EXTRA_SOURCES Ext/SDLMain.m)
+	set(EXTRA_SOURCES apple/SDLMain.m)
 endif(APPLE)
 if(MSVC)
 	set(EXTRA_SOURCES win32/i_exception.c win32/i_opndir.c win32/i_cpu.c)
