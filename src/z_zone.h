@@ -88,6 +88,9 @@ void    (Z_Touch)(void *ptr, const char *, int);
 #define Z_Touch(a)          (Z_Touch)       (a,      __FILE__,__LINE__)
 #define Z_FreeAlloca()      (Z_FreeAlloca)  (        __FILE__,__LINE__)
 
+// Get the size of a static array
+#define earrlen(a) (sizeof(a) / sizeof(*a))
+
 int Z_TagUsage(int tag);
 int Z_FreeMemory(void);
 

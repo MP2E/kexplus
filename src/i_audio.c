@@ -1256,8 +1256,7 @@ void I_InitSequencer(void)
 	char *sfdirs[] = { ".", "/usr/local/share/games/doom", "/usr/share/games/doom", "/usr/local/share/doom" };
 	int ndirs;
 
-        // TODO: Change 4 to be the number of elements in sfdirs at compile-time
-	for(ndirs = 0; ndirs < 4; ndirs++)
+	for(ndirs = 0; ndirs < earrlen(sfdirs); ndirs++)
 	{
 	    if (!sfpath)
 	        sfpath = W_SearchDirectoryForFile(sfdirs[ndirs], s_soundfont.string);
