@@ -540,7 +540,10 @@ int main(int argc, char **argv)
     
     return 0;
 }
+#else
+    #define I_Main main
 #endif  /*_DEBUG*/
+
 #endif  /*_WIN32*/
 
 int I_Main(int argc, char *argv[])
