@@ -10,9 +10,9 @@ if(APPLE)
 	set(EXTRA_SOURCES Ext/SDLMain.m)
 endif(APPLE)
 if(MSVC)
-	set(EXTRA_SOURCES i_exception.c i_opndir.c i_cpu.c)
+	set(EXTRA_SOURCES win32/i_exception.c win32/i_opndir.c win32/i_cpu.c)
 else(MSVC)
-	set(EXTRA_SOURCES i_cpu_posix.c)
+	set(EXTRA_SOURCES unix/i_cpu_posix.c)
 endif(MSVC)
 
 add_executable(doom64ex
