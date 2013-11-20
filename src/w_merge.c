@@ -36,7 +36,7 @@
 #include "w_merge.h"
 #include "w_wad.h"
 #include "z_zone.h"
-#ifdef _WIN32
+#ifdef _MSVC_VER
 #include "i_opndir.h"
 #endif
 

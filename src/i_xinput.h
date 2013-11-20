@@ -39,7 +39,7 @@
 #include "Ext/sal.h"
 #endif
 
-#include <XInput.h>
+#include <xinput.h>
 
 #define XINPUT_BUTTONS  14
 #define XINPUT_MAX_STICK_THRESHOLD  32768

@@ -9,12 +9,15 @@ ${FLUIDSYNTH_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIR} ${PNG_INCLUD
 
 if(APPLE)
 	set(EXTRA_SOURCES apple/SDLMain.m)
-endif(APPLE)
-if(MSVC)
-	set(EXTRA_SOURCES win32/i_exception.c win32/i_opndir.c win32/i_cpu.c)
-else(MSVC)
+elseif(WIN32)
+	set(EXTRA_SOURCES win32/i_exception.c win32/i_cpu.c)
+else()
         LIST(APPEND EXTRA_SOURCES unix/i_cpu_posix.c)
-endif(MSVC)
+endif()
+
+if(MSVC)
+	LIST(APPEND EXTRA_SOURCES win32/i_opndir.c)
+endif()
 
 add_executable(doom64ex
 	${EXTRA_SOURCES}
