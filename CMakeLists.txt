@@ -56,9 +56,7 @@ find_package(OpenGL REQUIRED)
 ##
 
 execute_process(
-	COMMAND git log
-	COMMAND grep -i commit
-	COMMAND grep -o -E -e "[0-9a-f]{40}"
+	COMMAND git rev-parse --short HEAD
 	COMMAND tr -d "\\n"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src
 	OUTPUT_VARIABLE GITREVISION
