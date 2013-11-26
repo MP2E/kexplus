@@ -274,7 +274,7 @@ typedef struct
     float                   gain;
 } doomseq_t;
 
-static doomseq_t doomseq;   // doom sequencer
+static doomseq_t doomseq = {0};   // doom sequencer
 
 typedef void(*eventhandler)(doomseq_t*, channel_t*);
 typedef int(*signalhandler)(doomseq_t*);
@@ -1199,10 +1199,6 @@ void I_InitSequencer(void)
         CON_Warnf("I_InitSequencer: failed to create semaphore");
         return;
     }
-
-    MUTEX_LOCK()
-    dmemset(&doomseq, 0, sizeof(doomseq_t));
-    MUTEX_UNLOCK()
 
     //
     // init sequencer thread
