@@ -259,6 +259,9 @@ byte* I_PNGReadData(int lump, dboolean palette, dboolean nopack, dboolean alpha,
             png_set_add_alpha(png_ptr, 0xff, 0);
         }
     }
+
+    // interlace handler
+    png_set_interlace_handling(png_ptr);
     
     // refresh png information
     png_read_update_info(png_ptr, info_ptr);
