@@ -77,7 +77,7 @@ static int I_PNGFindChunk(png_struct* png_ptr, png_unknown_chunkp chunk)
 {
     int *dat;
     
-    if(!dstrncmp((char*)chunk->name, "grAb", 4))
+    if(!dstrncmp((char*)chunk->name, "grAb", 4) && chunk->size >= 8)
     {
         dat = (int*)png_get_user_chunk_ptr(png_ptr);
         dat[0] = I_SwapBE32(*(int*)(chunk->data));
@@ -234,17 +234,29 @@ byte* I_PNGReadData(int lump, dboolean palette, dboolean nopack, dboolean alpha,
                     dstrncpy(palname + 3, lumpinfo[lump].name, 4);
                     sprintf(palname + 7, "%i", palindex);
                     
-                    pallump = W_CacheLumpName(palname, PU_STATIC);
-                    
-                    // swap out current palette with the new one
-                    for(i = 0; i < 256; i++)
+                    // villsa 12/04/13: don't abort if external palette is not found
+                    if(W_CheckNumForName(palname) != -1)
                     {
-                        pal[i].red = pallump[i].red;
-                        pal[i].green = pallump[i].green;
-                        pal[i].blue = pallump[i].blue;
+                        pallump = W_CacheLumpName(palname, PU_STATIC);
+
+                        // swap out current palette with the new one
+                        for(i = 0; i < 256; i++)
+                        {
+                            pal[i].red = pallump[i].red;
+                            pal[i].green = pallump[i].green;
+                            pal[i].blue = pallump[i].blue;
+                        }
+
+                        Z_Free(pallump);
                     }
-                    
-                    Z_Free(pallump);
+                    // villsa 12/04/13: if we're loading texture palette as normal
+                    // but palindex is not zero, then just copy out a single row from the
+                    // palette in case world textures have a 8-32 bit depth color table
+                    else
+                    {
+                        for(i = 0; i < 16; i++)
+                            dmemcpy(&pal[i], &pal[(16 * palindex) + i], sizeof(png_color));
+                    }
                 }
             }
             
