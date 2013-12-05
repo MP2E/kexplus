@@ -456,7 +456,9 @@ static PrintSegVInfo(void)
 }
 
 // Note: everything inside here is x86-specific, unfortunately.
+// MP2E: And MSVC-only, at that :/
 #ifdef _M_IX86
+#ifdef _MSC_VER
 
 //
 // PrintRegInfo
@@ -589,6 +591,7 @@ static void PrintStack(void)
     }
 }
 
+#endif // _MSC_VER
 #endif // _M_IX86
 
 //=============================================================================
@@ -635,9 +638,11 @@ int __cdecl I_W32ExceptionHandler(PEXCEPTION_POINTERS ep)
     // This won't be terribly useful on non-x86 as-is.
     // That is assuming it works at all, of course.
 #ifdef _M_IX86
+#ifdef _MSC_VER
     PrintRegInfo();    // print CPU registers
     PrintCS();         // print code segment at EIP
     PrintStack();      // print stack dump
+#endif
 #endif
 
     LogPrintf(_T("\r\n===== [end of %s] =====\r\n"), _T("CRASHLOG.TXT"));
