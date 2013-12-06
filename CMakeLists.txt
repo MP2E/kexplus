@@ -37,11 +37,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
    TRY_CXX_COMPILER_FLAG(-Wall    FLAG_CXX_Wall   )
    TRY_CXX_COMPILER_FLAG(-Wextra  FLAG_CXX_Wextra )
    TRY_CXX_COMPILER_FLAG(-Wshadow FLAG_CXX_Wshadow)
-
    TRY_CXX_COMPILER_FLAG(-std=c++11 FLAG_CXX_CXX11)
-
-   # Specializing std::hash invokes this regardless of tag used.
-   TRY_CXX_COMPILER_FLAG(-Wno-mismatched-tags FLAG_CXX_Wno_mismatched_tags)
 endif()
 
 find_package(ZLIB REQUIRED)
