@@ -44,7 +44,7 @@
 #elif defined(_MSC_VER)
   #define d_inline __inline
 #else
-  #define d_inline
+  #define d_inline inline
 #endif
 
 //
