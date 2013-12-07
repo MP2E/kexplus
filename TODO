@@ -1,10 +1,20 @@
 To Do List for KexPlus
 ======================
-- Refactor code to C++11
-- Write doxygen documentation
-- Port to SDL2
-- Make libretro/GL port
-- Purge unneeded code
-- Android/iOS ports(most likely through RetroArch)
-- Investigate Timidity++ integration
-- WadGen integration?
+Immediate:
+- Fix all compiler warnings
+- Fix bugs in macro system
+- Fix shoot-while-saving bug
+- Fix title screen being superimposed on TITLEMAP on second playthrough
+- Fix any remaining gameplay or stability issues
+- Make backport patches for easy importing into Kex
+
+3.0(pending):
+- Do extensive testing with valgrind, clang cpp analzyer, and aggressive compiler optimizations and investigate bugs(aka scaling bug with LTO)
+- Draft up a style guide for consistent C++ code with Kaiset
+- Rename everything to cpp files and start C++ port
+- Use classes for obvious cases where it would benefit code clarity(mobj)
+- We need to create a testcase suite to be able to test kexplus for compatibility with correct doom64 behaviour
+- SDL2 port(from Kex2)
+- aim for GLES2.0/GL2.0 compliance?
+- test on obscure architectures for endian-ness issues and anything else(ARM Linux anyone?)
+
