@@ -80,7 +80,7 @@ void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation, dboolean f
     if(rotation == 0)
     {
         // the lump should be used for all rotations
-        if((sprtemp[frame].rotate == false))
+        if(sprtemp[frame].rotate == false)
             I_Error("R_InitSprites: Sprite %s frame %c has multiple rot=0 lump", spritename, 'A'+frame);
         
         if(sprtemp[frame].rotate == true)

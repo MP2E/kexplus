@@ -110,6 +110,8 @@ void T_PlatRaise(plat_t* plat)
             case customUpDownFast:
                 P_RemoveActivePlat(plat);
                 break;
+	    default:
+	        break;
             }
         }
         break;

@@ -1095,9 +1095,9 @@ void NET_SV_SendQueryResponse(net_addr_t *addr)
 
 static void NET_SV_ParseCheatRequest(net_packet_t* packet, net_client_t *client)
 {
-    int player;
+    unsigned int player;
     char *buff;
-    int type;
+    unsigned int type;
     net_packet_t *packet2;
     int i;
 

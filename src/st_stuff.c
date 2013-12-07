@@ -821,6 +821,8 @@ void ST_Drawer(void)
                 case am_cell:
                     Draw_Sprite2D(SPR_CELL, 0, 0, 524, 464, 0.5f, 0, WHITEALPHA(0xC0));
                     break;
+		default:
+		    break;
             }
 
             // display artifact sprites

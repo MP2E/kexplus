@@ -58,6 +58,10 @@ typedef enum
 
     CLIENT_STATE_IN_GAME,
 
+    // disconnected(time-out)
+
+    CLIENT_DISCONNECTED
+
 } net_clientstate_t;
 
 // Type of structure used in the receive window
@@ -636,6 +640,10 @@ static void NET_CL_ParseGameStart(net_packet_t *packet)
     {
         return;
     }
+    if(client_state != CLIENT_DISCONNECTED)
+    {
+        return;
+    }
 
     if (num_players > MAXPLAYERS || player_number >= (signed int) num_players)
     {
@@ -1013,9 +1021,9 @@ static void NET_CL_ParseCvarUpdate(net_packet_t* packet)
 
 static void NET_CL_ParseCheat(net_packet_t* packet)
 {
-    int player;
+    unsigned int player;
     char *buff;
-    int type;
+    unsigned int type;
 
     NET_ReadInt8(packet, &player);
     NET_ReadInt8(packet, &type);
@@ -1281,7 +1289,7 @@ void NET_CL_Disconnect(void)
         {
             // time out after 5 seconds
             
-            client_state = NET_CONN_STATE_DISCONNECTED;
+            client_state = CLIENT_DISCONNECTED;
 
             fprintf(stderr, "NET_CL_Disconnect: Timeout while disconnecting from server\n");
             break;

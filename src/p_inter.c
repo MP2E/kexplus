@@ -81,7 +81,7 @@ dboolean P_GiveAmmo(player_t* player, ammotype_t ammo, int num)
 	if (ammo == am_noammo)
 		return false;
 
-	if (ammo < 0 || ammo > NUMAMMO)
+	if (ammo > NUMAMMO)
 		I_Error ("P_GiveAmmo: bad type %i", ammo);
 
 	if ( player->ammo[ammo] == player->maxammo[ammo]  )
@@ -297,6 +297,8 @@ static dboolean P_GiveCard(player_t* player, mobj_t *item, card_t card)
 		case it_redskull:
 			player->message = GOTREDSKULL;
             player->messagepic = 30;
+			break;
+		default:
 			break;
 	}
 
