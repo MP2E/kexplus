@@ -74,7 +74,7 @@ int         dsnprintf(char *src, size_t n, const char *str, ...);
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4035 )
-d_inline int D_abs(int x)
+static d_inline int D_abs(int x)
 {
     __asm
     {
