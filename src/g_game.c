@@ -1422,6 +1422,10 @@ void G_SecretExitLevel(int map)
 
 void G_RunTitleMap(void)
 {
+    // villsa 12092013 - abort if map doesn't exist in mapfino
+    if(P_GetMapInfo(33) == NULL)
+        return;
+ 
     demobuffer = Z_Calloc(0x16000, PU_STATIC, NULL);
     demo_p = demobuffer;
     demobuffer[0x16000-1] = DEMOMARKER;
