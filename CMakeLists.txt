@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(doom64ex)
 
-include(CheckCXXCompilerFlag)
+include(CheckCCompilerFlag)
 
 # This is needed to include the FluidSynth module
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
@@ -18,13 +18,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
 ##
 
 ##
-## TRY_CXX_COMPILER_FLAG
+## TRY_C_COMPILER_FLAG
 ##
-function(TRY_CXX_COMPILER_FLAG flag name)
-   CHECK_CXX_COMPILER_FLAG(${flag} ${name})
+function(TRY_C_COMPILER_FLAG flag name)
+   CHECK_C_COMPILER_FLAG(${flag} ${name})
 
    if(${name})
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}" PARENT_SCOPE)
+	   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}" PARENT_SCOPE)
    endif()
 endfunction()
 
@@ -33,13 +33,13 @@ endfunction()
 ## Environment Detection                                                      |
 ##
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-   TRY_CXX_COMPILER_FLAG(-Wall    FLAG_CXX_Wall   )
-   TRY_CXX_COMPILER_FLAG(-Wextra  FLAG_CXX_Wextra )
-   TRY_CXX_COMPILER_FLAG(-Wshadow FLAG_CXX_Wshadow)
-   TRY_CXX_COMPILER_FLAG(-std=c++11 FLAG_CXX_CXX11)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-   TRY_CXX_COMPILER_FLAG(/Wall    FLAG_CXX_Wall   )
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+   TRY_C_COMPILER_FLAG(-Wall    FLAG_C_Wall   )
+   TRY_C_COMPILER_FLAG(-Wextra  FLAG_C_Wextra )
+   TRY_C_COMPILER_FLAG(-Wshadow FLAG_C_Wshadow)
+   TRY_C_COMPILER_FLAG(-std=c11 FLAG_C_C11)
+elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+   TRY_C_COMPILER_FLAG(/Wall    FLAG_C_Wall   )
 endif()
 
 find_package(ZLIB REQUIRED)

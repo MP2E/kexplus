@@ -32,6 +32,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
+// 20131212 MP2E: Linux needs limits.h to define PATH_MAX
+#ifdef __linux__
+#include <linux/limits.h>
+#endif
 
 #include "g_local.h"
 #include "z_zone.h"
