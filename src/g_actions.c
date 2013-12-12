@@ -422,12 +422,15 @@ dboolean G_ActionResponder(event_t *ev)
 
     // villsa 12/20/2013: properly handle mouse button actions and
     // handle mouse movement in its own event state
-    // MP2E 12/10/2013: ev_mousedown and mouseup need G_DoCmdMouseMove
+    // MP2E 12/11/2013: ev_mouse needs to process button actions
     case ev_mousedown:
     case ev_mouseup:
         ProcessButtonActions(MouseActions, ev->data1, MouseButtons);
         MouseButtons = ev->data1;
+	break;
     case ev_mouse:
+        ProcessButtonActions(MouseActions, ev->data1, MouseButtons);
+        MouseButtons = ev->data1;
         G_DoCmdMouseMove(ev->data2, ev->data3);
         break;
 
