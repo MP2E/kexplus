@@ -820,7 +820,7 @@ static void P_AlertTaggedMobj(player_t* player, int tid)
             continue;
 
         // 20120610 villsa - check for killable things only
-        if(!mo->flags & MF_COUNTKILL)
+        if(!(mo->flags & MF_COUNTKILL))
             continue;
 
         // [kex] TODO - there's no check if the mobj is already dead but
