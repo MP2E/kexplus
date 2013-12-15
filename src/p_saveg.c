@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Archiving: SaveGame I/O.
+//    Archiving: SaveGame I/O.
 //
 //-----------------------------------------------------------------------------
 
@@ -1129,11 +1129,11 @@ static void saveg_read_laserthinker_t(laserthinker_t* laserthinker)
 
 static char* saveg_gettime(void)
 {
-	time_t clock;
-	struct tm* lt;
+    time_t clock;
+    struct tm* lt;
 
-	time(&clock);
-	lt = localtime(&clock);
+    time(&clock);
+    lt = localtime(&clock);
     return asctime(lt);
 }
 
@@ -1143,7 +1143,7 @@ static void saveg_write_header(char *description)
     int size;
     char date[32];
     byte* tbn;
-	
+    
     for(i = 0; description[i] != '\0'; i++)
         saveg_write8(description[i]);
 
@@ -1170,7 +1170,7 @@ static void saveg_write_header(char *description)
 
     for(i = 0; i < 16; i++)
         saveg_write8(passwordData[i]);
-	 
+     
     saveg_write8(gameskill);
     saveg_write8(gamemap);
     saveg_write8(nextmap);
@@ -1199,7 +1199,7 @@ static void saveg_read_header(void)
     int i;
     int size;
     byte a, b, c; 
-	 
+     
     // skip the description field 
     for(i = 0; i < SAVESTRINGSIZE; i++)
         saveg_read8();
@@ -1216,7 +1216,7 @@ static void saveg_read_header(void)
 
     for(i = 0; i < 16; i++)
         passwordData[i] = saveg_read8();
-			 
+             
     gameskill   = saveg_read8();
     gamemap     = saveg_read8();
     nextmap     = saveg_read8();
@@ -1235,7 +1235,7 @@ static void saveg_read_header(void)
     totalsecret = saveg_read32();
 
     for(i = 0; i < MAXPLAYERS; i++) 
-	    playeringame[i] = saveg_read8();
+        playeringame[i] = saveg_read8();
 
     // get the times 
     a = saveg_read8();
@@ -1559,7 +1559,7 @@ void P_UnArchiveWorld (void)
 
 void P_ArchiveMobjs(void)
 {
-    mobj_t*	mobj;
+    mobj_t*    mobj;
 
     saveg_setup_mobjwrite();
     saveg_write32(savegmobjnum);
@@ -1880,10 +1880,10 @@ void P_UnArchiveSpecials(void)
     currentthinker = thinkercap.next;
     while(currentthinker != &thinkercap)
     {
-	    next = currentthinker->next;
+        next = currentthinker->next;
         Z_Free(currentthinker);
 
-	    currentthinker = next;
+        currentthinker = next;
     }
 
     thinkercap.prev = thinkercap.next  = &thinkercap;

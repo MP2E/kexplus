@@ -84,7 +84,7 @@ char *I_DoomExeDir(void);
 
 void I_RegisterCvars(void);
 
-extern FILE	*DebugFile;
-extern dboolean	DigiJoy;
+extern FILE    *DebugFile;
+extern dboolean    DigiJoy;
 
 #endif

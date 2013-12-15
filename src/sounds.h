@@ -86,7 +86,7 @@ typedef enum
     sfx_bos1die,    //boss1die
     sfx_headsit,    //headsit
     sfx_headdie,    //headdie
-    sfx_skullatk,	//skullatk
+    sfx_skullatk,    //skullatk
     sfx_bos2sit,    //boss2sit
     sfx_bos2die,    //boss2die
     sfx_pesit,      //painsit

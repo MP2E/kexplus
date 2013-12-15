@@ -30,13 +30,13 @@ void Draw_GfxImage(int x, int y, const char* name,
 void Draw_Sprite2D(int type, int rot, int frame, int x, int y,
                    float scale, int pal, rcolor c);
 
-#define SM_FONT1		16
-#define SM_FONT2		42
-#define SM_MISCFONT		10
-#define SM_NUMBERS		0
-#define SM_SKULLS		70
-#define SM_THERMO		68
-#define SM_MICONS		78
+#define SM_FONT1        16
+#define SM_FONT2        42
+#define SM_MISCFONT        10
+#define SM_NUMBERS        0
+#define SM_SKULLS        70
+#define SM_THERMO        68
+#define SM_MICONS        78
 
 typedef struct
 {
@@ -48,11 +48,11 @@ typedef struct
 
 extern const symboldata_t symboldata[];
 
-#define ST_FONTWHSIZE	8
-#define ST_FONTNUMSET	32	//# of fonts per row in font pic
-#define ST_FONTSTART	'!'	// the first font characters
-#define ST_FONTEND		'_'	// the last font characters
-#define ST_FONTSIZE		(ST_FONTEND - ST_FONTSTART + 1) // Calculate # of glyphs in font.
+#define ST_FONTWHSIZE    8
+#define ST_FONTNUMSET    32    //# of fonts per row in font pic
+#define ST_FONTSTART    '!'    // the first font characters
+#define ST_FONTEND        '_'    // the last font characters
+#define ST_FONTSIZE        (ST_FONTEND - ST_FONTSTART + 1) // Calculate # of glyphs in font.
 
 int Draw_Text(int x, int y, rcolor color, float scale,
               dboolean wrap, const char* string, ...);

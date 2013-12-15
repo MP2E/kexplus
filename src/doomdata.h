@@ -66,8 +66,8 @@ enum
 // A single Vertex.
 typedef struct
 {
-    fixed_t	x;
-    fixed_t	y;
+    fixed_t    x;
+    fixed_t    y;
 } PACKEDATTR mapvertex_t;
 
 typedef struct
@@ -84,12 +84,12 @@ typedef struct
 // by setting textures and offsets.
 typedef struct
 {
-    short	textureoffset;
-    short	rowoffset;
-    word	toptexture;
-    word	bottomtexture;
-    word	midtexture;
-    short	sector;	// Front sector, towards viewer.
+    short    textureoffset;
+    short    rowoffset;
+    word    toptexture;
+    word    bottomtexture;
+    word    midtexture;
+    short    sector;    // Front sector, towards viewer.
 } PACKEDATTR mapsidedef_t;
 
 
@@ -134,44 +134,44 @@ typedef struct
 #define ML_DONTPEGBOTTOM        16              // lower texture unpegged
 #define ML_SECRET               32              // In AutoMap: don't map as two sided: IT'S A SECRET!
 #define ML_SOUNDBLOCK           64              // Sound rendering: don't let sound cross two of these.
-#define ML_DONTDRAW             128				// Don't draw on the automap at all.
-#define ML_MAPPED               256				// Set if already seen, thus drawn in automap.
-#define ML_DRAWMIDTEXTURE       0x200			// Draw middle texture on sidedef
-#define ML_DONTOCCLUDE          0x400			// Don't add to occlusion buffer
-#define ML_DONTPEGMID           0x800			// middle texture unpegged
-#define ML_THINGTRIGGER         0x1000			// Line is triggered by dead thing (flagged as ondeathtrigger)
-#define ML_SWITCHX02            0x2000			// Switch flag 1
-#define ML_SWITCHX04            0x4000			// Switch flag 2
-#define ML_SWITCHX08            0x8000			// Switch flag 3
-#define ML_CHECKFLOORHEIGHT     0x10000			// if true then check the switch's floor height, else use the ceiling height
-#define ML_SCROLLRIGHT          0x20000			// scroll texture to the right
-#define ML_SCROLLLEFT           0x40000			// scroll texture to the left
-#define ML_SCROLLUP             0x80000			// scroll texture up
-#define ML_SCROLLDOWN           0x100000		// scroll texture down
-#define ML_BLENDFULLTOP         0x200000		// do not extend blending for top texture
-#define ML_BLENDFULLBOTTOM      0x400000		// do not extend blending for bottom texture
-#define ML_BLENDING             0x800000		// use sector color blending (top/lower, ceiling, floor colors).
-#define ML_TRIGGERFRONT         0x1000000		// can only trigger from the front of the line
-#define ML_UNKNOWN2000000       0x2000000		// reserved
-#define ML_INVERSEBLEND         0x4000000		// reverse the blending of the sector colors
-#define ML_UNKNOWN8000000       0x8000000		// reserved
-#define ML_UNKNOWN10000000      0x10000000		// reserved
-#define ML_UNKNOWN20000000      0x20000000		// reserved
-#define ML_HMIRROR              0x40000000		// horizontal mirror the texture
-#define ML_VMIRROR              0x80000000		// vertical mirror the texture
+#define ML_DONTDRAW             128                // Don't draw on the automap at all.
+#define ML_MAPPED               256                // Set if already seen, thus drawn in automap.
+#define ML_DRAWMIDTEXTURE       0x200            // Draw middle texture on sidedef
+#define ML_DONTOCCLUDE          0x400            // Don't add to occlusion buffer
+#define ML_DONTPEGMID           0x800            // middle texture unpegged
+#define ML_THINGTRIGGER         0x1000            // Line is triggered by dead thing (flagged as ondeathtrigger)
+#define ML_SWITCHX02            0x2000            // Switch flag 1
+#define ML_SWITCHX04            0x4000            // Switch flag 2
+#define ML_SWITCHX08            0x8000            // Switch flag 3
+#define ML_CHECKFLOORHEIGHT     0x10000            // if true then check the switch's floor height, else use the ceiling height
+#define ML_SCROLLRIGHT          0x20000            // scroll texture to the right
+#define ML_SCROLLLEFT           0x40000            // scroll texture to the left
+#define ML_SCROLLUP             0x80000            // scroll texture up
+#define ML_SCROLLDOWN           0x100000        // scroll texture down
+#define ML_BLENDFULLTOP         0x200000        // do not extend blending for top texture
+#define ML_BLENDFULLBOTTOM      0x400000        // do not extend blending for bottom texture
+#define ML_BLENDING             0x800000        // use sector color blending (top/lower, ceiling, floor colors).
+#define ML_TRIGGERFRONT         0x1000000        // can only trigger from the front of the line
+#define ML_UNKNOWN2000000       0x2000000        // reserved
+#define ML_INVERSEBLEND         0x4000000        // reverse the blending of the sector colors
+#define ML_UNKNOWN8000000       0x8000000        // reserved
+#define ML_UNKNOWN10000000      0x10000000        // reserved
+#define ML_UNKNOWN20000000      0x20000000        // reserved
+#define ML_HMIRROR              0x40000000        // horizontal mirror the texture
+#define ML_VMIRROR              0x80000000        // vertical mirror the texture
 
 //
 // Special attributes.
 //
 
-#define MLU_MACRO               0x100			// line is set to be used as a macro
-#define MLU_RED                 0x200			// requires red key
-#define MLU_BLUE                0x400			// requires blue key
-#define MLU_YELLOW              0x800			// requires yellow key
-#define MLU_CROSS               0x1000			// must cross to trigger
-#define MLU_SHOOT               0x2000			// must shoot the line to trigger
-#define MLU_USE                 0x4000			// must press use on the line to trigger
-#define MLU_REPEAT              0x8000			// line can be reactivated again
+#define MLU_MACRO               0x100            // line is set to be used as a macro
+#define MLU_RED                 0x200            // requires red key
+#define MLU_BLUE                0x400            // requires blue key
+#define MLU_YELLOW              0x800            // requires yellow key
+#define MLU_CROSS               0x1000            // must cross to trigger
+#define MLU_SHOOT               0x2000            // must shoot the line to trigger
+#define MLU_USE                 0x4000            // must press use on the line to trigger
+#define MLU_REPEAT              0x8000            // line can be reactivated again
 
 //
 // Line masks
@@ -182,16 +182,16 @@ typedef struct
 #define MACROMASK(x)            (SPECIALMASK(x) - (x & MLU_MACRO))
 
 // Sector definition, from editing.
-typedef	struct
+typedef    struct
 {
-    short	floorheight;
-    short	ceilingheight;
-    word	floorpic;
-    word	ceilingpic;
-    word	colors[5];
-    short	special;
-    short	tag;
-    word	flags;
+    short    floorheight;
+    short    ceilingheight;
+    word    floorpic;
+    word    ceilingpic;
+    word    colors[5];
+    short    special;
+    short    tag;
+    word    flags;
 } PACKEDATTR mapsector_t;
 
 //
@@ -229,32 +229,32 @@ typedef struct
 {
     word    v1;
     word    v2;
-    short	angle;
+    short    angle;
     word    linedef;
-    short	side;
-    short	offset;
+    short    side;
+    short    offset;
 } PACKEDATTR mapseg_t;
 
 // BSP node structure.
 
 // Indicate a leaf.
-#define	NF_SUBSECTOR	0x8000
+#define    NF_SUBSECTOR    0x8000
 
 typedef struct
 {
     // Partition line from (x,y) to x+dx,y+dy)
-    short	x;
-    short	y;
-    short	dx;
-    short	dy;
+    short    x;
+    short    y;
+    short    dx;
+    short    dy;
     
     // Bounding box for each child,
     // clip against view frustum.
-    short	bbox[2][4];
+    short    bbox[2][4];
     
     // If NF_SUBSECTOR its a subsector,
     // else it's a node of another subtree.
-    word	children[2];
+    word    children[2];
     
 } PACKEDATTR mapnode_t;
 
@@ -262,13 +262,13 @@ typedef struct
 // plus skill/visibility flags and attributes.
 typedef struct
 {
-    short	x;
-    short	y;
-    short	z;
-    short	angle;
-    short	type;
-    short	options;
-    short	tid;
+    short    x;
+    short    y;
+    short    z;
+    short    angle;
+    short    type;
+    short    options;
+    short    tid;
 } PACKEDATTR mapthing_t;
 
 #ifdef _MSC_VER
@@ -276,5 +276,5 @@ typedef struct
 #endif
 
 
-#endif			// __DOOMDATA__
+#endif            // __DOOMDATA__
 

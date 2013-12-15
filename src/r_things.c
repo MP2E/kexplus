@@ -42,7 +42,7 @@
 
 #include <stdlib.h>
 
-#define MAX_SPRITES	1024
+#define MAX_SPRITES    1024
 
 spritedef_t     *spriteinfo;
 int             numsprites;
@@ -69,7 +69,7 @@ static void AddSpriteDrawlist(drawlist_t *dl, visspritelist_t *vis, int texid);
 
 void R_InstallSpriteLump(int lump, unsigned frame, unsigned rotation, dboolean flipped)
 {
-    int	r;
+    int    r;
     
     if(frame >= 29 || rotation > 8)
         I_Error("R_InstallSpriteLump: Bad frame characters in lump %i", lump);
@@ -739,7 +739,7 @@ void R_DrawPSprite(pspdef_t *psp, sector_t* sector, player_t *player)
 
 void R_RenderPlayerSprites(player_t *player)
 {
-    pspdef_t*	psp;
+    pspdef_t*    psp;
     
     psp = &player->psprites[ps_weapon];
     for(psp = player->psprites; psp < &player->psprites[NUMPSPRITES]; psp++)

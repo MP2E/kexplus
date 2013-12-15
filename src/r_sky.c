@@ -90,7 +90,7 @@ static void R_CloudThunder(void)
         thundertic = (1 + (M_Random() & 1));
     }
     
-    if(!(lightningCounter < 6))	// Reset loop after 6 lightning flickers
+    if(!(lightningCounter < 6))    // Reset loop after 6 lightning flickers
     {
         int rand = (M_Random() & 7);
         thunderCounter = (((rand << 4) - rand) << 2) + 60;
@@ -109,7 +109,7 @@ static void R_CloudThunder(void)
         sky->skycolor[1] -= 0x001111;
     }
     
-    thunderCounter = (M_Random() & 7) + 1;	// Do short delay loops for lightning flickers
+    thunderCounter = (M_Random() & 7) + 1;    // Do short delay loops for lightning flickers
     lightningCounter++;
 }
 
@@ -603,7 +603,7 @@ static void R_Fire(byte *buffer)
     counter = 0;
     src += width;
     
-    do	// height
+    do    // height
     {
         srcoffset = (src + counter);
         pixel = *(byte*)srcoffset;
@@ -615,7 +615,7 @@ static void R_Fire(byte *buffer)
         src += width;
         srcoffset += width;
         
-        do	// width
+        do    // width
         {
             pixel = *(byte*)srcoffset;
             step += 2;

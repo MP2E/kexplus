@@ -26,7 +26,7 @@
 //  Status bar code.
 //  Does the face/direction indicator animatin.
 //  Does palette indicators as well (red pain/berserk, bright pickup)
-//	Handles hud and chat messages
+//    Handles hud and chat messages
 //
 //-----------------------------------------------------------------------------
 
@@ -84,9 +84,9 @@ typedef struct
     int         times;
 } keyflash_t;
 
-static keyflash_t flashCards[NUMCARDS];	/* INFO FOR FLASHING CARDS & SKULLS */
+static keyflash_t flashCards[NUMCARDS];    /* INFO FOR FLASHING CARDS & SKULLS */
 
-#define	FLASHDELAY      8       /* # of tics delay (1/30 sec) */
+#define    FLASHDELAY      8       /* # of tics delay (1/30 sec) */
 #define FLASHTIMES      6       /* # of times to flash new frag amount (EVEN!) */
 
 #define ST_HEALTHTEXTX  29
@@ -170,7 +170,7 @@ static int st_chatcount = 0;
 dboolean st_chatOn = false;
 static char st_chatstring[MAXPLAYERS][MAXCHATSIZE];
 
-#define STQUEUESIZE		256
+#define STQUEUESIZE        256
 static int st_chathead;
 static int st_chattail;
 static byte st_chatqueue[STQUEUESIZE];
@@ -821,8 +821,8 @@ void ST_Drawer(void)
                 case am_cell:
                     Draw_Sprite2D(SPR_CELL, 0, 0, 524, 464, 0.5f, 0, WHITEALPHA(0xC0));
                     break;
-		default:
-		    break;
+        default:
+            break;
             }
 
             // display artifact sprites

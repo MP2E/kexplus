@@ -23,8 +23,8 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	DOOM Network game communication and protocol,
-//	all OS independend parts.
+//    DOOM Network game communication and protocol,
+//    all OS independend parts.
 //
 //-----------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@
 
 dboolean    ShowGun=true;
 dboolean    drone = false;
-dboolean    net_cl_new_sync = true;	// Use new client syncronisation code
+dboolean    net_cl_new_sync = true;    // Use new client syncronisation code
 fixed_t     offsetms;
 
 //
@@ -55,21 +55,21 @@ fixed_t     offsetms;
 //
 // a gametic cannot be run until nettics[] > gametic for all players
 
-ticcmd_t	netcmds[MAXPLAYERS][BACKUPTICS];
+ticcmd_t    netcmds[MAXPLAYERS][BACKUPTICS];
 int         nettics[MAXNETNODES];
-dboolean	nodeingame[MAXNETNODES];		// set false as nodes leave game
-dboolean	remoteresend[MAXNETNODES];		// set when local needs tics
-int			resendto[MAXNETNODES];			// set when remote needs tics
-int			resendcount[MAXNETNODES];
+dboolean    nodeingame[MAXNETNODES];        // set false as nodes leave game
+dboolean    remoteresend[MAXNETNODES];        // set when local needs tics
+int            resendto[MAXNETNODES];            // set when remote needs tics
+int            resendcount[MAXNETNODES];
 
-int			nodeforplayer[MAXPLAYERS];
+int            nodeforplayer[MAXPLAYERS];
 
 int         maketic=0;
-int			lastnettic=0;
-int			skiptics=0;
-int			ticdup=0;
-int			maxsend=0;	// BACKUPTICS/(2*ticdup)-1
-int			extratics;
+int            lastnettic=0;
+int            skiptics=0;
+int            ticdup=0;
+int            maxsend=0;    // BACKUPTICS/(2*ticdup)-1
+int            extratics;
 
 
 void D_ProcessEvents (void);
@@ -91,8 +91,8 @@ static int GetAdjustedTime(void)
 
     if (net_cl_new_sync)
     {
-	// Use the adjustments from net_client.c only if we are
-	// using the new sync mode.
+    // Use the adjustments from net_client.c only if we are
+    // using the new sync mode.
 
         time_ms += (offsetms / FRACUNIT);
     }
@@ -111,18 +111,18 @@ void NetUpdate(void)
 {
     int             nowtime;
     int             newtics;
-    int				i;
-    int				gameticdiv;
+    int                i;
+    int                gameticdiv;
 
     if(renderinframe)
         return;
 
 #ifdef FEATURE_MULTIPLAYER
 
-	// Run network subsystems
+    // Run network subsystems
 
-	NET_CL_Run();
-	NET_SV_Run();
+    NET_CL_Run();
+    NET_SV_Run();
 
 #endif
 
@@ -133,60 +133,60 @@ void NetUpdate(void)
 
     if (skiptics <= newtics)
     {
-		newtics -= skiptics;
-		skiptics = 0;
+        newtics -= skiptics;
+        skiptics = 0;
     }
     else
     {
-		skiptics -= newtics;
-		newtics = 0;
+        skiptics -= newtics;
+        newtics = 0;
     }
 
     // build new ticcmds for console player(s)
     gameticdiv = gametic/ticdup;
     for (i=0 ; i<newtics ; i++)
     {
-		ticcmd_t cmd;
+        ticcmd_t cmd;
 
-		I_StartTic();
-		D_ProcessEvents();
-		//if (maketic - gameticdiv >= BACKUPTICS/2-1)
-		//	break;          // can't hold any more
+        I_StartTic();
+        D_ProcessEvents();
+        //if (maketic - gameticdiv >= BACKUPTICS/2-1)
+        //    break;          // can't hold any more
 
-		M_Ticker();
+        M_Ticker();
 
-		if(drone)	// In drone mode, do not generate any ticcmds.
+        if(drone)    // In drone mode, do not generate any ticcmds.
             continue;
-	
-		if(net_cl_new_sync)
-		{ 
-			// If playing single player, do not allow tics to buffer
-			// up very far
+    
+        if(net_cl_new_sync)
+        { 
+            // If playing single player, do not allow tics to buffer
+            // up very far
 
-			if((!netgame || demoplayback) && maketic - gameticdiv > 2)
-				break;
+            if((!netgame || demoplayback) && maketic - gameticdiv > 2)
+                break;
 
-		   // Never go more than ~200ms ahead
-		   if (maketic - gameticdiv > 8)
-			   break;
-		}
-		else
-		{
-			if(maketic - gameticdiv >= 5)
+           // Never go more than ~200ms ahead
+           if (maketic - gameticdiv > 8)
                break;
-		}
+        }
+        else
+        {
+            if(maketic - gameticdiv >= 5)
+               break;
+        }
 
-		G_BuildTiccmd(&cmd);
+        G_BuildTiccmd(&cmd);
 
 #ifdef FEATURE_MULTIPLAYER
         
-		if(netgame && !demoplayback)
-			NET_CL_SendTiccmd(&cmd, maketic);
+        if(netgame && !demoplayback)
+            NET_CL_SendTiccmd(&cmd, maketic);
 
 #endif
         netcmds[consoleplayer][maketic % BACKUPTICS] = cmd;
 
-		++maketic;
+        ++maketic;
         nettics[consoleplayer] = maketic;
     }
 }
@@ -199,7 +199,7 @@ void NetUpdate(void)
 
 void D_StartGameLoop(void)
 {
-	gametime = GetAdjustedTime() / ticdup;
+    gametime = GetAdjustedTime() / ticdup;
 }
 
 //
@@ -254,46 +254,46 @@ static void CheckMD5Sums(void)
 
 static void D_NetWait(void)
 {
-	SDL_Event Event;
-	unsigned int id = 0;
+    SDL_Event Event;
+    unsigned int id = 0;
 
-	if(M_CheckParm("-server") > 0)
+    if(M_CheckParm("-server") > 0)
     {
 #ifdef USESYSCONSOLE
         I_Printf("D_NetWait: Waiting for players..\n\nPress ready key to begin game..\n\n");
 #else
-		I_Printf("D_NetWait: Waiting for players..\n\nWhen ready press any key to begin game..\n\n");
+        I_Printf("D_NetWait: Waiting for players..\n\nWhen ready press any key to begin game..\n\n");
 #endif
     }
 
-	I_Printf("---------------------------------------------\n\n");
+    I_Printf("---------------------------------------------\n\n");
 
 #ifndef USESYSCONSOLE
     I_NetWaitScreen();
 #endif
 
-	while(net_waiting_for_start)
-	{
-		CheckMD5Sums();
+    while(net_waiting_for_start)
+    {
+        CheckMD5Sums();
 
-		if(id != net_clients_in_game)
-		{
-			I_Printf("%s - %s\n", net_player_names[net_clients_in_game-1],
-				net_player_addresses[net_clients_in_game-1]);
-			id = net_clients_in_game;
-		}
+        if(id != net_clients_in_game)
+        {
+            I_Printf("%s - %s\n", net_player_names[net_clients_in_game-1],
+                net_player_addresses[net_clients_in_game-1]);
+            id = net_clients_in_game;
+        }
 
-		NET_CL_Run();
-		NET_SV_Run();
+        NET_CL_Run();
+        NET_SV_Run();
 
-		if(!net_client_connected)
-			I_Error("D_NetWait: Disconnected from server");
+        if(!net_client_connected)
+            I_Error("D_NetWait: Disconnected from server");
 
         I_Sleep(100);
 
-		while(SDL_PollEvent(&Event))
-			if(Event.type == SDL_KEYDOWN)
-				NET_CL_StartGame();
+        while(SDL_PollEvent(&Event))
+            if(Event.type == SDL_KEYDOWN)
+                NET_CL_StartGame();
     }
 }
 
@@ -304,10 +304,10 @@ static void D_NetWait(void)
 
 void D_CheckNetGame (void)
 {
-    int	i;
-	int	num_players;
+    int    i;
+    int    num_players;
 
-	// default values for single player
+    // default values for single player
 
     consoleplayer = 0;
     netgame = false;
@@ -315,43 +315,43 @@ void D_CheckNetGame (void)
     extratics = 1;
     offsetms = 0;
 
-	for(i = 0; i < MAXPLAYERS; i++)
+    for(i = 0; i < MAXPLAYERS; i++)
     {
         playeringame[i] = false;
-       	nettics[i] = 0;
+           nettics[i] = 0;
     }
 
-	playeringame[0] = true;
+    playeringame[0] = true;
 
 #ifdef FEATURE_MULTIPLAYER
-	{
-		net_addr_t *addr = NULL;
+    {
+        net_addr_t *addr = NULL;
 
-		//!
-		// @category net
-		//
-		// Start a multiplayer server, listening for connections.
-		//
+        //!
+        // @category net
+        //
+        // Start a multiplayer server, listening for connections.
+        //
 
-		if(M_CheckParm("-server") > 0)
-		{
-			NET_SV_Init();
-			NET_SV_AddModule(&net_loop_server_module);
-			NET_SV_AddModule(&net_sdl_module);
+        if(M_CheckParm("-server") > 0)
+        {
+            NET_SV_Init();
+            NET_SV_AddModule(&net_loop_server_module);
+            NET_SV_AddModule(&net_sdl_module);
 
-			net_loop_client_module.InitClient();
-			addr = net_loop_client_module.ResolveAddress(NULL);
-		}
-		else
-		{
-			//! 
-			// @category net
-			//
-			// Automatically search the local LAN for a multiplayer
-			// server and join it.
-			//
-			
-			i = M_CheckParm("-autojoin");
+            net_loop_client_module.InitClient();
+            addr = net_loop_client_module.ResolveAddress(NULL);
+        }
+        else
+        {
+            //! 
+            // @category net
+            //
+            // Automatically search the local LAN for a multiplayer
+            // server and join it.
+            //
+            
+            i = M_CheckParm("-autojoin");
 
             if(i > 0)
             {
@@ -423,12 +423,12 @@ void D_CheckNetGame (void)
             I_Printf("D_CheckNetGame: Connected to %s\n", NET_AddrToString(addr));
 
             D_NetWait();
-		}
-	}
+        }
+    }
 
 #endif
 
-	num_players = 0;
+    num_players = 0;
 
     for(i = 0; i < MAXPLAYERS; ++i)
     {
@@ -447,11 +447,11 @@ void D_CheckNetGame (void)
 void D_QuitNetGame (void)
 {
     if(debugfile)
-		fclose (debugfile);
+        fclose (debugfile);
 
 #ifdef FEATURE_MULTIPLAYER
-	NET_SV_Shutdown();
-	NET_CL_Disconnect();
+    NET_SV_Shutdown();
+    NET_CL_Disconnect();
 #endif
 
 }
@@ -463,15 +463,15 @@ void D_QuitNetGame (void)
 
 dboolean PlayersInGame(void)
 {
-	int i;
+    int i;
 
-	for(i = 0; i < MAXPLAYERS; ++i)
-	{
+    for(i = 0; i < MAXPLAYERS; ++i)
+    {
         if(playeringame[i])
-			return true;
-	}
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 //
@@ -483,22 +483,22 @@ int GetLowTic(void)
     int i;
     int lowtic;
 
-	if(net_client_connected)
-	{
-		lowtic = INT_MAX;
+    if(net_client_connected)
+    {
+        lowtic = INT_MAX;
     
-		for(i = 0; i < MAXPLAYERS; ++i)
-		{
-			if(playeringame[i])
-			{
-				if(nettics[i] < lowtic)
-					lowtic = nettics[i];
-			}
-		}
-	}
-	else
-		lowtic = maketic;
+        for(i = 0; i < MAXPLAYERS; ++i)
+        {
+            if(playeringame[i])
+            {
+                if(nettics[i] < lowtic)
+                    lowtic = nettics[i];
+            }
+        }
+    }
+    else
+        lowtic = maketic;
 
-	return lowtic;
+    return lowtic;
 }
 

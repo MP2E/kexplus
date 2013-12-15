@@ -41,10 +41,10 @@
 #include "m_misc.h"
 #include "g_actions.h"
 
-int	ViewWindowX = 0;
-int	ViewWindowY = 0;
-int	ViewWidth	= 0;
-int	ViewHeight	= 0;
+int    ViewWindowX = 0;
+int    ViewWindowY = 0;
+int    ViewWidth    = 0;
+int    ViewHeight    = 0;
 
 int gl_max_texture_units;
 int gl_max_texture_size;
@@ -574,7 +574,7 @@ static int GetVersionInt(const unsigned char* version)
 
 void GL_Init(void)
 {
-    uint32	flags = 0;
+    uint32    flags = 0;
 
     I_InitScreen();
 

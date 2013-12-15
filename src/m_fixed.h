@@ -34,13 +34,13 @@
 //
 // Fixed point, 32bit as 16.16.
 //
-#define FRACBITS		16
-#define FRACUNIT		(1<<FRACBITS)
+#define FRACBITS        16
+#define FRACUNIT        (1<<FRACBITS)
 
-#define INT2F(x)		((x)<<FRACBITS)
-#define F2INT(x)		((x)>>FRACBITS)
+#define INT2F(x)        ((x)<<FRACBITS)
+#define F2INT(x)        ((x)>>FRACBITS)
 #define FLOATTOFIXED(x) ((fixed_t)((x)*FRACUNIT))
-#define F2D3D(x) 		(((float)(x))/FRACUNIT)
+#define F2D3D(x)         (((float)(x))/FRACUNIT)
 
 typedef int fixed_t;
 

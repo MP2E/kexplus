@@ -27,7 +27,7 @@
 
 extern int                  curtexture;
 extern int                  cursprite;
-extern int	                curtrans;
+extern int                    curtrans;
 extern int                  curgfx;
 
 extern word*                texturewidth;

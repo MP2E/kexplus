@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Main program
+//    Main program
 //
 //-----------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ const char version_date[] = __DATE__;
 void _dprintf(const char *s, ...)
 {
     static char msg[MAX_MESSAGE_SIZE];
-    va_list	va;
+    va_list    va;
     
     va_start(va, s);
     vsprintf(msg, s, va);
@@ -160,7 +160,7 @@ int dstrncmp(const char *s1, const char *s2, int len)
 
 int dstricmp(const char *s1, const char *s2)
 {
-    return strcasecmp(s1, s2);	
+    return strcasecmp(s1, s2);    
 }
 
 //
@@ -325,10 +325,10 @@ int datoi(const char *str)
 
 float datof(char *str)
 {
-    double	val;
-    int		sign;
-    int		c;
-    int		decimal, total;
+    double    val;
+    int        sign;
+    int        c;
+    int        decimal, total;
     
     if(*str == '-')
     {
@@ -397,27 +397,27 @@ float datof(char *str)
 
 int dhtoi(char* str)
 {
-	char *s;
-	int num;
+    char *s;
+    int num;
 
-	num = 0;
-	s = str;
+    num = 0;
+    s = str;
 
-	while(*s)
-	{
-		num <<= 4;
-		if(*s >= '0' && *s <= '9')
-			num += *s-'0';
-		else if(*s >= 'a' && *s <= 'f')
-			num += 10 + *s-'a';
-		else if(*s >= 'A' && *s <= 'F')
-			num += 10 + *s-'A';
+    while(*s)
+    {
+        num <<= 4;
+        if(*s >= '0' && *s <= '9')
+            num += *s-'0';
+        else if(*s >= 'a' && *s <= 'f')
+            num += 10 + *s-'a';
+        else if(*s >= 'A' && *s <= 'F')
+            num += 10 + *s-'A';
         else
             return 0;
-		s++;
-	}
+        s++;
+    }
 
-	return num;
+    return num;
 }
 
 //

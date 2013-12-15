@@ -51,7 +51,7 @@ int             tmflags;
 fixed_t         tmx;
 fixed_t         tmy;
 
-mobj_t*			blockthing;
+mobj_t*            blockthing;
 
 
 // If "floatok" true, move would be ok
@@ -413,7 +413,7 @@ dboolean P_CheckPosition(mobj_t* thing, fixed_t x, fixed_t y)
     
     // Check things first, possibly picking things up.
     // [d64] MAXRADIUS is not used
-	P_BlockMapBox(bbox, x, y, tmthing);
+    P_BlockMapBox(bbox, x, y, tmthing);
     
     for(bx = bbox[BOXLEFT]; bx <= bbox[BOXRIGHT]; bx++)
     {
@@ -645,7 +645,7 @@ void P_ZMovement(mobj_t* mo, dboolean checkmissile);
 
 mobj_t *P_CheckOnMobj(mobj_t *thing)
 {
-    int	bx, by;
+    int    bx, by;
     subsector_t *newsubsec;
     fixed_t x;
     fixed_t y;
@@ -1249,7 +1249,7 @@ dboolean PTR_ShootTraverse(intercept_t* in)
 // P_AimLineAttack
 //
 
-fixed_t P_AimLineAttack(mobj_t*	t1, angle_t angle, fixed_t zheight, fixed_t distance)
+fixed_t P_AimLineAttack(mobj_t*    t1, angle_t angle, fixed_t zheight, fixed_t distance)
 {
     int flags;
     fixed_t x2;
@@ -1273,9 +1273,9 @@ fixed_t P_AimLineAttack(mobj_t*	t1, angle_t angle, fixed_t zheight, fixed_t dist
     topslope        = 120*FRACUNIT/160;
     bottomslope     = -120*FRACUNIT/160;
     
-    attackrange	    = distance;
-    linetarget	    = NULL;
-    //aimfrac		    = 0;
+    attackrange        = distance;
+    linetarget        = NULL;
+    //aimfrac            = 0;
     //shotsideline    = false;
     //aimlaser        = false;
     flags           = PT_ADDLINES|PT_ADDTHINGS;
@@ -1372,7 +1372,7 @@ static dboolean P_CheckUseHeight(line_t *line, mobj_t *thing)
     if(!(line->flags & ML_SWITCHX02 ||
         line->flags & ML_SWITCHX04 ||
         line->flags & ML_SWITCHX08))
-        return true;	// ignore non-switches
+        return true;    // ignore non-switches
     
     if(line->flags & ML_CHECKFLOORHEIGHT)
     {
@@ -1416,11 +1416,11 @@ dboolean PTR_UseTraverse(intercept_t* in)
             if(!usecontext)
                 S_StartSound(usething, sfx_noway);
 
-            return false;	// can't use through a wall
+            return false;    // can't use through a wall
         }
         
         
-        return true;	// keep checking
+        return true;    // keep checking
     }
     
     if(!(in->d.line->special & MLU_USE) || !P_CheckUseHeight(in->d.line, usething))
@@ -1449,11 +1449,11 @@ dboolean PTR_UseTraverse(intercept_t* in)
 
 dboolean P_UseLines(player_t *player, dboolean showcontext) 
 {
-    int		angle;
-    fixed_t	x1;
-    fixed_t	y1;
-    fixed_t	x2;
-    fixed_t	y2;
+    int        angle;
+    fixed_t    x1;
+    fixed_t    y1;
+    fixed_t    x2;
+    fixed_t    y2;
     
     usething = player->mo;
 

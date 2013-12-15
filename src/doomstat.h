@@ -45,9 +45,9 @@
 //
 extern  dboolean    nomonsters;     // checkparm of -nomonsters
 extern  dboolean    respawnparm;    // checkparm of -respawn
-extern	dboolean    respawnitem;
+extern    dboolean    respawnitem;
 extern  dboolean    fastparm;       // checkparm of -fast
-extern	dboolean    nolights;
+extern    dboolean    nolights;
 extern  dboolean    devparm;        // DEBUG: launched with -devparm
 
 
@@ -57,7 +57,7 @@ extern  dboolean    devparm;        // DEBUG: launched with -devparm
 
 // Defaults for menu, methinks.
 extern  skill_t     startskill;
-extern	int         startmap;
+extern    int         startmap;
 
 extern  dboolean    autostart;
 
@@ -68,12 +68,12 @@ extern  int         nextmap;
 
 // Nightmare mode flag, single player.
 extern  dboolean    respawnmonsters;
-extern	dboolean    respawnspecials;
+extern    dboolean    respawnspecials;
 
 // Netgame? Only true if >1 player.
-extern	dboolean    netgame;
-extern	dboolean    netcheat;
-extern	dboolean    netkill;
+extern    dboolean    netgame;
+extern    dboolean    netcheat;
+extern    dboolean    netkill;
 
 extern  int         gameflags;
 extern  int         compatflags;
@@ -103,14 +103,14 @@ extern  dboolean    statusbaractive;
 extern  dboolean    automapactive;      // In AutoMap mode?
 extern  dboolean    menuactive;         // Menu overlayed?
 extern  dboolean    allowmenu;          // Allow menu interaction?
-extern	dboolean    mainmenuactive;
+extern    dboolean    mainmenuactive;
 extern  dboolean    allowclearmenu;
 extern  dboolean    paused;             // Game Pause?
 
-extern	dboolean    InWindow;
-extern	dboolean    setWindow;
-extern	int         ViewHeight;
-extern	int         ViewWidth;
+extern    dboolean    InWindow;
+extern    dboolean    setWindow;
+extern    int         ViewHeight;
+extern    int         ViewWidth;
 
 extern int          validcount;
 
@@ -136,7 +136,7 @@ extern macroinfo_t  macros;
 
 // This one is related to the 3-screen display mode.
 // ANG90 = left side, ANG270 = right
-//extern  int	viewangleoffset;
+//extern  int    viewangleoffset;
 
 // 1'st Player taking events, and displaying.
 
@@ -148,8 +148,8 @@ extern int          consoleplayer;
 // Statistics on a given map, for intermission.
 //
 extern  int         totalkills;
-extern	int         totalitems;
-extern	int         totalsecret;
+extern    int         totalitems;
+extern    int         totalsecret;
 
 // Timer, for scores.
 extern  int         leveltime;      // tics in game play for par
@@ -216,11 +216,11 @@ typedef struct
 
 
 
-extern	int         gametic;
+extern    int         gametic;
 
 
 // Bookkeeping on players - state.
-extern	player_t    players[MAXPLAYERS];
+extern    player_t    players[MAXPLAYERS];
 
 // Alive? Disconnected?
 extern  dboolean    playeringame[MAXPLAYERS];
@@ -249,7 +249,7 @@ extern  int         maxammo[NUMAMMO];
 //
 
 // File handling stuff.
-extern	char        basedefault[1024];
+extern    char        basedefault[1024];
 extern  FILE*       debugfile;
 
 // if true, load all graphics at level load
@@ -258,7 +258,7 @@ extern  dboolean    precache;
 // outdated iwad file?
 extern  dboolean    oldiwad;
 
-#define MAXSENSITIVITY	32
+#define MAXSENSITIVITY    32
 
 extern  int         bodyqueslot;
 
@@ -267,14 +267,14 @@ extern  int         bodyqueslot;
 //moved doomcom and netbuffer into i_net.h so can't accidentaly clobber in split-screen mode
 
 //don't need to know about localtics, probably broken to to splitscreen anyway...
-//extern  ticcmd_t	localcmds[BACKUPTICS];
-extern	int         rndindex;
+//extern  ticcmd_t    localcmds[BACKUPTICS];
+extern    int         rndindex;
 
-extern	int         maketic;
+extern    int         maketic;
 extern  int         nettics[MAXNETNODES];
 
 extern ticcmd_t     netcmds[MAXPLAYERS][BACKUPTICS];
-extern	int         ticdup;
-extern	int         extratics;
+extern    int         ticdup;
+extern    int         extratics;
 
 #endif

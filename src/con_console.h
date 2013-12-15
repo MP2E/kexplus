@@ -28,7 +28,7 @@
 #include "gl_main.h"
 #include "con_cvar.h"
 
-#define MAX_CONSOLE_INPUT_LEN	80
+#define MAX_CONSOLE_INPUT_LEN    80
 extern char     console_inputbuffer[];
 extern int      console_inputlength;
 extern dboolean console_initialized;

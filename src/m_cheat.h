@@ -44,6 +44,6 @@ void M_CheatArtifacts(player_t* player, char dat[4]);
 void M_CheatBoyISuck(player_t* player, char dat[4]);
 void M_CheatGiveKey(player_t* player, char dat[4]);
 
-extern int		amCheating;
+extern int        amCheating;
 
 #endif

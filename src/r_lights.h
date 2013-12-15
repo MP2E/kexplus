@@ -35,7 +35,7 @@ enum
     LIGHT_LWRWALL
 };
 
-extern rcolor	bspColor[5];
+extern rcolor    bspColor[5];
 
 rcolor R_GetSectorLight(byte alpha, word ptr);
 void R_SetLightFactor(float lightfactor);

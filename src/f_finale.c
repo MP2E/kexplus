@@ -23,7 +23,7 @@
 //
 //
 // DESCRIPTION:
-//		Game completion, final screen animation.
+//        Game completion, final screen animation.
 //
 //-----------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ castinfo_t castorder[] =
     {   CC_ZOMBIE,  MT_POSSESSED1   },
     {   CC_SHOTGUN, MT_POSSESSED2   },
     {   CC_IMP,     MT_IMP1         },
-    {   CC_IMP2,	MT_IMP2         },
+    {   CC_IMP2,    MT_IMP2         },
     {   CC_DEMON,   MT_DEMON1       },
     {   CC_DEMON2,  MT_DEMON2       },
     {   CC_LOST,    MT_SKULL        },

@@ -196,8 +196,8 @@ char *W_SearchDirectoryForFile(char *dir, char *filename)
     if((dh = opendir(dir)))
     {
         while(!match && (file = readdir(dh)))
-	    if(!strcasecmp(filename, file->d_name))
-	        match = 1;
+        if(!strcasecmp(filename, file->d_name))
+            match = 1;
     }
 
     if(match)
@@ -208,10 +208,10 @@ char *W_SearchDirectoryForFile(char *dir, char *filename)
             sprintf(name, "%s%c%s", dir, '/', file->d_name);
 
         if(M_FileExists(name))
-	{
+    {
             closedir(dh);
             return name;
-	}
+    }
     }
     closedir(dh);
 

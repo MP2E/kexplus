@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	LineOfSight/Visibility checks, uses REJECT Lookup Table.
+//    LineOfSight/Visibility checks, uses REJECT Lookup Table.
 //
 //-----------------------------------------------------------------------------
 
@@ -54,10 +54,10 @@ int         sightcounts[2];
 
 int P_DivlineSide(fixed_t x, fixed_t y, divline_t* node)
 {
-    fixed_t	dx;
-    fixed_t	dy;
-    fixed_t	left;
-    fixed_t	right;
+    fixed_t    dx;
+    fixed_t    dy;
+    fixed_t    left;
+    fixed_t    right;
     
     if(!node->dx)
     {
@@ -88,12 +88,12 @@ int P_DivlineSide(fixed_t x, fixed_t y, divline_t* node)
     right = F2INT(dy) * F2INT(node->dx);
     
     if(right < left)
-        return 0;	// front side
+        return 0;    // front side
     
     if(left == right)
         return 2;
 
-    return 1;		// back side
+    return 1;        // back side
 }
 
 
@@ -106,9 +106,9 @@ int P_DivlineSide(fixed_t x, fixed_t y, divline_t* node)
 
 fixed_t P_InterceptVector2(divline_t* v2, divline_t* v1)
 {
-    fixed_t	frac;
-    fixed_t	num;
-    fixed_t	den;
+    fixed_t    frac;
+    fixed_t    num;
+    fixed_t    den;
     
     den = FixedMul(v1->dy>>8,v2->dx) - FixedMul(v1->dx>>8,v2->dy);
     
@@ -220,7 +220,7 @@ dboolean P_CrossSubsector(int num)
         
         // quick test for totally closed doors
         if(openbottom >= opentop)
-            return false;		// stop
+            return false;        // stop
         
         frac = P_InterceptVector2(&strace, &divl);
         
@@ -239,7 +239,7 @@ dboolean P_CrossSubsector(int num)
         }
         
         if(topslope <= bottomslope)
-            return false;		// stop
+            return false;        // stop
     }
 
     // passed the subsector ok
@@ -271,7 +271,7 @@ dboolean P_CrossBSPNode(int bspnum)
     // decide which side the start point is on
     side = P_DivlineSide(strace.x, strace.y, (divline_t *)bsp);
     if(side == 2)
-        side = 0;	// an "on" should cross both sides
+        side = 0;    // an "on" should cross both sides
     
     // cross the starting side
     if(!P_CrossBSPNode (bsp->children[side]) )
@@ -353,8 +353,8 @@ void P_ScanSights(void)
 {
     mobj_t* mobj;
 
-	for(mobj = mobjhead.next; mobj != &mobjhead; mobj = mobj->next)
-	{
+    for(mobj = mobjhead.next; mobj != &mobjhead; mobj = mobj->next)
+    {
         // must be killable
         if(!(mobj->flags & MF_COUNTKILL))
             continue;

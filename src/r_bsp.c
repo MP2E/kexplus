@@ -77,7 +77,7 @@ void R_AddClipLine(seg_t* line)
     angle1 = line->v1->clipspan;
     angle2 = line->v2->clipspan;
     
-    // Back side, i.e. backface culling	- read: endAngle >= startAngle!
+    // Back side, i.e. backface culling    - read: endAngle >= startAngle!
     if(angle2 - angle1 < ANG180 || !line->linedef)
         return;
     
@@ -108,7 +108,7 @@ void R_AddClipLine(seg_t* line)
     R_AddLine(line);
 }
 
-int	checkcoord[12][4] =
+int    checkcoord[12][4] =
 {
     {3,0,2,1},
     {3,0,2,0},
@@ -128,7 +128,7 @@ int	checkcoord[12][4] =
 //
 
 dboolean R_CheckBBox(fixed_t* bspcoord)
-{	
+{    
     angle_t     angle1;
     angle_t     angle2;
     int         boxpos;
@@ -533,7 +533,7 @@ static dboolean R_GenerateMiddleSegPlane(seg_t *line, vtx_t* v)
     {   
         // ML_DONTPEGMID is extremly hacky and it appears to be used only once in the entire game
         if(linedef->flags & ML_DONTPEGMID && line->backsector)
-        {	
+        {    
             v[0].tv = v[1].tv = 1 + rowoffs - ((top - btop) / height);
             v[2].tv = v[3].tv = 1 + rowoffs + (((top + btop) - (bottom + bbottom)) / height)/2;
         }
@@ -719,7 +719,7 @@ static void R_AddLine(seg_t *line)
 
 void R_Subsector(int num)
 {
-    subsector_t	*sub;
+    subsector_t    *sub;
     
     sub = &subsectors[num];
     frontsector = sub->sector;

@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 Simon Howard
@@ -37,7 +37,7 @@ void NET_WriteSettings(net_packet_t *packet, net_gamesettings_t *settings)
     NET_WriteInt8(packet, settings->nomonsters);
     NET_WriteInt8(packet, settings->fast_monsters);
     NET_WriteInt8(packet, settings->respawn_monsters);
-	NET_WriteInt8(packet, settings->respawn_items);
+    NET_WriteInt8(packet, settings->respawn_items);
     NET_WriteInt8(packet, settings->map);
     NET_WriteInt8(packet, settings->skill);
     NET_WriteInt8(packet, settings->gameversion);
@@ -59,7 +59,7 @@ dboolean NET_ReadSettings(net_packet_t *packet, net_gamesettings_t *settings)
         && NET_ReadInt8(packet, (unsigned int *) &settings->nomonsters)
         && NET_ReadInt8(packet, (unsigned int *) &settings->fast_monsters)
         && NET_ReadInt8(packet, (unsigned int *) &settings->respawn_monsters)
-		&& NET_ReadInt8(packet, (unsigned int *) &settings->respawn_items)
+        && NET_ReadInt8(packet, (unsigned int *) &settings->respawn_items)
         && NET_ReadInt8(packet, (unsigned int *) &settings->map)
         && NET_ReadSInt8(packet, &settings->skill)
         && NET_ReadInt8(packet, (unsigned int *) &settings->gameversion)
@@ -85,17 +85,17 @@ dboolean NET_ReadQueryData(net_packet_t *packet, net_querydata_t *query)
           && NET_ReadInt8(packet, (unsigned int *) &query->max_players)
           && NET_ReadInt8(packet, (unsigned int *) &query->gamemode)
           && NET_ReadInt8(packet, (unsigned int *) &query->gamemission);
-    
+
     if (result)
     {
         query->description = NET_ReadString(packet);
 
         return query->description != NULL;
-    }   
+    }
     else
     {
         return false;
-    } 
+    }
 }
 
 void NET_WriteQueryData(net_packet_t *packet, net_querydata_t *query)
@@ -109,7 +109,7 @@ void NET_WriteQueryData(net_packet_t *packet, net_querydata_t *query)
     NET_WriteString(packet, query->description);
 }
 
-void NET_WriteTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff, 
+void NET_WriteTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
                          dboolean lowres_turn)
 {
     // Header
@@ -139,10 +139,10 @@ void NET_WriteTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
         NET_WriteInt8(packet, diff->cmd.consistancy);
     if (diff->diff & NET_TICDIFF_CHATCHAR)
         NET_WriteInt8(packet, diff->cmd.chatchar);
-	if (diff->diff & NET_TICDIFF_BUTTONS2)
-		NET_WriteInt8(packet, diff->cmd.buttons2);
-	if (diff->diff & NET_TICDIFF_PITCH)
-		NET_WriteInt16(packet, diff->cmd.pitch);
+    if (diff->diff & NET_TICDIFF_BUTTONS2)
+        NET_WriteInt8(packet, diff->cmd.buttons2);
+    if (diff->diff & NET_TICDIFF_PITCH)
+        NET_WriteInt16(packet, diff->cmd.pitch);
 }
 
 dboolean NET_ReadTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
@@ -155,7 +155,7 @@ dboolean NET_ReadTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
 
     if (!NET_ReadInt8(packet, &diff->diff))
         return false;
-    
+
     // Read fields
 
     if (diff->diff & NET_TICDIFF_FORWARD)
@@ -209,14 +209,14 @@ dboolean NET_ReadTiccmdDiff(net_packet_t *packet, net_ticdiff_t *diff,
         diff->cmd.chatchar = val;
     }
 
-	if (diff->diff & NET_TICDIFF_BUTTONS2)
+    if (diff->diff & NET_TICDIFF_BUTTONS2)
     {
         if (!NET_ReadInt8(packet, &val))
             return false;
         diff->cmd.buttons2 = val;
     }
 
-	if (diff->diff & NET_TICDIFF_PITCH)
+    if (diff->diff & NET_TICDIFF_PITCH)
     {
         if (!NET_ReadSInt16(packet, &sval))
                 return false;
@@ -243,9 +243,9 @@ void NET_TiccmdDiff(ticcmd_t *tic1, ticcmd_t *tic2, net_ticdiff_t *diff)
         diff->diff |= NET_TICDIFF_CONSISTANCY;
     if (tic2->chatchar != 0)
         diff->diff |= NET_TICDIFF_CHATCHAR;
-	if (tic1->buttons2 != tic2->buttons2)
+    if (tic1->buttons2 != tic2->buttons2)
         diff->diff |= NET_TICDIFF_BUTTONS2;
-	if (tic1->pitch != tic2->pitch)
+    if (tic1->pitch != tic2->pitch)
         diff->diff |= NET_TICDIFF_PITCH;
 }
 
@@ -270,15 +270,15 @@ void NET_TiccmdPatch(ticcmd_t *src, net_ticdiff_t *diff, ticcmd_t *dest)
         dest->chatchar = diff->cmd.chatchar;
     else
         dest->chatchar = 0;
-	if (diff->diff & NET_TICDIFF_BUTTONS2)
+    if (diff->diff & NET_TICDIFF_BUTTONS2)
         dest->buttons2 = diff->cmd.buttons2;
-	if (diff->diff & NET_TICDIFF_PITCH)
+    if (diff->diff & NET_TICDIFF_PITCH)
         dest->pitch = diff->cmd.pitch;
 }
 
-// 
+//
 // net_full_ticcmd_t
-// 
+//
 
 dboolean NET_ReadFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd, dboolean lowres_turn)
 {
@@ -298,12 +298,12 @@ dboolean NET_ReadFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd, dboole
     {
         return false;
     }
-          
+
     for (i=0; i<MAXPLAYERS; ++i)
     {
         cmd->playeringame[i] = (bitfield & (1 << i)) != 0;
     }
-        
+
     // Read cmds
 
     for (i=0; i<MAXPLAYERS; ++i)
@@ -333,7 +333,7 @@ void NET_WriteFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd, dboolean 
     // in this ticcmd
 
     bitfield = 0;
-    
+
     for (i=0; i<MAXPLAYERS; ++i)
     {
         if (cmd->playeringame[i])
@@ -341,7 +341,7 @@ void NET_WriteFullTiccmd(net_packet_t *packet, net_full_ticcmd_t *cmd, dboolean 
             bitfield |= 1 << i;
         }
     }
-    
+
     NET_WriteInt8(packet, bitfield);
 
     // Write player ticcmds

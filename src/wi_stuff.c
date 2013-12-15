@@ -342,7 +342,7 @@ void WI_Drawer(void)
 
     // draw 'mapname' Finished text
     Draw_BigText(-1, 20, WHITE, P_GetMapInfo(currentmap)->mapname);
-	Draw_BigText(-1, 36, WHITE, "Finished");
+    Draw_BigText(-1, 36, WHITE, "Finished");
 
     if(!netgame)
     {
@@ -418,7 +418,7 @@ void WI_Drawer(void)
     if(wi_stage > 4 && (P_GetMapInfo(nextmap) != NULL))
     {
         char password[20];
-	    byte *passData;
+        byte *passData;
         int i = 0;
         int y = 145;
 
@@ -428,27 +428,27 @@ void WI_Drawer(void)
         Draw_BigText(-1, y, WHITE, "Entering");
         Draw_BigText(-1, y + 16, WHITE, P_GetMapInfo(nextmap)->mapname);
 
-        if(netgame)	// don't bother drawing the password on netgames
-		    return;
+        if(netgame)    // don't bother drawing the password on netgames
+            return;
 
         Draw_BigText(-1, 187, WHITE, "Password");
 
         dmemset(password, 0, 20);
-	    passData = passwordData;
+        passData = passwordData;
 
         // draw actual password
-	    do
-	    {
-		    if(i && !((passData - passwordData) & 3))
-			    password[i++] = 0x20;
+        do
+        {
+            if(i && !((passData - passwordData) & 3))
+                password[i++] = 0x20;
 
-		    if(i >= 20)
-			    break;
+            if(i >= 20)
+                break;
 
-		    password[i++] = passwordChar[*(passData++)];
-	    } while(i < 20);
+            password[i++] = passwordChar[*(passData++)];
+        } while(i < 20);
 
-	    password[19] = 0;
+        password[19] = 0;
 
         Draw_BigText(-1, 203, WHITE, password);
     }

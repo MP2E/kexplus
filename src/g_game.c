@@ -914,7 +914,7 @@ void G_DoLoadLevel (void)
         respawnspecials = false;
     
     P_SetupLevel(gamemap, 0, gameskill);
-    displayplayer = consoleplayer;		// view the guy you are playing
+    displayplayer = consoleplayer;        // view the guy you are playing
     starttime = I_GetTime();
     gameaction = ga_nothing;
     
@@ -964,10 +964,10 @@ dboolean G_Responder(event_t* ev)
         }
         
         if(ST_Responder(ev))
-            return true;	// status window ate it
+            return true;    // status window ate it
 
         if(AM_Responder(ev))
-            return true;	// automap ate it
+            return true;    // automap ate it
     }
 
     // Handle screen specific ticcmds
@@ -1121,8 +1121,8 @@ void G_PlayerFinishLevel(int player)
     
     dmemset(p->powers, 0, sizeof(p->powers));
     dmemset(p->cards, 0, sizeof(p->cards));
-    p->mo->flags &= ~MF_SHADOW; 	// cancel invisibility
-    p->damagecount = 0; 		// no palette changes
+    p->mo->flags &= ~MF_SHADOW;     // cancel invisibility
+    p->damagecount = 0;         // no palette changes
     p->bonuscount = 0;
     p->bfgcount = 0;
 
@@ -1264,7 +1264,7 @@ dboolean G_CheckSpot(int playernum, mapthing_t* mthing)
         );
     
     if(players[playernum].viewz != 1)
-        S_StartSound(mo, sfx_telept);	// don't start sound on first frame
+        S_StartSound(mo, sfx_telept);    // don't start sound on first frame
     
     return true;
 }
@@ -1308,7 +1308,7 @@ void G_DoReborn(int playernum)
 {
     if(!netgame)
         gameaction = ga_loadlevel;      // reload the level from scratch
-    else	 // respawn at the start
+    else     // respawn at the start
     {
         int i;
         
@@ -1336,11 +1336,11 @@ void G_DoReborn(int playernum)
         {
             if(G_CheckSpot(playernum, &playerstarts[i]) ) 
             { 
-                playerstarts[i].type = playernum+1;	// fake as other player 
+                playerstarts[i].type = playernum+1;    // fake as other player 
                 P_SpawnPlayer(&playerstarts[i]); 
-                playerstarts[i].type = i+1;			// restore 
+                playerstarts[i].type = i+1;            // restore 
                 return;
-            }	    
+            }        
             // he's going to be inside something.  Too bad.
         }
         P_SpawnPlayer (&playerstarts[playernum]);
@@ -1496,7 +1496,7 @@ void G_LoadGame(const char* name)
     gameaction = ga_loadgame;
 }
 
-#define VERSIONSIZE 	16
+#define VERSIONSIZE     16
 
 //
 // G_DoLoadGame
@@ -1686,12 +1686,12 @@ void G_InitNew(skill_t skill, int map)
     for(i = 0; i < MAXPLAYERS; i++)
         players[i].playerstate = PST_REBORN;
     
-    usergame		= true;				// will be set false if a demo
-    paused			= false;
-    demoplayback	= false;
-    automapactive	= false;
-    gamemap			= map;
-    gameskill		= skill;
+    usergame        = true;                // will be set false if a demo
+    paused            = false;
+    demoplayback    = false;
+    automapactive    = false;
+    gamemap            = map;
+    gameskill        = skill;
 
     // [d64] For some reason this is added here
     M_ClearRandom();
@@ -1748,7 +1748,7 @@ void G_WriteDemoTiccmd(ticcmd_t* cmd)
         return;
     }
     
-    G_ReadDemoTiccmd(cmd);	// make SURE it is exactly the same
+    G_ReadDemoTiccmd(cmd);    // make SURE it is exactly the same
 }
 
 
@@ -1900,7 +1900,7 @@ dboolean G_CheckDemoStatus(void)
         netdemo         = false;
         netgame         = false;
         deathmatch      = false;
-        playeringame[1]	= playeringame[2] = playeringame[3] = 0;
+        playeringame[1]    = playeringame[2] = playeringame[3] = 0;
         respawnparm     = false;
         respawnitem     = false;
         fastparm        = false;

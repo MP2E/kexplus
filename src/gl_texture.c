@@ -919,8 +919,8 @@ void GL_InitTextures(void)
 // GL_PadTextureDims
 //
 
-#define MAXTEXSIZE	2048
-#define MINTEXSIZE	1
+#define MAXTEXSIZE    2048
+#define MINTEXSIZE    1
 
 int GL_PadTextureDims(int n)
 {
@@ -943,9 +943,9 @@ int GL_PadTextureDims(int n)
 
 void GL_DumpTextures(void)
 {
-    int	i;
+    int    i;
     int j;
-    int	p;
+    int    p;
     
     for(i = 0; i < numtextures; i++)
     {

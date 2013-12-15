@@ -147,8 +147,8 @@ typedef enum
 
 typedef enum
 {
-    BF_MOBJSTAND        = 1,	// Standing on top of thing?
-    BF_MOBJPASS         = 2,	// Able to pass under thing?
+    BF_MOBJSTAND        = 1,    // Standing on top of thing?
+    BF_MOBJPASS         = 2,    // Able to pass under thing?
     BF_MIDPOINTONLY     = 4     // Only check sector where mobj's midpoint is inside
 
 } mobjblockflag_t;
@@ -173,10 +173,10 @@ typedef struct mobj_s
     struct mobj_s*      sprev;
     
     //More drawing info: to determine current sprite.
-    angle_t             angle;	// orientation
+    angle_t             angle;    // orientation
     angle_t             pitch;  // [kex] pitch orientation; for looking up/down
-    spritenum_t         sprite;	// used to find patch_t and flip value
-    int                 frame;	// might be ORed with FF_FULLBRIGHT
+    spritenum_t         sprite;    // used to find patch_t and flip value
+    int                 frame;    // might be ORed with FF_FULLBRIGHT
     
     // Interaction info, by BLOCKMAP.
     // Links in blocks (if needed).
@@ -202,9 +202,9 @@ typedef struct mobj_s
     int                 validcount;
     
     mobjtype_t          type;
-    mobjinfo_t*         info;	// &mobjinfo[mobj->type]
+    mobjinfo_t*         info;    // &mobjinfo[mobj->type]
     
-    int                 tics;	// state tic counter
+    int                 tics;    // state tic counter
     state_t*            state;
     dword               flags;
     int                 health;
@@ -216,8 +216,8 @@ typedef struct mobj_s
     mobjblockflag_t     blockflag;
     
     // Movement direction, movement generation (zig-zagging).
-    int                 movedir;	// 0-7
-    int                 movecount;	// when 0, select a new dir
+    int                 movedir;    // 0-7
+    int                 movecount;    // when 0, select a new dir
     
     // Thing being chased/attacked (or NULL),
     // also the originator for missiles.

@@ -406,7 +406,7 @@ char *I_DoomExeDir(void)
 {
     static char current_dir_dummy[] = {"./"};
     static char *base;
-    if (!base)	// cache multiple requests
+    if (!base)    // cache multiple requests
     {
         size_t len = dstrlen(*myargv);
         char *p = (base = malloc(len+1)) + len - 1;
@@ -476,7 +476,7 @@ void I_Init(void)
 void I_Error(char* string, ...)
 {
     char buff[1024];
-    va_list	va;
+    va_list    va;
 
     I_ShutdownSound();
 
@@ -555,7 +555,7 @@ void I_Quit(void)
 void I_Printf(char* string, ...)
 {
     char buff[1024];
-    va_list	va;
+    va_list    va;
 
     dmemset(buff, 0, 1024);
     
@@ -587,8 +587,8 @@ void I_Printf(char* string, ...)
         } while(c++);
 
         SendMessage(hwndBuffer, EM_LINESCROLL, 0, 0xffff);
-	    SendMessage(hwndBuffer, EM_SCROLLCARET, 0, 0 );
-	    SendMessage(hwndBuffer, EM_REPLACESEL, 0, (LPARAM)winBuff);
+        SendMessage(hwndBuffer, EM_SCROLLCARET, 0, 0 );
+        SendMessage(hwndBuffer, EM_REPLACESEL, 0, (LPARAM)winBuff);
     }
 #endif
 
@@ -601,7 +601,7 @@ void I_Printf(char* string, ...)
 // I_BeginRead
 //
 
-dboolean	inshowbusy=false;
+dboolean    inshowbusy=false;
 
 void I_BeginRead(void)
 {

@@ -131,7 +131,7 @@ void T_VerticalDoor(vldoor_t* door)
             switch(door->type)
             {
             case blazeClose:
-            case doorclose:		// DO NOT GO BACK UP!
+            case doorclose:        // DO NOT GO BACK UP!
                 break;
                 
             default:

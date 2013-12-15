@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 Simon Howard
@@ -36,7 +36,7 @@
 #include "net_structrw.h"
 #include "net_sdl.h"
 
-typedef struct 
+typedef struct
 {
     net_addr_t *addr;
     net_querydata_t data;
@@ -48,12 +48,12 @@ static int num_responses;
 
 // Add a new address to the list of hosts that has responded
 
-static queryresponse_t *AddResponder(net_addr_t *addr, 
+static queryresponse_t *AddResponder(net_addr_t *addr,
                                      net_querydata_t *data)
 {
     queryresponse_t *response;
 
-    responders = realloc(responders, 
+    responders = realloc(responders,
                          sizeof(queryresponse_t) * (num_responses + 1));
 
     response = &responders[num_responses];
@@ -107,16 +107,16 @@ static void formatted_printf(int wide, char *s, ...)
 {
     va_list args;
     int i;
-    
+
     va_start(args, s);
     i = vprintf(s, args);
     va_end(args);
 
-    while (i < wide) 
+    while (i < wide)
     {
         putchar(' ');
         ++i;
-    } 
+    }
 }
 
 static void PrintHeader(void)
@@ -135,7 +135,7 @@ static void PrintHeader(void)
 static void PrintResponse(queryresponse_t *response)
 {
     formatted_printf(18, "%s: ", NET_AddrToString(response->addr));
-    formatted_printf(8, "%i/%i", response->data.num_players, 
+    formatted_printf(8, "%i/%i", response->data.num_players,
                                  response->data.max_players);
 
     if (response->data.server_state)
@@ -198,7 +198,7 @@ static void NET_Query_GetResponse(void)
     }
 }
 
-static net_addr_t *NET_Query_QueryLoop(net_addr_t *addr, 
+static net_addr_t *NET_Query_QueryLoop(net_addr_t *addr,
                                        dboolean find_one)
 {
     int start_time;
@@ -225,9 +225,9 @@ static net_addr_t *NET_Query_QueryLoop(net_addr_t *addr,
 
         if (find_one && num_responses > 0)
             break;
-        
+
         // Don't thrash the CPU
-        
+
         I_Sleep(100);
     }
 
@@ -250,7 +250,7 @@ void NET_Query_Init(void)
 void NET_QueryAddress(char *addr)
 {
     net_addr_t *net_addr;
-    
+
     NET_Query_Init();
 
     net_addr = NET_ResolveAddress(query_context, addr);

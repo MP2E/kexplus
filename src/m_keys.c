@@ -32,8 +32,8 @@
 
 typedef struct
 {
-    int		code;
-    char	*name;
+    int        code;
+    char    *name;
 }keyinfo_t;
 
 static keyinfo_t    Keys[]=

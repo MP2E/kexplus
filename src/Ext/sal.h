@@ -1131,7 +1131,7 @@ REPEATABLE
 struct _$P
 {
 #ifdef __cplusplus
-	_$P();
+    _$P();
 #endif
    int _$d;
 };
@@ -1142,7 +1142,7 @@ REPEATABLE
 struct _$R
 {
 #ifdef __cplusplus
-	_$R();
+    _$R();
 #endif
    int _$d;
 };
@@ -1152,7 +1152,7 @@ typedef struct _$R _$R;
 struct _$M
 {
 #ifdef __cplusplus
-	_$M();
+    _$M();
 #endif
    int _$d;
 };
@@ -1353,7 +1353,7 @@ typedef struct _$M _$M;
 
  NullTerm: States if the present of a '\0' marks the end of valid elements in the buffer.
  _z    : A '\0' indicated the end of the buffer
- _nz	 : The buffer may not be null terminated and a '\0' does not indicate the end of the
+ _nz     : The buffer may not be null terminated and a '\0' does not indicate the end of the
           buffer.
  Optional: Describes if the buffer itself is optional.
 

@@ -38,8 +38,8 @@
 #define O_BINARY 0
 #endif
 
-extern  int	myargc;
-extern  char**	myargv;
+extern  int    myargc;
+extern  char**    myargv;
 
 // Returns the position of the given parameter
 // in the arg list (0 if not found).
@@ -52,16 +52,16 @@ enum
     BOXBOTTOM,
     BOXLEFT,
     BOXRIGHT
-};	// bbox coordinates
+};    // bbox coordinates
 
 // Bounding box functions.
-void M_ClearBox (fixed_t*	box);
+void M_ClearBox (fixed_t*    box);
 
 void
 M_AddToBox
-( fixed_t*	box,
- fixed_t	x,
- fixed_t	y );
+( fixed_t*    box,
+ fixed_t    x,
+ fixed_t    y );
 
 dboolean M_WriteFile(char const* name, void* source, int length);
 int M_ReadFile(char const* name, byte** buffer);
@@ -77,7 +77,7 @@ void M_SaveDefaults(void);
 //
 // DEFAULTS
 //
-extern int		DualMouse;
+extern int        DualMouse;
 
 extern int      viewwidth;
 extern int      viewheight;

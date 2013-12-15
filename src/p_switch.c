@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Switches, buttons. Two-state animation. Exits.
+//    Switches, buttons. Two-state animation. Exits.
 //
 //-----------------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ button_t buttonlist[MAXBUTTONS];
 
 void P_StartButton(line_t* line, bwhere_e w, int texture, int time)
 {
-    int	i;
+    int    i;
     
     // See if button is already pressed
     for(i = 0; i < MAXBUTTONS; i++)

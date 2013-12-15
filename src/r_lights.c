@@ -33,7 +33,7 @@
 #include "d_keywds.h"
 #include "p_local.h"
 
-rcolor	bspColor[5];
+rcolor    bspColor[5];
 
 CVAR_CMD(i_brightness, 100)
 {
@@ -299,12 +299,12 @@ rcolor R_SplitLineColor(seg_t *line, byte side)
     g2 = (float)((d3dc2 >> 8) & 0xff);
     r2 = (float)(d3dc2 & 0xff);
     
-    if(side == 1)		/*TOP*/
+    if(side == 1)        /*TOP*/
     {
         sideheight1 = (line->backsector->ceilingheight - line->frontsector->floorheight)/FRACUNIT;
         sideheight2 = (line->frontsector->ceilingheight - line->backsector->ceilingheight)/FRACUNIT;
     }
-    else if(side == 2)	/*BOTTOM*/
+    else if(side == 2)    /*BOTTOM*/
     {
         sideheight1 = (line->backsector->floorheight - line->frontsector->floorheight)/FRACUNIT;
         sideheight2 = (line->frontsector->ceilingheight - line->backsector->floorheight)/FRACUNIT;

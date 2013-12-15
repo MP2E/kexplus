@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Plats (i.e. elevator platforms) code, raising/lowering.
+//    Plats (i.e. elevator platforms) code, raising/lowering.
 //
 //-----------------------------------------------------------------------------
 
@@ -110,8 +110,8 @@ void T_PlatRaise(plat_t* plat)
             case customUpDownFast:
                 P_RemoveActivePlat(plat);
                 break;
-	    default:
-	        break;
+        default:
+            break;
             }
         }
         break;
@@ -139,188 +139,188 @@ void T_PlatRaise(plat_t* plat)
 //
 int
 EV_DoPlat
-( line_t*	line,
-  plattype_e	type,
-  int		amount )
+( line_t*    line,
+  plattype_e    type,
+  int        amount )
 {
-    plat_t*	plat;
-    int		secnum;
-    int		rtn;
-    sector_t*	sec;
+    plat_t*    plat;
+    int        secnum;
+    int        rtn;
+    sector_t*    sec;
 
     secnum = -1;
     rtn = 0;
 
 
-    //	Activate all <type> plats that are in_stasis
+    //    Activate all <type> plats that are in_stasis
     switch(type)
     {
       case perpetualRaise:
-	P_ActivateInStasis(line->tag);
-	break;
+    P_ActivateInStasis(line->tag);
+    break;
 
       default:
-	break;
+    break;
     }
 
     while ((secnum = P_FindSectorFromLineTag(line,secnum)) >= 0)
     {
-	sec = &sectors[secnum];
+    sec = &sectors[secnum];
 
-	if (sec->specialdata)
-	    continue;
+    if (sec->specialdata)
+        continue;
 
-	// Find lowest & highest floors around sector
-	rtn = 1;
-	plat = Z_Malloc( sizeof(*plat), PU_LEVSPEC, 0);
-	P_AddThinker(&plat->thinker);
+    // Find lowest & highest floors around sector
+    rtn = 1;
+    plat = Z_Malloc( sizeof(*plat), PU_LEVSPEC, 0);
+    P_AddThinker(&plat->thinker);
 
-	plat->type = type;
-	plat->sector = sec;
-	plat->sector->specialdata = plat;
-	plat->thinker.function.acp1 = (actionf_p1) T_PlatRaise;
-	plat->crush = false;
-	plat->tag = line->tag;
+    plat->type = type;
+    plat->sector = sec;
+    plat->sector->specialdata = plat;
+    plat->thinker.function.acp1 = (actionf_p1) T_PlatRaise;
+    plat->crush = false;
+    plat->tag = line->tag;
 
-	switch(type)
-	{
-	  case raiseToNearestAndChange:
-	    plat->speed = PLATSLOWSPEED;
-	    sec->floorpic = sides[line->sidenum[0]].sector->floorpic;
-	    plat->high = P_FindNextHighestFloor(sec,sec->floorheight);
-	    plat->wait = 0;
-	    plat->status = up;
-	    // NO MORE DAMAGE, IF APPLICABLE
-	    sec->special = 0;
+    switch(type)
+    {
+      case raiseToNearestAndChange:
+        plat->speed = PLATSLOWSPEED;
+        sec->floorpic = sides[line->sidenum[0]].sector->floorpic;
+        plat->high = P_FindNextHighestFloor(sec,sec->floorheight);
+        plat->wait = 0;
+        plat->status = up;
+        // NO MORE DAMAGE, IF APPLICABLE
+        sec->special = 0;
 
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_secmove);
-	    break;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_secmove);
+        break;
 
-	  case raiseAndChange:
-	    plat->speed = PLATSLOWSPEED;
-	    sec->floorpic = sides[line->sidenum[0]].sector->floorpic;
-	    plat->high = sec->floorheight + amount*FRACUNIT;
-	    plat->wait = 0;
-	    plat->status = up;
+      case raiseAndChange:
+        plat->speed = PLATSLOWSPEED;
+        sec->floorpic = sides[line->sidenum[0]].sector->floorpic;
+        plat->high = sec->floorheight + amount*FRACUNIT;
+        plat->wait = 0;
+        plat->status = up;
 
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_secmove);
-	    break;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_secmove);
+        break;
 
-	  case downWaitUpStay:
-	    plat->speed = PLATSPEED;
-	    plat->low = P_FindLowestFloorSurrounding(sec);
+      case downWaitUpStay:
+        plat->speed = PLATSPEED;
+        plat->low = P_FindLowestFloorSurrounding(sec);
 
-	    if (plat->low > sec->floorheight)
-		plat->low = sec->floorheight;
+        if (plat->low > sec->floorheight)
+        plat->low = sec->floorheight;
 
-	    plat->high = sec->floorheight;
-	    plat->wait = TICRATE*PLATWAIT;
-	    plat->status = down;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-	    break;
+        plat->high = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = down;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case blazeDWUS:
-	    plat->speed = PLATBLAZESPEED;
-	    plat->low = P_FindLowestFloorSurrounding(sec);
+      case blazeDWUS:
+        plat->speed = PLATBLAZESPEED;
+        plat->low = P_FindLowestFloorSurrounding(sec);
 
-	    if (plat->low > sec->floorheight)
-		plat->low = sec->floorheight;
+        if (plat->low > sec->floorheight)
+        plat->low = sec->floorheight;
 
-	    plat->high = sec->floorheight;
-	    plat->wait = TICRATE*PLATWAIT;
-	    plat->status = down;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-	    break;
+        plat->high = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = down;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case customDownUp:
-		plat->speed = PLATSPEED;
-	    plat->low = sec->floorheight - (globalint * FRACUNIT);
+      case customDownUp:
+        plat->speed = PLATSPEED;
+        plat->low = sec->floorheight - (globalint * FRACUNIT);
 
-	    if (plat->low > sec->floorheight)
-		plat->low = sec->floorheight;
+        if (plat->low > sec->floorheight)
+        plat->low = sec->floorheight;
 
-	    plat->high = sec->floorheight;
-	    plat->wait = TICRATE*PLATWAIT;
-	    plat->status = down;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-		break;
+        plat->high = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = down;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	   case customDownUpFast:
-		plat->speed = PLATBLAZESPEED;
-	    plat->low = sec->floorheight - (globalint * FRACUNIT);
+       case customDownUpFast:
+        plat->speed = PLATBLAZESPEED;
+        plat->low = sec->floorheight - (globalint * FRACUNIT);
 
-	    if (plat->low > sec->floorheight)
-		plat->low = sec->floorheight;
+        if (plat->low > sec->floorheight)
+        plat->low = sec->floorheight;
 
-	    plat->high = sec->floorheight;
-	    plat->wait = TICRATE*PLATWAIT;
-	    plat->status = down;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-		break;
+        plat->high = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = down;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case upWaitDownStay:
-		plat->speed = PLATSPEED;
-		plat->high = P_FindHighestFloorSurrounding(sec);
-		if (plat->high < sec->floorheight)
-			plat->high = sec->floorheight;
-		plat->low = sec->floorheight;
-		plat->wait = TICRATE*PLATWAIT;
-		plat->status = up;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-		break;
+      case upWaitDownStay:
+        plat->speed = PLATSPEED;
+        plat->high = P_FindHighestFloorSurrounding(sec);
+        if (plat->high < sec->floorheight)
+            plat->high = sec->floorheight;
+        plat->low = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = up;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case blazeUWDS:
-		plat->speed = PLATBLAZESPEED;
-		plat->high = P_FindHighestFloorSurrounding(sec);
-		if (plat->high < sec->floorheight)
-			plat->high = sec->floorheight;
-		plat->low = sec->floorheight;
-		plat->wait = TICRATE*PLATWAIT;
-		plat->status = up;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-		break;
+      case blazeUWDS:
+        plat->speed = PLATBLAZESPEED;
+        plat->high = P_FindHighestFloorSurrounding(sec);
+        if (plat->high < sec->floorheight)
+            plat->high = sec->floorheight;
+        plat->low = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = up;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case customUpDown:
-		plat->speed = PLATSPEED;
-		plat->high = sec->floorheight + (globalint * FRACUNIT);
-		if (plat->high < sec->floorheight)
-			plat->high = sec->floorheight;
-		plat->low = sec->floorheight;
-		plat->wait = TICRATE*PLATWAIT;
-		plat->status = up;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-		break;
+      case customUpDown:
+        plat->speed = PLATSPEED;
+        plat->high = sec->floorheight + (globalint * FRACUNIT);
+        if (plat->high < sec->floorheight)
+            plat->high = sec->floorheight;
+        plat->low = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = up;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case customUpDownFast:
-		plat->speed = PLATSPEED;
-		plat->high = sec->floorheight + (globalint * FRACUNIT);
-		if (plat->high < sec->floorheight)
-			plat->high = sec->floorheight;
-		plat->low = sec->floorheight;
-		plat->wait = TICRATE*PLATWAIT;
-		plat->status = up;
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-		break;
+      case customUpDownFast:
+        plat->speed = PLATSPEED;
+        plat->high = sec->floorheight + (globalint * FRACUNIT);
+        if (plat->high < sec->floorheight)
+            plat->high = sec->floorheight;
+        plat->low = sec->floorheight;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = up;
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
 
-	  case perpetualRaise:
-	    plat->speed = PLATSLOWSPEED;
-	    plat->low = P_FindLowestFloorSurrounding(sec);
+      case perpetualRaise:
+        plat->speed = PLATSLOWSPEED;
+        plat->low = P_FindLowestFloorSurrounding(sec);
 
-	    if (plat->low > sec->floorheight)
-		plat->low = sec->floorheight;
+        if (plat->low > sec->floorheight)
+        plat->low = sec->floorheight;
 
-	    plat->high = P_FindHighestFloorSurrounding(sec);
+        plat->high = P_FindHighestFloorSurrounding(sec);
 
-	    if (plat->high < sec->floorheight)
-		plat->high = sec->floorheight;
+        if (plat->high < sec->floorheight)
+        plat->high = sec->floorheight;
 
-	    plat->wait = TICRATE*PLATWAIT;
-	    plat->status = P_Random()&1;
+        plat->wait = TICRATE*PLATWAIT;
+        plat->status = P_Random()&1;
 
-	    S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
-	    break;
-	}
-	P_AddActivePlat(plat);
+        S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+        break;
+    }
+    P_AddActivePlat(plat);
     }
     return rtn;
 }
@@ -329,58 +329,58 @@ EV_DoPlat
 
 void P_ActivateInStasis(int tag)
 {
-    int		i;
+    int        i;
 
     for (i = 0;i < MAXPLATS;i++)
-	if (activeplats[i]
-	    && (activeplats[i])->tag == tag
-	    && (activeplats[i])->status == in_stasis)
-	{
-	    (activeplats[i])->status = (activeplats[i])->oldstatus;
-	    (activeplats[i])->thinker.function.acp1
-	      = (actionf_p1) T_PlatRaise;
-	}
+    if (activeplats[i]
+        && (activeplats[i])->tag == tag
+        && (activeplats[i])->status == in_stasis)
+    {
+        (activeplats[i])->status = (activeplats[i])->oldstatus;
+        (activeplats[i])->thinker.function.acp1
+          = (actionf_p1) T_PlatRaise;
+    }
 }
 
 void EV_StopPlat(line_t* line)
 {
-    int		j;
+    int        j;
 
     for (j = 0;j < MAXPLATS;j++)
-	if (activeplats[j]
-	    && ((activeplats[j])->status != in_stasis)
-	    && ((activeplats[j])->tag == line->tag))
-	{
-	    (activeplats[j])->oldstatus = (activeplats[j])->status;
-	    (activeplats[j])->status = in_stasis;
-	    (activeplats[j])->thinker.function.acv = (actionf_v)NULL;
-	}
+    if (activeplats[j]
+        && ((activeplats[j])->status != in_stasis)
+        && ((activeplats[j])->tag == line->tag))
+    {
+        (activeplats[j])->oldstatus = (activeplats[j])->status;
+        (activeplats[j])->status = in_stasis;
+        (activeplats[j])->thinker.function.acv = (actionf_v)NULL;
+    }
 }
 
 void P_AddActivePlat(plat_t* plat)
 {
-    int		i;
+    int        i;
 
     for (i = 0;i < MAXPLATS;i++)
-	if (activeplats[i] == NULL)
-	{
-	    activeplats[i] = plat;
-	    return;
-	}
+    if (activeplats[i] == NULL)
+    {
+        activeplats[i] = plat;
+        return;
+    }
     I_Error ("P_AddActivePlat: no more plats!");
 }
 
 void P_RemoveActivePlat(plat_t* plat)
 {
-    int		i;
+    int        i;
     for (i = 0;i < MAXPLATS;i++)
-	if (plat == activeplats[i])
-	{
-	    (activeplats[i])->sector->specialdata = NULL;
-	    P_RemoveThinker(&(activeplats[i])->thinker);
-	    activeplats[i] = NULL;
+    if (plat == activeplats[i])
+    {
+        (activeplats[i])->sector->specialdata = NULL;
+        P_RemoveThinker(&(activeplats[i])->thinker);
+        activeplats[i] = NULL;
 
-	    return;
-	}
+        return;
+    }
     I_Error ("P_RemoveActivePlat: can't find plat!");
 }

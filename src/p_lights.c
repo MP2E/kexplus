@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Handle Sector base lighting effects.
+//    Handle Sector base lighting effects.
 //
 //-----------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@
 
 void T_FireFlicker(fireflicker_t* flick)
 {
-    int	amount;
+    int    amount;
     
     if(--flick->count)
         return;
@@ -71,7 +71,7 @@ void T_FireFlicker(fireflicker_t* flick)
 
 void P_SpawnFireFlicker(sector_t* sector)
 {
-    fireflicker_t*	flick;
+    fireflicker_t*    flick;
     
     flick = Z_Malloc ( sizeof(*flick), PU_LEVSPEC, 0);
     
@@ -126,7 +126,7 @@ void T_LightFlash(lightflash_t* flash)
 //
 void P_SpawnLightFlash(sector_t* sector)
 {
-    lightflash_t*	flash;
+    lightflash_t*    flash;
     
     flash = Z_Malloc(sizeof(*flash), PU_LEVSPEC, 0);
     
@@ -204,7 +204,7 @@ void P_SpawnStrobeFlash(sector_t* sector, int speed)
 // Alternate variation of P_SpawnStrobeFlash
 //
 
-void P_SpawnStrobeAltFlash(sector_t* sector, int speed)		// 0x80015C44
+void P_SpawnStrobeAltFlash(sector_t* sector, int speed)        // 0x80015C44
 {
     strobe_t* flash;
     
@@ -228,8 +228,8 @@ void P_SpawnStrobeAltFlash(sector_t* sector, int speed)		// 0x80015C44
 
 void EV_StartLightStrobing(line_t* line)
 {
-    int			secnum;
-    sector_t*	sec;
+    int            secnum;
+    sector_t*    sec;
     
     secnum = -1;
     while((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
@@ -252,7 +252,7 @@ void EV_StartLightStrobing(line_t* line)
 // T_Glow
 //
 
-void T_Glow(glow_t*	g)
+void T_Glow(glow_t*    g)
 {
     sector_t *sector;
     
@@ -304,9 +304,9 @@ void T_Glow(glow_t*	g)
 // P_SpawnGlowingLight
 //
 
-void P_SpawnGlowingLight(sector_t*	sector, byte type)
+void P_SpawnGlowingLight(sector_t*    sector, byte type)
 {
-    glow_t*	g;
+    glow_t*    g;
     
     g = Z_Malloc( sizeof(*g), PU_LEVSPEC, 0);
     
@@ -436,7 +436,7 @@ void P_SpawnSequenceLight(sector_t* sector, dboolean first)
         for(i = 0; i < sector->linecount; i++)
         {
             headsector = sector->lines[i]->frontsector;
-            if(!headsector)	// this should never happen
+            if(!headsector)    // this should never happen
                 return;
             
             if(headsector == sector)

@@ -44,37 +44,37 @@
 //if list of actions for menu>=MAX_MENUACTION_LENGTH then won't display any more
 #define MAX_MENUACTION_LENGTH 25
 
-#define MAX_CURRENTACTIONS	16
+#define MAX_CURRENTACTIONS    16
 
 typedef struct action_s action_t;
 
 struct action_s
 {
-    char			*name;
-    actionproc_t	proc;
-    action_t		*children[2];
-    action_t		*parent;
-    int64			data;
+    char            *name;
+    actionproc_t    proc;
+    action_t        *children[2];
+    action_t        *parent;
+    int64            data;
 };
 
-static action_t	*Actions=NULL;
+static action_t    *Actions=NULL;
 
 typedef struct alist_s alist_t;
 
 struct alist_s
 {
-    char		*buff;
-    char		*cmd;
-    alist_t		*next;
-    int			refcount;
+    char        *buff;
+    char        *cmd;
+    alist_t        *next;
+    int            refcount;
     //should allocate to required size?
-    char		*param[MAX_ACTIONPARAM+1];//NULL terminated list
+    char        *param[MAX_ACTIONPARAM+1];//NULL terminated list
 };
 
 void G_RunAlias(int64 data, char **param);
 void G_DoOptimizeActionTree(void);
 
-alist_t	*CurrentActions[MAX_CURRENTACTIONS];
+alist_t    *CurrentActions[MAX_CURRENTACTIONS];
 
 //these must be in the order key, joy, mouse, mouse2, other
 #define KEY_ACTIONPOS       0
@@ -82,11 +82,11 @@ alist_t	*CurrentActions[MAX_CURRENTACTIONS];
 #define MOUSE2_ACTIONPOS    (MOUSE_ACTIONPOS+MOUSE_BUTTONS)
 #define NUM_ACTIONS         (MOUSE2_ACTIONPOS+MOUSE_BUTTONS)
 
-alist_t	*AllActions[NUM_ACTIONS];
+alist_t    *AllActions[NUM_ACTIONS];
 
-alist_t	**KeyActions;
-alist_t	**MouseActions;
-alist_t	**Mouse2Actions;
+alist_t    **KeyActions;
+alist_t    **MouseActions;
+alist_t    **Mouse2Actions;
 
 static int  JoyButtons = 0;
 static int  MouseButtons = 0;
@@ -174,7 +174,7 @@ char *FindWhitespace(char *p)
 
 alist_t *DuplicateActionList(alist_t *al)
 {
-    alist_t	*p;
+    alist_t    *p;
     
     p = al;
     while(p)
@@ -341,7 +341,7 @@ void TryActions(alist_t *al, dboolean up)
 
 void DerefActionList(alist_t *al)
 {
-    alist_t	*next;
+    alist_t    *next;
     
     while(al)
     {
@@ -427,7 +427,7 @@ dboolean G_ActionResponder(event_t *ev)
     case ev_mouseup:
         ProcessButtonActions(MouseActions, ev->data1, MouseButtons);
         MouseButtons = ev->data1;
-	break;
+    break;
     case ev_mouse:
         ProcessButtonActions(MouseActions, ev->data1, MouseButtons);
         MouseButtons = ev->data1;
@@ -547,7 +547,7 @@ alist_t* ParseActions(char *actions)
 
 void G_ExecuteCommand(char *action)
 {
-    alist_t	*al;
+    alist_t    *al;
     
     al = ParseActions(action);
     al = DoRunActions(al, true);
@@ -564,7 +564,7 @@ void G_ExecuteCommand(char *action)
 
 alist_t **FindActionControler(char *name, alist_t **actions, int numbuttons)
 {
-    int		i;
+    int        i;
     
     if((name[0] >= '1') && (name[0] <= '9'))
     {
@@ -613,7 +613,7 @@ alist_t **G_FindKeyByName(char *key)
 
 void G_BindAction(alist_t **plist, char *action)
 {
-    alist_t	*al;
+    alist_t    *al;
     
     al = ParseActions(action);
     
@@ -697,7 +697,7 @@ void G_BindActionByName(char *key, char *action)
 
 static void OutputActions(FILE * fh, alist_t *al, char *name)
 {
-    int		i;
+    int        i;
     
     fprintf(fh, "bind %s \"", name);
     while(al)
@@ -787,7 +787,7 @@ void G_PrintActions(alist_t *al)
 
 void G_ShowBinding(char *key)
 {
-    alist_t	**alist;
+    alist_t    **alist;
     
     alist = G_FindKeyByName(key);
     if(!alist)
@@ -1024,7 +1024,7 @@ void G_RunAlias(int64 data, char **param)
 // G_ShowAliases
 //
 
-void G_ShowAliases(action_t	*action)
+void G_ShowAliases(action_t    *action)
 {
     if(!action)
         return;

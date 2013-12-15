@@ -46,7 +46,7 @@ void R_ClearSprites(void);
 void R_RenderPlayerSprites(player_t *player);
 void R_DrawThingBBox(void);
 
-extern spritedef_t	*spriteinfo;
-extern int			numsprites;
+extern spritedef_t    *spriteinfo;
+extern int            numsprites;
 
 #endif

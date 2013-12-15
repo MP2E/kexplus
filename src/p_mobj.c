@@ -527,7 +527,7 @@ dboolean P_OnMobjZ(mobj_t* mobj)
                     mobj->blockflag |= BF_MOBJSTAND;
                     mobj->player->onground = 1;
                     mobj->momz = 0;
-                }				
+                }                
                 else mobj->momz = 0;
             }
         }
@@ -740,7 +740,7 @@ void P_SpawnPlayer(mapthing_t* mthing)
     
     // not playing?
     if(!playeringame[mthing->type-1])
-        return;	
+        return;    
     
     p = &players[mthing->type-1];
     
@@ -904,7 +904,7 @@ void P_CreateFadeOutThinker(mobj_t* mobj, line_t* line)
 
 int EV_SpawnMobjTemplate(line_t* line)
 {
-    mobj_t*	mobj;
+    mobj_t*    mobj;
     int i;
     dboolean ok = false;
     mapthing_t* mthing;

@@ -24,7 +24,7 @@
 #ifndef G_ACTIONS_H
 #define G_ACTIONS_H
 
-#define MAX_ACTIONPARAM		2
+#define MAX_ACTIONPARAM        2
 
 typedef void (*actionproc_t)(int64 data, char **param);
 
@@ -44,6 +44,6 @@ int         G_ListCommands(void);
 void        G_OutputBindings(FILE *fh);
 void        G_DoCmdMouseMove(int x, int y);
 
-extern dboolean	ButtonAction;
+extern dboolean    ButtonAction;
 
 #endif

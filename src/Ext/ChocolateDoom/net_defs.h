@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 Simon Howard
@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 #ifndef NET_DEFS_H
-#define NET_DEFS_H 
+#define NET_DEFS_H
 
 #include "doomdef.h"
 #include "doomtype.h"
@@ -94,7 +94,7 @@ struct _net_addr_s
 
 // packet types
 
-typedef enum 
+typedef enum
 {
     NET_PACKET_TYPE_SYN,
     NET_PACKET_TYPE_ACK,
@@ -115,7 +115,7 @@ typedef enum
     NET_PACKET_TYPE_CHEAT_REQUEST,
 } net_packet_type_t;
 
-typedef struct 
+typedef struct
 {
     int ticdup;
     int extratics;
@@ -123,7 +123,7 @@ typedef struct
     int nomonsters;
     int fast_monsters;
     int respawn_monsters;
-	int respawn_items;
+    int respawn_items;
     int map;
     int skill;
     int gameversion;
@@ -144,7 +144,7 @@ typedef struct
 #define NET_TICDIFF_CONSISTANCY  (1 << 4)
 #define NET_TICDIFF_CHATCHAR     (1 << 5)
 #define NET_TICDIFF_BUTTONS2     (1 << 6)
-#define NET_TICDIFF_PITCH		 (1 << 7)
+#define NET_TICDIFF_PITCH         (1 << 7)
 
 typedef struct
 {
@@ -154,7 +154,7 @@ typedef struct
 
 // Complete set of ticcmds from all players
 
-typedef struct 
+typedef struct
 {
     signed int latency;
     unsigned int seq;

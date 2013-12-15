@@ -46,9 +46,9 @@
 
 typedef struct
 {
-    int		len;
-    dword	color;
-    char	line[1];
+    int        len;
+    dword    color;
+    char    line[1];
 } conline_t;
 
 enum
@@ -222,7 +222,7 @@ void CON_AddText(char *text)
 void CON_Printf(rcolor clr, const char *s, ...)
 {
     static char msg[MAX_MESSAGE_SIZE];
-    va_list	va;
+    va_list    va;
     
     va_start(va, s);
     vsprintf(msg, s, va);
@@ -239,7 +239,7 @@ void CON_Printf(rcolor clr, const char *s, ...)
 void CON_Warnf(const char *s, ...)
 {
     static char msg[MAX_MESSAGE_SIZE];
-    va_list	va;
+    va_list    va;
     
     va_start(va, s);
     vsprintf(msg, s, va);
@@ -258,7 +258,7 @@ void CON_DPrintf(const char *s, ...)
     if(devparm)
     {
         static char msg[MAX_MESSAGE_SIZE];
-        va_list	va;
+        va_list    va;
         
         va_start(va, s);
         vsprintf(msg, s, va);

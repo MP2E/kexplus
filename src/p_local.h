@@ -32,44 +32,44 @@
 #include "m_menu.h"
 #include "t_bsp.h"
 
-#define FLOATSPEED		(FRACUNIT*4)
+#define FLOATSPEED        (FRACUNIT*4)
 
 
-#define MAXHEALTH		100
-#define VIEWHEIGHT		(56*FRACUNIT)	//villsa: changed from 41 to 56
+#define MAXHEALTH        100
+#define VIEWHEIGHT        (56*FRACUNIT)    //villsa: changed from 41 to 56
 
 // mapblocks are used to check movement
 // against lines and things
-#define MAPBLOCKUNITS	128
-#define MAPBLOCKSIZE	(MAPBLOCKUNITS*FRACUNIT)
-#define MAPBLOCKSHIFT	(FRACBITS+7)
-#define MAPBMASK		(MAPBLOCKSIZE-1)
-#define MAPBTOFRAC		(MAPBLOCKSHIFT-FRACBITS)
+#define MAPBLOCKUNITS    128
+#define MAPBLOCKSIZE    (MAPBLOCKUNITS*FRACUNIT)
+#define MAPBLOCKSHIFT    (FRACBITS+7)
+#define MAPBMASK        (MAPBLOCKSIZE-1)
+#define MAPBTOFRAC        (MAPBLOCKSHIFT-FRACBITS)
 
 
 // player radius for movement checking
-#define PLAYERRADIUS	19*FRACUNIT
+#define PLAYERRADIUS    19*FRACUNIT
 
 // MAXRADIUS is for precalculated sector block boxes
 // the spider demon is larger,
 // but we do not have any moving sectors nearby
-#define MAXRADIUS		32*FRACUNIT
+#define MAXRADIUS        32*FRACUNIT
 
-#define GRAVITY		FRACUNIT
-#define MAXMOVE		(16*FRACUNIT)           // [d64] changed from 30 to 16
+#define GRAVITY        FRACUNIT
+#define MAXMOVE        (16*FRACUNIT)           // [d64] changed from 30 to 16
 #define STOPSPEED   0x1000
 #define FRICTION    0xd200
 
-#define USERANGE		(64*FRACUNIT)
-#define MELEERANGE		(80*FRACUNIT)       // [d64] changed from 64 to 80
+#define USERANGE        (64*FRACUNIT)
+#define MELEERANGE        (80*FRACUNIT)       // [d64] changed from 64 to 80
 #define ATTACKRANGE     (16*64*FRACUNIT)
-#define MISSILERANGE	(32*64*FRACUNIT)
-#define LASERRANGE		(4096*FRACUNIT)
-#define LASERAIMHEIGHT	(40*FRACUNIT)
-#define LASERDISTANCE	(30*FRACUNIT)
+#define MISSILERANGE    (32*64*FRACUNIT)
+#define LASERRANGE        (4096*FRACUNIT)
+#define LASERAIMHEIGHT    (40*FRACUNIT)
+#define LASERDISTANCE    (30*FRACUNIT)
 
 // follow a player
-#define	BASETHRESHOLD	 	90
+#define    BASETHRESHOLD         90
 
 
 
@@ -78,8 +78,8 @@
 //
 
 // both the head and tail of the thinker list
-extern	thinker_t	thinkercap;
-extern	mobj_t		mobjhead;
+extern    thinker_t    thinkercap;
+extern    mobj_t        mobjhead;
 
 void P_InitThinkers(void);
 void P_AddThinker(thinker_t* thinker);
@@ -180,56 +180,56 @@ void P_NoiseAlert (mobj_t* target, mobj_t* emmiter);
 //
 typedef struct
 {
-    fixed_t	x;
-    fixed_t	y;
-    fixed_t	dx;
-    fixed_t	dy;
+    fixed_t    x;
+    fixed_t    y;
+    fixed_t    dx;
+    fixed_t    dy;
     
 } divline_t;
 
 typedef struct
 {
-    fixed_t	frac;		// along trace line
-    dboolean	isaline;
+    fixed_t    frac;        // along trace line
+    dboolean    isaline;
     union {
-        mobj_t*	thing;
-        line_t*	line;
-    }			d;
+        mobj_t*    thing;
+        line_t*    line;
+    }            d;
 } intercept_t;
 
-#define MAXINTERCEPTS	128
+#define MAXINTERCEPTS    128
 
-extern intercept_t	intercepts[MAXINTERCEPTS];
-extern intercept_t*	intercept_p;
+extern intercept_t    intercepts[MAXINTERCEPTS];
+extern intercept_t*    intercept_p;
 
 typedef dboolean (*traverser_t) (intercept_t *in);
 
 fixed_t P_AproxDistance (fixed_t dx, fixed_t dy);
-int 	P_PointOnLineSide (fixed_t x, fixed_t y, line_t* line);
-int 	P_PointOnDivlineSide (fixed_t x, fixed_t y, divline_t* line);
-void 	P_MakeDivline (line_t* li, divline_t* dl);
+int     P_PointOnLineSide (fixed_t x, fixed_t y, line_t* line);
+int     P_PointOnDivlineSide (fixed_t x, fixed_t y, divline_t* line);
+void     P_MakeDivline (line_t* li, divline_t* dl);
 fixed_t P_InterceptVector (divline_t* v2, divline_t* v1);
-void	P_GetIntersectPoint(fixed_t *s1, fixed_t *s2, fixed_t *x, fixed_t *y);
-int 	P_BoxOnLineSide (fixed_t* tmbox, line_t* ld);
+void    P_GetIntersectPoint(fixed_t *s1, fixed_t *s2, fixed_t *x, fixed_t *y);
+int     P_BoxOnLineSide (fixed_t* tmbox, line_t* ld);
 
-extern fixed_t		opentop;
-extern fixed_t 		openbottom;
-extern fixed_t		openrange;
-extern fixed_t		lowfloor;
+extern fixed_t        opentop;
+extern fixed_t         openbottom;
+extern fixed_t        openrange;
+extern fixed_t        lowfloor;
 
-void 		P_LineOpening (line_t* linedef);
-dboolean	P_BlockLinesIterator (int x, int y, dboolean(*func)(line_t*) );
-dboolean	P_BlockThingsIterator (int x, int y, dboolean(*func)(mobj_t*) );
+void         P_LineOpening (line_t* linedef);
+dboolean    P_BlockLinesIterator (int x, int y, dboolean(*func)(line_t*) );
+dboolean    P_BlockThingsIterator (int x, int y, dboolean(*func)(mobj_t*) );
 
-#define PT_ADDLINES		1
-#define PT_ADDTHINGS	2
-#define PT_EARLYOUT		4
+#define PT_ADDLINES        1
+#define PT_ADDTHINGS    2
+#define PT_EARLYOUT        4
 
-extern divline_t	trace;
+extern divline_t    trace;
 
-dboolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int	flags, dboolean(*trav)(intercept_t *));
-void	P_UnsetThingPosition (mobj_t* thing);
-void	P_SetThingPosition (mobj_t* thing);
+dboolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int    flags, dboolean(*trav)(intercept_t *));
+void    P_UnsetThingPosition (mobj_t* thing);
+void    P_SetThingPosition (mobj_t* thing);
 
 
 //
@@ -241,7 +241,7 @@ void	P_SetThingPosition (mobj_t* thing);
 extern dboolean     floatok;
 extern fixed_t      tmfloorz;
 extern fixed_t      tmceilingz;
-extern	line_t*     tmhitline;
+extern    line_t*     tmhitline;
 
 dboolean    P_CheckPosition (mobj_t *thing, fixed_t x, fixed_t y);
 dboolean    P_TryMove (mobj_t* thing, fixed_t x, fixed_t y);
@@ -256,37 +256,37 @@ void        P_CheckChaseCamPosition(mobj_t* target, mobj_t* camera, fixed_t x, f
 
 #define MAXSPECIALCROSS 64
 
-extern mobj_t*  linetarget;	// who got hit (or NULL)
+extern mobj_t*  linetarget;    // who got hit (or NULL)
 extern mobj_t*  blockthing;
 extern fixed_t  aimfrac;
 extern line_t*  spechit[MAXSPECIALCROSS];
 extern int      numspechit;
 
-fixed_t P_AimLineAttack(mobj_t*	t1, angle_t angle, fixed_t zheight, fixed_t distance);
-void	P_LineAttack(mobj_t* t1,angle_t angle, fixed_t distance, fixed_t slope, int damage);
-void	P_RadiusAttack(mobj_t* spot, mobj_t* source, int damage);
+fixed_t P_AimLineAttack(mobj_t*    t1, angle_t angle, fixed_t zheight, fixed_t distance);
+void    P_LineAttack(mobj_t* t1,angle_t angle, fixed_t distance, fixed_t slope, int damage);
+void    P_RadiusAttack(mobj_t* spot, mobj_t* source, int damage);
 
 
 
 //
 // P_SETUP
 //
-extern byte*		rejectmatrix;	// for fast sight rejection
-extern short*		blockmaplump;	// offsets in blockmap are from here
-extern short*		blockmap;
-extern int			bmapwidth;
-extern int			bmapheight;	// in mapblocks
-extern fixed_t		bmaporgx;
-extern fixed_t		bmaporgy;	// origin of block map
-extern mobj_t**		blocklinks;	// for thing chains
+extern byte*        rejectmatrix;    // for fast sight rejection
+extern short*        blockmaplump;    // offsets in blockmap are from here
+extern short*        blockmap;
+extern int            bmapwidth;
+extern int            bmapheight;    // in mapblocks
+extern fixed_t        bmaporgx;
+extern fixed_t        bmaporgy;    // origin of block map
+extern mobj_t**        blocklinks;    // for thing chains
 
 
 
 //
 // P_INTER
 //
-extern int		maxammo[NUMAMMO];
-extern int		clipammo[NUMAMMO];
+extern int        maxammo[NUMAMMO];
+extern int        clipammo[NUMAMMO];
 
 extern int infraredFactor;
 
@@ -300,6 +300,6 @@ void P_DamageMobj(mobj_t* target, mobj_t* inflictor, mobj_t* source, int damage)
 #include "p_spec.h"
 
 
-#endif	// __P_LOCAL__
+#endif    // __P_LOCAL__
 
 

@@ -38,8 +38,8 @@
 #pragma interface
 #endif
 
-#define MAXNETNODES		8	// Max computers/players in a game.
-#define BACKUPTICS		128	// Networking and tick handling related.
+#define MAXNETNODES        8    // Max computers/players in a game.
+#define BACKUPTICS        128    // Networking and tick handling related.
 
 
 // Create any new ticcmds and broadcast to other players.
@@ -51,7 +51,7 @@ void D_QuitNetGame (void);
 
 extern dboolean ShowGun;
 extern dboolean drone;
-extern dboolean	net_cl_new_sync;
+extern dboolean    net_cl_new_sync;
 
 #endif
 

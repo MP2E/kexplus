@@ -29,7 +29,7 @@
 #include "SDL.h"
 #include "d_event.h"
 
-#define SDL_BPP		32
+#define SDL_BPP        32
 
 ////////////Video///////////////
 

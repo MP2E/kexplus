@@ -226,10 +226,10 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 
 int R_PointOnSide(fixed_t x, fixed_t y, node_t* node)
 {
-    fixed_t	dx;
-    fixed_t	dy;
-    fixed_t	left;
-    fixed_t	right;
+    fixed_t    dx;
+    fixed_t    dy;
+    fixed_t    left;
+    fixed_t    right;
     
     if (!node->dx)
     {
@@ -322,9 +322,9 @@ void R_Init(void)
 
 subsector_t* R_PointInSubsector(fixed_t x, fixed_t y)
 {
-    node_t*	node;
-    int		side;
-    int		nodenum;
+    node_t*    node;
+    int        side;
+    int        nodenum;
     
     // single subsector is a special case
     if (!numnodes)
@@ -383,9 +383,9 @@ void R_PrecacheLevel(void)
 {
     char *texturepresent;
     char *spritepresent;
-    int	i;
+    int    i;
     int j;
-    int	p;
+    int    p;
     int num;
     mobj_t* mo;
 
@@ -456,7 +456,7 @@ void R_PrecacheLevel(void)
     {
         if(spritepresent[i])
         {
-            spritedef_t	*sprdef;
+            spritedef_t    *sprdef;
             int k;
 
             sprdef = &spriteinfo[i];
@@ -575,7 +575,7 @@ void R_DrawWireframe(dboolean enable)
 {
     if (enable == true)
         CON_CvarSetValue(r_fillmode.name, 0);
-    else	//Turn off wireframe and set device back to the way it was
+    else    //Turn off wireframe and set device back to the way it was
     {
         CON_CvarSetValue(r_fillmode.name, 1);
         dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -881,7 +881,7 @@ void R_RenderPlayerView(player_t *player)
     if(r_drawfill.value >= 1)
     {
         dglClearColor(1, 0, 1, 0);
-		dglClear(GL_COLOR_BUFFER_BIT);
+        dglClear(GL_COLOR_BUFFER_BIT);
         bRenderSky = false;
     }
 

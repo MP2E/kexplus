@@ -1187,7 +1187,7 @@ void I_InitSequencer(void)
     if(lock == NULL)
     {
         CON_Warnf("I_InitSequencer: failed to create mutex");
-	return;
+    return;
     }
 
     //
@@ -1258,14 +1258,14 @@ void I_InitSequencer(void)
     // 20120203 villsa - done :)
     {
         char *sfpath = NULL;
-	char *sfdirs[] = { ".", "/usr/local/share/games/doom", "/usr/share/games/doom", "/usr/local/share/doom" };
-	int ndirs;
+    char *sfdirs[] = { ".", "/usr/local/share/games/doom", "/usr/share/games/doom", "/usr/local/share/doom" };
+    int ndirs;
 
-	for(ndirs = 0; ndirs < earrlen(sfdirs); ndirs++)
-	{
-	    if (!sfpath)
-	        sfpath = W_SearchDirectoryForFile(sfdirs[ndirs], s_soundfont.string);
-	}
+    for(ndirs = 0; ndirs < earrlen(sfdirs); ndirs++)
+    {
+        if (!sfpath)
+            sfpath = W_SearchDirectoryForFile(sfdirs[ndirs], s_soundfont.string);
+    }
 
         I_Printf("Found SoundFont %s\n", sfpath);
         doomseq.sfont_id = fluid_synth_sfload(doomseq.synth, sfpath, 1);

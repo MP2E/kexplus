@@ -113,8 +113,8 @@ static dboolean DL_ProcessAutomap(vtxlist_t* vl, int* drawcount)
 {
     leaf_t* leaf;
     rcolor color;
-    fixed_t	tx;
-    fixed_t	ty;
+    fixed_t    tx;
+    fixed_t    ty;
     vtx_t *v;
     int j;
     int count;
@@ -368,7 +368,7 @@ void AM_DrawTriangle(mobj_t* mobj, float scale, dboolean solid, byte r, byte g, 
 
 void AM_DrawSprite(mobj_t* thing, float scale)
 {
-    spritedef_t	*sprdef;
+    spritedef_t    *sprdef;
     spriteframe_t *sprframe;
     fixed_t x;
     fixed_t y;

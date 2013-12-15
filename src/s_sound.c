@@ -101,8 +101,8 @@ void S_Init(void)
         CON_DPrintf("Music disabled\n");
     }
 
-	if(nosound && nomusic)
-		return;
+    if(nosound && nomusic)
+        return;
 
     I_InitSequencer();
 
@@ -171,7 +171,7 @@ void S_StopMusic(void)
 void S_ResetSound(void)
 {
     if(nosound && nomusic)
-		return;
+        return;
 
     I_ResetSound();
 }
@@ -183,7 +183,7 @@ void S_ResetSound(void)
 void S_PauseSound(void)
 {
     if(nosound && nomusic)
-		return;
+        return;
 
     I_PauseSound();
 }
@@ -195,7 +195,7 @@ void S_PauseSound(void)
 void S_ResumeSound(void)
 {
     if(nosound && nomusic)
-		return;
+        return;
 
     I_ResumeSound();
 }
@@ -335,8 +335,8 @@ int S_AdjustSoundParams(fixed_t x, fixed_t y, int* vol, int* sep)
 {
     fixed_t     approx_dist;
     angle_t     angle;
-    mobj_t*		listener;
-    player_t*	player;
+    mobj_t*        listener;
+    player_t*    player;
     
     player = &players[consoleplayer];
     

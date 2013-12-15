@@ -75,7 +75,7 @@ fixed_t R_Interpolate(fixed_t ticframe, fixed_t updateframe, dboolean enable);
 void R_SetupLevel(void);
 void R_SetViewAngleOffset(angle_t angle);
 void R_SetViewOffset(int offset);
-void R_DrawWireframe(dboolean enable);	//villsa
+void R_DrawWireframe(dboolean enable);    //villsa
 void R_RegisterCvars(void);
 void R_SetViewMatrix(void);
 void R_RenderWorld(void);

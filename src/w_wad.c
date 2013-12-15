@@ -23,7 +23,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Handles WAD file header, directory, lump I/O.
+//    Handles WAD file header, directory, lump I/O.
 //
 //-----------------------------------------------------------------------------
 
@@ -79,17 +79,17 @@
 typedef struct
 {
     // Should be "IWAD" or "PWAD".
-    char		identification[4];
-    int			numlumps;
-    int			infotableofs;
+    char        identification[4];
+    int            numlumps;
+    int            infotableofs;
 } PACKEDATTR wadinfo_t;
 
 
 typedef struct
 {
-    int			filepos;
-    int			size;
-    char		name[8];
+    int            filepos;
+    int            size;
+    char        name[8];
 } PACKEDATTR filelump_t;
 
 #ifdef _MSC_VER
@@ -98,19 +98,19 @@ typedef struct
 
 void W_IwadChecksum(void);
 
-#define MAX_MEMLUMPS	16
+#define MAX_MEMLUMPS    16
 
 // Location of each lump on disk.
-lumpinfo_t*	lumpinfo;
-int			numlumps;
+lumpinfo_t*    lumpinfo;
+int            numlumps;
 
 #define CopyLumps(dest, src, count) dmemcpy(dest, src, (count)*sizeof(lumpinfo_t))
 #define CopyLump(dest, src) CopyLumps(dest, src, 1)
 
 void ExtractFileBase(char* path, char* dest)
 {
-    char*	src;
-    int		length;
+    char*    src;
+    int        length;
     
     src = path + dstrlen(path) - 1;
     
@@ -302,20 +302,20 @@ wad_file_t *W_AddFile(char *filename)
     // open the file and add to directory
 
     wadfile = W_OpenFile(filename);
-		
+        
     if(wadfile == NULL)
     {
-	    I_Printf("W_AddFile: couldn't open %s\n", filename);
-	    return NULL;
+        I_Printf("W_AddFile: couldn't open %s\n", filename);
+        return NULL;
     }
 
     I_Printf("W_AddFile: Adding %s\n", filename);
 
     startlump = numlumps;
-	
+    
     if(strcasecmp(filename+dstrlen(filename)-3 , "wad"))
     {
-	    // single lump file
+        // single lump file
 
         // fraggle: Swap the filepos and size here.  The WAD directory
         // parsing code expects a little-endian directory, so will swap
@@ -357,7 +357,7 @@ wad_file_t *W_AddFile(char *filename)
         I_Error("W_AddFile: Couldn't realloc lumpinfo");
 
     lump_p = &lumpinfo[startlump];
-	
+    
     filerover = fileinfo;
 
     for(i = startlump; i < numlumps; ++i)
@@ -371,7 +371,7 @@ wad_file_t *W_AddFile(char *filename)
         ++lump_p;
         ++filerover;
     }
-	
+    
     Z_Free(fileinfo);
 
     W_HashLumps();
@@ -506,7 +506,7 @@ int W_CheckNumForName(const char* name)
 
 int W_GetNumForName(const char* name)
 {
-    int	i;
+    int    i;
     
     i = W_CheckNumForName(name);
     
@@ -539,18 +539,18 @@ void W_ReadLump(int lump, void *dest)
 {
     int c;
     lumpinfo_t *l;
-	
+    
     if(lump >= numlumps)
         I_Error("W_ReadLump: %i >= numlumps", lump);
 
     l = lumpinfo+lump;
-	
+    
     I_BeginRead();
-	
+    
     c = W_Read(l->wadfile, l->position, dest, l->size);
 
     if(c < l->size)
-        I_Error("W_ReadLump: only read %i of %i on lump %i", c, l->size, lump);	
+        I_Error("W_ReadLump: only read %i of %i on lump %i", c, l->size, lump);    
 }
 
 //

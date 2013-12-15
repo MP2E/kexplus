@@ -23,8 +23,8 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//		Weapon sprite animation, weapon objects.
-//		Action functions for weapons.
+//        Weapon sprite animation, weapon objects.
+//        Action functions for weapons.
 //
 //-----------------------------------------------------------------------------
 
@@ -44,30 +44,30 @@
 #include "m_misc.h"
 
 
-#define LOWERSPEED				FRACUNIT*7
-#define RAISESPEED				FRACUNIT*7
+#define LOWERSPEED                FRACUNIT*7
+#define RAISESPEED                FRACUNIT*7
 
-#define WEAPONBOTTOM			128*FRACUNIT
-#define WEAPONTOP				32*FRACUNIT
+#define WEAPONBOTTOM            128*FRACUNIT
+#define WEAPONTOP                32*FRACUNIT
 
-#define RECOILPITCH				0x2AA8000	//villsa
+#define RECOILPITCH                0x2AA8000    //villsa
 
 
 // plasma cells for a bfg attack
-#define BFGCELLS				40
+#define BFGCELLS                40
 
-weaponinfo_t	weaponinfo[NUMWEAPONS] =
+weaponinfo_t    weaponinfo[NUMWEAPONS] =
 {
-    { am_noammo,	S_708, S_707, S_705, S_709, S_000 },	// chainsaw
-    { am_noammo,	S_714, S_713, S_712, S_715, S_000 },	// fist
-    { am_clip,		S_722, S_721, S_720, S_723, S_728 },	// pistol
-    { am_shell,		S_731, S_730, S_729, S_732, S_738 },	// shotgun
-    { am_shell,		S_741, S_740, S_739, S_742, S_752 },	// super shotgun
-    { am_clip,		S_755, S_754, S_753, S_756, S_759 },	// chaingun
-    { am_misl,		S_763, S_762, S_761, S_764, S_767 },	// rocket launcher
-    { am_cell,		S_773, S_772, S_771, S_775, S_000 },	// plasma gun
-    { am_cell,		S_783, S_782, S_781, S_784, S_788 },	// bfg
-    { am_cell,		S_793, S_792, S_791, S_794, S_796 }		// laser rifle
+    { am_noammo,    S_708, S_707, S_705, S_709, S_000 },    // chainsaw
+    { am_noammo,    S_714, S_713, S_712, S_715, S_000 },    // fist
+    { am_clip,        S_722, S_721, S_720, S_723, S_728 },    // pistol
+    { am_shell,        S_731, S_730, S_729, S_732, S_738 },    // shotgun
+    { am_shell,        S_741, S_740, S_739, S_742, S_752 },    // super shotgun
+    { am_clip,        S_755, S_754, S_753, S_756, S_759 },    // chaingun
+    { am_misl,        S_763, S_762, S_761, S_764, S_767 },    // rocket launcher
+    { am_cell,        S_773, S_772, S_771, S_775, S_000 },    // plasma gun
+    { am_cell,        S_783, S_782, S_781, S_784, S_788 },    // bfg
+    { am_cell,        S_793, S_792, S_791, S_794, S_796 }        // laser rifle
 };
 
 static int laserCells = 1;
@@ -122,7 +122,7 @@ static dboolean pls_buzzing = false;    // [kex] for keeping track when the buzz
 
 void P_BringUpWeapon(player_t* player)
 {
-    statenum_t	newstate;
+    statenum_t    newstate;
     
     if(player->pendingweapon == wp_nochange)
         player->pendingweapon = player->readyweapon;
@@ -185,11 +185,11 @@ dboolean P_CheckAmmo(player_t* player)
     if(player->readyweapon == wp_bfg)
         count = BFGCELLS;
     else if(player->readyweapon == wp_supershotgun)
-        count = 2;		// Double barrel.
+        count = 2;        // Double barrel.
     else if(player->readyweapon == wp_laser)
         count = laserCells;
     else
-        count = 1;		// Regular.
+        count = 1;        // Regular.
     
     // Some do not need ammunition anyway.
     // Return if current ammunition sufficient.
@@ -263,8 +263,8 @@ dboolean P_CheckAmmo(player_t* player)
 //
 void P_FireWeapon(player_t* player)
 {
-    statenum_t	newstate;
-    pspdef_t*	psp;
+    statenum_t    newstate;
+    pspdef_t*    psp;
     
     if (!P_CheckAmmo (player))
         return;
@@ -277,7 +277,7 @@ void P_FireWeapon(player_t* player)
         newstate++;
     P_SetPsprite (player, ps_weapon, newstate);
     P_NoiseAlert (player->mo, player->mo);
-    psp->sx = FRACUNIT;		//villsa
+    psp->sx = FRACUNIT;        //villsa
     psp->sy = WEAPONTOP;
 }
 
@@ -291,8 +291,8 @@ void P_FireWeapon(player_t* player)
 
 void A_WeaponReady(player_t* player, pspdef_t* psp)
 {
-    statenum_t	newstate;
-    int 		angle;
+    statenum_t    newstate;
+    int         angle;
     
     // get out of attack state
     if (player->mo->state == &states[S_006]
@@ -302,18 +302,18 @@ void A_WeaponReady(player_t* player, pspdef_t* psp)
     }
     
     // check for change
-    //	if player is dead, put the weapon away
+    //    if player is dead, put the weapon away
     if (player->pendingweapon != wp_nochange || !player->health)
     {
         // change weapon
-        //	(pending weapon should allready be validated)
+        //    (pending weapon should allready be validated)
         newstate = weaponinfo[player->readyweapon].downstate;
         P_SetPsprite (player, ps_weapon, newstate);
         return;
     }
     
     // check for fire
-    //	the missile launcher and bfg do not auto fire
+    //    the missile launcher and bfg do not auto fire
     if (player->cmd.buttons & BT_ATTACK)
     {
         if ( !player->attackdown
@@ -345,7 +345,7 @@ void A_ReFire(player_t* player, pspdef_t* psp)
 {
     
     // check for fire
-    //	(if a weaponchange is pending, let it go through instead)
+    //    (if a weaponchange is pending, let it go through instead)
     if ( (player->cmd.buttons & BT_ATTACK)
         && player->pendingweapon == wp_nochange
         && player->health)
@@ -374,7 +374,7 @@ void A_CheckReload(player_t* player, pspdef_t* psp)
 //
 // A_Lower
 // Lowers current weapon,
-//	and changes weapon at bottom.
+//    and changes weapon at bottom.
 //
 void A_Lower(player_t* player, pspdef_t* psp)
 {
@@ -423,7 +423,7 @@ void A_Lower(player_t* player, pspdef_t* psp)
 //
 void A_Raise(player_t* player, pspdef_t* psp)
 {
-    statenum_t	newstate;
+    statenum_t    newstate;
     
     psp->sy -= RAISESPEED;
     if (psp->sy > WEAPONTOP )
@@ -432,7 +432,7 @@ void A_Raise(player_t* player, pspdef_t* psp)
     psp->sy = WEAPONTOP;
     
     // The weapon has been raised all the way,
-    //	so change to the ready state.
+    //    so change to the ready state.
     newstate = weaponinfo[player->readyweapon].readystate;
     P_SetPsprite(player, ps_weapon, newstate);
 }
@@ -466,9 +466,9 @@ void A_GunFlash(player_t* player, pspdef_t* psp)
 
 void A_Punch(player_t* player, pspdef_t* psp)
 {
-    angle_t 	angle;
-    int 		damage;
-    int 		slope = 0;
+    angle_t     angle;
+    int         damage;
+    int         slope = 0;
     
     damage = ((P_Random() & 7) + 1) * 3;
     
@@ -498,9 +498,9 @@ void A_Punch(player_t* player, pspdef_t* psp)
 
 void A_Saw(player_t* player, pspdef_t* psp)
 {
-    angle_t 	angle;
-    int 		damage;
-    int 		slope = 0;
+    angle_t     angle;
+    int         damage;
+    int         slope = 0;
     
     damage = ((P_Random() & 7) + 1) * 3;
     angle = player->mo->angle;
@@ -641,8 +641,8 @@ void P_BulletSlope(mobj_t* mo)
 //
 void P_GunShot(mobj_t* mo, dboolean accurate)
 {
-    angle_t 	angle;
-    int 		damage;
+    angle_t     angle;
+    int         damage;
     
     damage = ((P_Random()&3)<<2)+4;
     angle = mo->angle;
@@ -705,9 +705,9 @@ void A_FireShotgun(player_t* player, pspdef_t* psp)
 
 void A_FireShotgun2(player_t* player, pspdef_t* psp)
 {
-    int 		i;
-    angle_t 	angle;
-    int 		damage;
+    int         i;
+    angle_t     angle;
+    int         damage;
     
     S_StartSound(player->mo, sfx_sht2fire);
     P_SetMobjState(player->mo, S_007);
@@ -858,10 +858,10 @@ void A_CloseShotgun2(player_t* player, pspdef_t* psp)
 
 d_inline static fixed_t P_LaserPointOnSide(fixed_t x, fixed_t y, node_t* node)
 {
-    fixed_t	dx;
-    fixed_t	dy;
-    fixed_t	left;
-    fixed_t	right;
+    fixed_t    dx;
+    fixed_t    dy;
+    fixed_t    left;
+    fixed_t    right;
     
     dx = (x - node->x);
     dy = (y - node->y);
@@ -1047,24 +1047,24 @@ void A_FireLaser(player_t *player, pspdef_t *psp)
     // setup laser type
     switch(type)
     {
-    case 1:		// Rapid fire / single shot
+    case 1:        // Rapid fire / single shot
         psp->tics = 5;
         lasercount = 1;
         angleoffs = mobj->angle;
         break;
-    case 2:		// Rapid fire / double shot
+    case 2:        // Rapid fire / double shot
         psp->tics = 4;
         lasercount = 2;
         angleoffs = mobj->angle + 0xFF4A0000;
         spread = 0x16C0000;
         break;
-    case 3:		// Spread shot
+    case 3:        // Spread shot
         psp->tics = 4;
         lasercount = 3;
         spread = 0x2220000 + (0x2220000 * (player->refire & 3));
         angleoffs = mobj->angle - spread;
         break;
-    default:	// Normal shot
+    default:    // Normal shot
         lasercount = 1;
         angleoffs = mobj->angle;
         break;
@@ -1078,8 +1078,8 @@ void A_FireLaser(player_t *player, pspdef_t *psp)
     // setup laser beams
     for(i = 0; i < lasercount; i++)
     {
-        int	hitdice = 0;
-        int	damage = 0;
+        int    hitdice = 0;
+        int    damage = 0;
 
         slope = P_AimLineAttack(mobj, angleoffs, LASERAIMHEIGHT, LASERRANGE);
         
@@ -1158,8 +1158,8 @@ void A_FireLaser(player_t *player, pspdef_t *psp)
         
         /*if(linetarget)
         {
-            int	hitdice = 0;
-            int	damage = 0;
+            int    hitdice = 0;
+            int    damage = 0;
             
             hitdice = (P_Random() & 7);
             damage = (((hitdice << 2) + hitdice) << 1) + 10;
@@ -1206,9 +1206,9 @@ void P_SetupPsprites (player_t* player)
 
 void P_MovePsprites(player_t* player)
 {
-    int 		i;
-    pspdef_t*	psp;
-    state_t*	state;
+    int         i;
+    pspdef_t*    psp;
+    state_t*    state;
 
     psp = &player->psprites[ps_weapon];
 

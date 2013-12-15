@@ -81,7 +81,7 @@ cvar_t *CON_CvarGet(char *name)
 
 float CON_CvarValue(char *name)
 {
-    cvar_t	*var;
+    cvar_t    *var;
     
     var = CON_CvarGet(name);
     if(!var)
@@ -162,19 +162,19 @@ void CON_CvarAutoComplete(char *partial)
 
 void CON_CvarSet(char *var_name, char *value)
 {
-    cvar_t	*var;
+    cvar_t    *var;
     dboolean changed;
     
     var = CON_CvarGet(var_name);
     if(!var)
-    {	// there is an error in C code if this happens
+    {    // there is an error in C code if this happens
         CON_Printf(WHITE, "CON_CvarSet: variable %s not found\n", var_name);
         return;
     }
     
     changed = dstrcmp(var->string, value);
     
-    Z_Free(var->string);	// free the old value string
+    Z_Free(var->string);    // free the old value string
     
     var->string = Z_Malloc(dstrlen(value)+1, PU_STATIC, 0);
     dstrcpy(var->string, value);
@@ -213,7 +213,7 @@ void CON_CvarRegister(cvar_t *variable)
     
     // copy the value off, because future sets will Z_Free it
     oldstr = variable->string;
-    variable->string = Z_Malloc(dstrlen(variable->string)+1, PU_STATIC, 0);	
+    variable->string = Z_Malloc(dstrlen(variable->string)+1, PU_STATIC, 0);    
     dstrcpy(variable->string, oldstr);
     variable->value = datof(variable->string);
     variable->defvalue = Z_Malloc(dstrlen(variable->string)+1, PU_STATIC, 0);

@@ -34,7 +34,7 @@
 #include "doomdef.h"
 #include "doomstat.h"
 
-#define ZONEID	0x1d4a11
+#define ZONEID    0x1d4a11
 //#define ZONEFILE
 
 typedef struct memblock_s memblock_t;
@@ -411,7 +411,7 @@ void *(Z_Calloc)(int n1, int tag, void *user, const char *file, int line)
 #ifdef ZONEFILE
     Z_LogPrintf("* Z_Calloc(file=%s:%d)\n", file, line);
 #endif
-	return dmemset((Z_Malloc)(n1, tag, user, file, line), 0, n1);
+    return dmemset((Z_Malloc)(n1, tag, user, file, line), 0, n1);
 }
 
 //
@@ -423,7 +423,7 @@ char *(Z_Strdup)(const char *s, int tag, void *user, const char *file, int line)
 #ifdef ZONEFILE
     Z_LogPrintf("* Z_Strdup(file=%s:%d)\n", file, line);
 #endif
-	return dstrcpy((Z_Malloc)(dstrlen(s)+1, tag, user, file, line), s);
+    return dstrcpy((Z_Malloc)(dstrlen(s)+1, tag, user, file, line), s);
 }
 
 //
@@ -437,7 +437,7 @@ char *(Z_Strdupa)(const char *s, const char *file, int line)
 #ifdef ZONEFILE
     Z_LogPrintf("* Z_Strdupa(file=%s:%d)\n", file, line);
 #endif
-	return dstrcpy((Z_Alloca)(strlen(s)+1, file, line), s);
+    return dstrcpy((Z_Alloca)(strlen(s)+1, file, line), s);
 }
 
 //
@@ -522,7 +522,7 @@ void (Z_CheckHeap)(const char *file, int line)
 
 int (Z_CheckTag)(void *ptr, const char *file, int line)
 {
-    memblock_t*	block;
+    memblock_t*    block;
     
     block = (memblock_t*)((byte *)ptr - sizeof(memblock_t));
 
@@ -540,7 +540,7 @@ int (Z_CheckTag)(void *ptr, const char *file, int line)
 
 void (Z_ChangeTag)(void *ptr, int tag, const char *file, int line)
 {
-    memblock_t*	block;
+    memblock_t*    block;
     
     block = (memblock_t*)((byte *)ptr - sizeof(memblock_t));
     

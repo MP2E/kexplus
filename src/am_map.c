@@ -673,9 +673,9 @@ static void AM_DrawNodes(void)
 {
     int i;
     int x1, x2, y1, y2;
-    node_t*	node;
-    int		side;
-    int		nodenum;
+    node_t*    node;
+    int        side;
+    int        nodenum;
     
     nodenum = numnodes-1;
     
@@ -900,16 +900,16 @@ void AM_drawPlayers(void)
             
             switch(i)
             {
-            case 0:		// Green
+            case 0:        // Green
                 AM_DrawTriangle(p->mo, scale, amModeCycle, 0, flash, 0);
                 break;
-            case 1:		// Red
+            case 1:        // Red
                 AM_DrawTriangle(p->mo, scale, amModeCycle, flash, 0, 0);
                 break;
-            case 2:		// Aqua
+            case 2:        // Aqua
                 AM_DrawTriangle(p->mo, scale, amModeCycle, 0, flash, flash);
                 break;
-            case 3:		// Blue
+            case 3:        // Blue
                 AM_DrawTriangle(p->mo, scale, amModeCycle, 0, 0, flash);
                 break;
             }
@@ -925,7 +925,7 @@ void AM_drawPlayers(void)
 void AM_drawThings(void)
 {
     int     i;
-    mobj_t*	t;
+    mobj_t*    t;
     
     for(i = 0; i < numsectors; i++)
     {

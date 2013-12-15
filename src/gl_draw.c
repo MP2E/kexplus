@@ -59,7 +59,7 @@ void Draw_GfxImage(int x, int y, const char* name, rcolor color, dboolean alpha)
 void Draw_Sprite2D(int type, int rot, int frame, int x, int y,
                    float scale, int pal, rcolor c)
 {
-    spritedef_t	*sprdef;
+    spritedef_t    *sprdef;
     spriteframe_t *sprframe;
     float flip = 0.0f;
     int w;
@@ -120,13 +120,13 @@ int Draw_Text(int x, int y, rcolor color, float scale,
     int c;
     int i;
     int vi = 0;
-    int	col;
+    int    col;
     const float size = 0.03125f;
     float fcol, frow;
     int start = 0;
     dboolean fill = false;
     char msg[MAX_MESSAGE_SIZE];
-    va_list	va;
+    va_list    va;
     const int ix = x;
     
     va_start(va, string);
@@ -234,7 +234,7 @@ int Draw_Text(int x, int y, rcolor color, float scale,
     return x;
 }
 
-const symboldata_t symboldata[] =	//0x5B9BC
+const symboldata_t symboldata[] =    //0x5B9BC
 {
     { 120, 14, 13, 13 },
     { 134, 14, 9, 13 },
@@ -246,12 +246,12 @@ const symboldata_t symboldata[] =	//0x5B9BC
     { 219, 14, 14, 13 },
     { 234, 14, 14, 13 },
     { 0, 29, 13, 13 },
-    { 67, 28, 14, 13 },	// -
-    { 36, 28, 15, 14 },	// %
-    { 28, 28, 7, 14 },	// !
-    { 14, 29, 6, 13 },	// .
-    { 52, 28, 13, 13 },	// ?
-    { 21, 29, 6, 13 },	// :
+    { 67, 28, 14, 13 },    // -
+    { 36, 28, 15, 14 },    // %
+    { 28, 28, 7, 14 },    // !
+    { 14, 29, 6, 13 },    // .
+    { 52, 28, 13, 13 },    // ?
+    { 21, 29, 6, 13 },    // :
     { 0, 0, 13, 13 },
     { 14, 0, 13, 13 },
     { 28, 0, 13, 13 },
@@ -892,7 +892,7 @@ float Draw_ConsoleText(float x, float y, rcolor color,
     float ty1 = 0.0f;
     float ty2 = 0.0f;
     char msg[MAX_MESSAGE_SIZE];
-    va_list	va;
+    va_list    va;
     float width;
     float height;
     int pic;

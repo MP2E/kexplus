@@ -76,21 +76,21 @@
 //
 
 #define MENUSTRINGSIZE      32
-#define SKULLXOFF           -40	//villsa: changed from -32 to -40
+#define SKULLXOFF           -40    //villsa: changed from -32 to -40
 #define SKULLXTEXTOFF       -24
 #define LINEHEIGHT          18
 #define TEXTLINEHEIGHT      18
-#define MENUCOLORRED	    D_RGBA(255, 0, 0, menualphacolor)
-#define MENUCOLORWHITE	    D_RGBA(255, 255, 255, menualphacolor)
-#define MAXBRIGHTNESS	    100
+#define MENUCOLORRED        D_RGBA(255, 0, 0, menualphacolor)
+#define MENUCOLORWHITE        D_RGBA(255, 255, 255, menualphacolor)
+#define MAXBRIGHTNESS        100
 
 //
 // defaulted values
 //
 
 dboolean            allowmenu = true;                   // can menu be accessed?
-dboolean	        menuactive = false;
-dboolean	        mainmenuactive = false;
+dboolean            menuactive = false;
+dboolean            mainmenuactive = false;
 dboolean            allowclearmenu = true;              // can user hit escape to clear menu?
 
 static dboolean     newmenu = false;    // 20120323 villsa
@@ -154,7 +154,7 @@ typedef struct
 typedef struct
 {
     cvar_t* mitem;
-    float	mdefault;
+    float    mdefault;
 } menudefault_t;
 
 typedef struct
@@ -186,8 +186,8 @@ typedef struct menu_s
 
 typedef struct
 {
-    char	*name;
-    char	*action;
+    char    *name;
+    char    *action;
 }menuaction_t;
 
 short           itemOn;                 // menu item skull is on
@@ -2466,8 +2466,8 @@ menu_t PasswordDef =
 };
 
 static dboolean passInvalid = false;
-static int		curPasswordSlot = 0;
-static int		passInvalidTic = 0;
+static int        curPasswordSlot = 0;
+static int        passInvalidTic = 0;
 
 void M_Password(int choice)
 {
@@ -2759,8 +2759,8 @@ enum
     features_end
 } features_e;
 
-#define FEATURESWARPLEVEL	"Warp To Level:"
-#define FEATURESWARPFUN		"Warp To Fun:"
+#define FEATURESWARPLEVEL    "Warp To Level:"
+#define FEATURESWARPFUN        "Warp To Fun:"
 #define FEATURESWARPSINGLE  "Warp To Pwad:"
 
 menuitem_t FeaturesMenu[]=
@@ -3204,7 +3204,7 @@ void M_DrawControls(void);
 
 #define NUM_NONBINDABLE_ITEMS   8
 #define NUM_CONTROL_ACTIONS     44
-#define	NUM_CONTROL_ITEMS		NUM_CONTROL_ACTIONS + NUM_NONBINDABLE_ITEMS
+#define    NUM_CONTROL_ITEMS        NUM_CONTROL_ACTIONS + NUM_NONBINDABLE_ITEMS
 
 menuaction_t*   PlayerActions;
 menu_t          ControlsDef;
@@ -3274,10 +3274,10 @@ void M_Controls(int choice)
 
 void M_BuildControlMenu(void)
 {
-    menu_t		*menu;
-    int			actions;
-    int			item;
-    int			i;
+    menu_t        *menu;
+    int            actions;
+    int            item;
+    int            i;
     
     PlayerActions = mPlayerActionsDef;
     

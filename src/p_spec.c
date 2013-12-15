@@ -23,11 +23,11 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Implements special effects:
-//	Texture animation, height or lighting changes
-//	 according to adjacent sectors, respective
-//	 utility functions, etc.
-//	Line Tag handling. Line and Sector triggers.
+//    Implements special effects:
+//    Texture animation, height or lighting changes
+//     according to adjacent sectors, respective
+//     utility functions, etc.
+//    Line Tag handling. Line and Sector triggers.
 //
 //-----------------------------------------------------------------------------
 
@@ -170,13 +170,13 @@ extern line_t** linespeciallist;
 //
 void P_InitPicAnims(void)
 {
-    int	i = 0;
+    int    i = 0;
 
     P_InitAnimdef();
     
     animinfo = (animinfo_t*)Z_Malloc(sizeof(animinfo_t) * numanimdef, PU_STATIC, 0);
     
-    //	Init animation
+    //    Init animation
     for(i = 0; i < numanimdef; i++)
     {
         animinfo[i].delay = 0;
@@ -319,12 +319,12 @@ sector_t* getNextSector(line_t* line, sector_t* sec)
 // P_FindLowestFloorSurrounding()
 // FIND LOWEST FLOOR HEIGHT IN SURROUNDING SECTORS
 //
-fixed_t	P_FindLowestFloorSurrounding(sector_t* sec)
+fixed_t    P_FindLowestFloorSurrounding(sector_t* sec)
 {
-    int			i;
-    line_t*		check;
-    sector_t*		other;
-    fixed_t		floor = sec->floorheight;
+    int            i;
+    line_t*        check;
+    sector_t*        other;
+    fixed_t        floor = sec->floorheight;
     
     for (i=0 ;i < sec->linecount ; i++)
     {
@@ -346,12 +346,12 @@ fixed_t	P_FindLowestFloorSurrounding(sector_t* sec)
 // P_FindHighestFloorSurrounding()
 // FIND HIGHEST FLOOR HEIGHT IN SURROUNDING SECTORS
 //
-fixed_t	P_FindHighestFloorSurrounding(sector_t *sec)
+fixed_t    P_FindHighestFloorSurrounding(sector_t *sec)
 {
-    int			i;
-    line_t*		check;
-    sector_t*		other;
-    fixed_t		floor = -500*FRACUNIT;
+    int            i;
+    line_t*        check;
+    sector_t*        other;
+    fixed_t        floor = -500*FRACUNIT;
     
     for (i=0 ;i < sec->linecount ; i++)
     {
@@ -375,7 +375,7 @@ fixed_t	P_FindHighestFloorSurrounding(sector_t *sec)
 // Note: this should be doable w/o a fixed array.
 
 // 20 adjoining sectors max!
-#define MAX_ADJOINING_SECTORS    	20
+#define MAX_ADJOINING_SECTORS        20
 
 fixed_t P_FindNextHighestFloor(sector_t* sec, int currentheight)
 {
@@ -449,7 +449,7 @@ fixed_t P_FindLowestCeilingSurrounding(sector_t* sec)
 //
 // FIND HIGHEST CEILING IN THE SURROUNDING SECTORS
 //
-fixed_t	P_FindHighestCeilingSurrounding(sector_t* sec)
+fixed_t    P_FindHighestCeilingSurrounding(sector_t* sec)
 {
     int         i;
     line_t*     check;
@@ -479,7 +479,7 @@ fixed_t	P_FindHighestCeilingSurrounding(sector_t* sec)
 
 int P_FindSectorFromLineTag(line_t* line, int start)
 {
-    int	i;
+    int    i;
     
     for(i = start + 1; i < numsectors; i++)
     {
@@ -931,7 +931,7 @@ int P_SetAimCamera(player_t* player, line_t* line, dboolean aim)
 //
 
 #define CAMMOVESPEED    164
-#define	CAMTRACEANGLE   ANG1
+#define    CAMTRACEANGLE   ANG1
 
 void T_MovingCamera(movecamera_t* camera)
 {
@@ -1771,7 +1771,7 @@ dboolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
 
 void P_PlayerInSpecialSector(player_t* player)
 {
-    sector_t*	sector;
+    sector_t*    sector;
     sector = player->mo->subsector->sector;
     
     // Falling, not all the way down yet?
@@ -1781,7 +1781,7 @@ void P_PlayerInSpecialSector(player_t* player)
     if(sector->flags & MS_SECRET)
     {
         player->secretcount++;
-        player->message = FOUNDSECRET;	//villsa
+        player->message = FOUNDSECRET;    //villsa
         player->messagepic = 40;
         sector->flags &= ~MS_SECRET;
     }
@@ -1840,7 +1840,7 @@ void P_UpdateSpecials (void)
     line_t*     line;
     sector_t*   sector;
     
-    //	LEVEL TIMER
+    //    LEVEL TIMER
     if(levelTimer == true)
     {
         levelTimeCount--;
@@ -2049,7 +2049,7 @@ void P_SpawnSpecials (void)
     i = M_CheckParm("-timer");
     if(i && deathmatch)
     {
-        int	time;
+        int    time;
         time = datoi(myargv[i+1]) * 60 * TICRATE;
         levelTimer = true;
         levelTimeCount = time;
@@ -2087,7 +2087,7 @@ void P_SpawnSpecials (void)
     tryopentype[2] = it_redcard;
 
     for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
-	{
+    {
         if(mo->type == MT_ITEM_BLUESKULLKEY)
             tryopentype[0] = it_blueskull;
 
@@ -2112,7 +2112,7 @@ void P_SpawnSpecials (void)
             tryopentype[2] = it_redskull;
     }
 
-    //	Init line EFFECTs
+    //    Init line EFFECTs
     numlinespecials = 0;
     linespeciallist = Z_Malloc(sizeof(line_t*) * 1, PU_LEVEL, 0);
     for (i = 0; i < numlines; i++)
@@ -2126,7 +2126,7 @@ void P_SpawnSpecials (void)
         }
     }
     
-    //	Init other misc stuff
+    //    Init other misc stuff
     for (i = 0;i < MAXCEILINGS;i++)
         activeceilings[i] = NULL;
     

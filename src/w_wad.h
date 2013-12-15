@@ -49,8 +49,8 @@ typedef struct
     void*       cache;
 } lumpinfo_t;
 
-extern	lumpinfo_t*	lumpinfo;
-extern	int			numlumps;
+extern    lumpinfo_t*    lumpinfo;
+extern    int            numlumps;
 
 void            W_Init(void);
 wad_file_t*     W_AddFile(char *filename);

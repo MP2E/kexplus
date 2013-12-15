@@ -47,9 +47,9 @@ static dboolean ProcessWalls(vtxlist_t* vl, int* drawcount)
     seg_t* seg = (seg_t*)vl->data;
     sector_t* sec = seg->frontsector;
 
-    bspColor[LIGHT_FLOOR]	= R_GetSectorLight(0xff, sec->colors[LIGHT_FLOOR]);
+    bspColor[LIGHT_FLOOR]    = R_GetSectorLight(0xff, sec->colors[LIGHT_FLOOR]);
     bspColor[LIGHT_CEILING] = R_GetSectorLight(0xff, sec->colors[LIGHT_CEILING]);
-    bspColor[LIGHT_THING]	= R_GetSectorLight(0xff, sec->colors[LIGHT_THING]);
+    bspColor[LIGHT_THING]    = R_GetSectorLight(0xff, sec->colors[LIGHT_THING]);
     bspColor[LIGHT_UPRWALL] = R_GetSectorLight(0xff, sec->colors[LIGHT_UPRWALL]);
     bspColor[LIGHT_LWRWALL] = R_GetSectorLight(0xff, sec->colors[LIGHT_LWRWALL]);
 

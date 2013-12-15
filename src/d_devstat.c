@@ -52,31 +52,31 @@ CVAR_EXTERNAL(sv_lockmonsters);
 
 void ST_DrawFPS(int offset)
 {
-	static int	frames;
-    static int	lasttick=0;
-    static int	fps;
-    int		ticks;
-    int		n;
-	
-	ticks = I_GetTime();
+    static int    frames;
+    static int    lasttick=0;
+    static int    fps;
+    int        ticks;
+    int        n;
+    
+    ticks = I_GetTime();
     if(!lasttick)
     {
-		lasttick = ticks;
-		frames = fps = 0;
+        lasttick = ticks;
+        frames = fps = 0;
     }
 
     frames++;
 
     if(ticks - lasttick >= TICRATE)
     {
-		lasttick = ticks;
-		fps = frames;
-		frames = 0;
-		if(fps > 99)
-			fps = 99;
+        lasttick = ticks;
+        fps = frames;
+        frames = 0;
+        if(fps > 99)
+            fps = 99;
     }
     n = fps;
-	Draw_Text(0, offset, WHITE, 0.35f, false, "FPS: %i", n);
+    Draw_Text(0, offset, WHITE, 0.35f, false, "FPS: %i", n);
 }
 
 //
@@ -85,11 +85,11 @@ void ST_DrawFPS(int offset)
 
 void D_DeveloperDisplay(void)
 {
-	rcolor	sevclr = WHITE;
-	int		p_nummobjthinkers = 0;
-	fixed_t px, py, pz, pa, pp;
-	int		y = 8;
-	mobj_t* mo;
+    rcolor    sevclr = WHITE;
+    int        p_nummobjthinkers = 0;
+    fixed_t px, py, pz, pa, pp;
+    int        y = 8;
+    mobj_t* mo;
 
     if(!showstats)
     {
@@ -100,23 +100,23 @@ void D_DeveloperDisplay(void)
         return;
     }
 
-	/*PLAYER INFORMATION*/
+    /*PLAYER INFORMATION*/
 
-	px=py=pz=pa=pp=0;
-	if(players[0].cameratarget && gamestate == GS_LEVEL)
-	{
-		px=players[0].cameratarget->x/FRACUNIT;
-		py=players[0].cameratarget->y/FRACUNIT;
-		pz=players[0].cameratarget->z/FRACUNIT;
-		pa=players[0].cameratarget->angle>>24;
-		pp=players[0].cameratarget->pitch>>24;
+    px=py=pz=pa=pp=0;
+    if(players[0].cameratarget && gamestate == GS_LEVEL)
+    {
+        px=players[0].cameratarget->x/FRACUNIT;
+        py=players[0].cameratarget->y/FRACUNIT;
+        pz=players[0].cameratarget->z/FRACUNIT;
+        pa=players[0].cameratarget->angle>>24;
+        pp=players[0].cameratarget->pitch>>24;
 
-		Draw_Text(0, y, WHITE, 0.35f, false, "x: %i, y: %i, z: %i, a: %i, p: %i", px, py, pz, pa, pp);
-		y+=16;
-	}
+        Draw_Text(0, y, WHITE, 0.35f, false, "x: %i, y: %i, z: %i, a: %i, p: %i", px, py, pz, pa, pp);
+        y+=16;
+    }
 
 
-	/*Z_MALLOC INFORMATION*/
+    /*Z_MALLOC INFORMATION*/
 
     Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_STATIC Usage: %6d kb", Z_TagUsage(PU_STATIC) >> 10);
     y+=16;
@@ -146,28 +146,28 @@ void D_DeveloperDisplay(void)
     Draw_Text(0, y, WHITE, 0.35f, false, "Draw List AMAP Usage: %6d kb", DL_GetDrawListSize(DLT_AMAP) >> 10);
     y+=16;
 
-	if(gamestate == GS_LEVEL)
-	{
-		ST_DrawFPS(y);
-		y+=16;
-	}
+    if(gamestate == GS_LEVEL)
+    {
+        ST_DrawFPS(y);
+        y+=16;
+    }
 
 
-	/*MOBJ INFORMATION*/
+    /*MOBJ INFORMATION*/
 
-	if(gamestate == GS_LEVEL)
-	{
-		for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
-		{
-			if(!mo->player)
-				p_nummobjthinkers++;
-		}
+    if(gamestate == GS_LEVEL)
+    {
+        for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
+        {
+            if(!mo->player)
+                p_nummobjthinkers++;
+        }
 
-		Draw_Text(0, y, WHITE, 0.35f, false, "P_Mobj Total Things: %i", p_nummobjthinkers);
-		y+=16;
-	}
+        Draw_Text(0, y, WHITE, 0.35f, false, "P_Mobj Total Things: %i", p_nummobjthinkers);
+        y+=16;
+    }
 
-	/*RENDERING INFORMATION*/
+    /*RENDERING INFORMATION*/
 
     sevclr = vertCount >= 4000 ? YELLOW : WHITE;
     Draw_Text(0, y, sevclr, 0.35f, false, "Total Vertices: %i", vertCount);
@@ -184,14 +184,14 @@ void D_DeveloperDisplay(void)
     Draw_Text(0, y, WHITE, 0.35f, false, "Draw Indices: %i", statindice);
     y+=16;
 
-	if(gamestate == GS_LEVEL && !automapactive)
-	{
-		Draw_Text(0, y, WHITE, 0.35f, false, "PlayerView Render Time: %ims", renderTic);
-		y+=16;
+    if(gamestate == GS_LEVEL && !automapactive)
+    {
+        Draw_Text(0, y, WHITE, 0.35f, false, "PlayerView Render Time: %ims", renderTic);
+        y+=16;
 
-		Draw_Text(0, y, WHITE, 0.35f, false, "Sprite Render Time: %ims", spriteRenderTic);
-		y+=16;
-	}
+        Draw_Text(0, y, WHITE, 0.35f, false, "Sprite Render Time: %ims", spriteRenderTic);
+        y+=16;
+    }
 
     Draw_Text(0, y, WHITE, 0.35f, false, "Active Sounds: %i", S_GetActiveSounds());
     y+=16;
@@ -200,10 +200,10 @@ void D_DeveloperDisplay(void)
     y+=16;
 
 #ifdef INSTRUMENTED
-	Z_PrintStats();
+    Z_PrintStats();
 #endif
 
-	glBindCalls = 0;
+    glBindCalls = 0;
     vertCount = 0;
     statindice = 0;
 }
@@ -214,18 +214,18 @@ void D_DeveloperDisplay(void)
 
 void D_BoyISuck(void)
 {
-	mobj_t* mo;
+    mobj_t* mo;
 
-	for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
+    for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
     {
-		if(mo->player)
-			continue;
+        if(mo->player)
+            continue;
 
-		if(mo->health > 0 && mo->flags & MF_COUNTKILL)
-		{
-			P_DamageMobj (mo, NULL, NULL, 99999);
-			continue;
-		}
+        if(mo->health > 0 && mo->flags & MF_COUNTKILL)
+        {
+            P_DamageMobj (mo, NULL, NULL, 99999);
+            continue;
+        }
     }
 }
 

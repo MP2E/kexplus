@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	Fixed point implementation.
+//    Fixed point implementation.
 //
 //-----------------------------------------------------------------------------
 
@@ -44,20 +44,20 @@
 
 fixed_t
 FixedMul
-( fixed_t	a,
-  fixed_t	b )
+( fixed_t    a,
+  fixed_t    b )
 {
 #ifdef USE_ASM
-    fixed_t	c;
+    fixed_t    c;
     _asm
     {
-	mov eax, [a]
-	mov ecx, [b]
-	imul ecx
-	shr eax, 16
-	shl edx, 16
-	or eax, edx
-	mov [c], eax
+    mov eax, [a]
+    mov ecx, [b]
+    imul ecx
+    shr eax, 16
+    shl edx, 16
+    or eax, edx
+    mov [c], eax
     }
     return(c);
 #else
@@ -73,11 +73,11 @@ FixedMul
 
 fixed_t
 FixedDiv
-( fixed_t	a,
-  fixed_t	b )
+( fixed_t    a,
+  fixed_t    b )
 {
     if ( (D_abs(a)>>14) >= D_abs(b))
-	return (a^b)<0 ? D_MININT : D_MAXINT;
+    return (a^b)<0 ? D_MININT : D_MAXINT;
     return FixedDiv2 (a,b);
 
 }
@@ -86,8 +86,8 @@ FixedDiv
 
 fixed_t
 FixedDiv2
-( fixed_t	a,
-  fixed_t	b )
+( fixed_t    a,
+  fixed_t    b )
 {
     return (fixed_t)((((int64)a)<<FRACBITS)/b);
 }

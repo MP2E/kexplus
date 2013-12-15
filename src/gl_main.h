@@ -25,11 +25,11 @@
 
 #include "SDL_opengl.h"
 
-typedef GLuint		dtexture;
-typedef GLfloat		rfloat;
-typedef GLuint		rcolor;
-typedef GLuint		rbuffer;
-typedef GLhandleARB	rhandle;
+typedef GLuint        dtexture;
+typedef GLfloat        rfloat;
+typedef GLuint        rcolor;
+typedef GLuint        rbuffer;
+typedef GLhandleARB    rhandle;
 
 extern int gl_max_texture_units;
 extern int gl_max_texture_size;
@@ -37,11 +37,11 @@ extern dboolean gl_has_combiner;
 
 typedef struct
 {
-    rfloat	x;
-    rfloat	y;
-    rfloat	z;
-    rfloat	tu;
-    rfloat	tv;
+    rfloat    x;
+    rfloat    y;
+    rfloat    z;
+    rfloat    tu;
+    rfloat    tv;
     byte r;
     byte g;
     byte b;

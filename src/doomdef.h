@@ -42,8 +42,8 @@ extern const char version_date[];
 
 #ifdef _MSC_VER
 #pragma warning(disable:4761)   // integral size mismatch in argument; conversion supplied
-#pragma warning(error:4701)	    // local variable *may* be used without init
-#pragma warning(error:4189)	    // initialized but unused variable
+#pragma warning(error:4701)        // local variable *may* be used without init
+#pragma warning(error:4189)        // initialized but unused variable
 #endif
 
 void        _dprintf(const char *s, ...);
@@ -141,8 +141,8 @@ static d_inline float D_fabs(float x)
 // Global parameters/defines.
 //
 
-#define SCREENWIDTH		320
-#define SCREENHEIGHT	240
+#define SCREENWIDTH        320
+#define SCREENHEIGHT    240
 
 #define MAX_MESSAGE_SIZE 1024
 
@@ -186,18 +186,18 @@ typedef enum
 //
 
 // Skill flags.
-#define	MTF_EASY            1
-#define	MTF_NORMAL          2
-#define	MTF_HARD            4
-#define	MTF_AMBUSH          8		// Deaf monsters/do not react to sound.
-#define MTF_MULTI           16		// Multiplayer specific
-#define MTF_SPAWN           32		// Don't spawn until triggered in level
-#define MTF_ONTOUCH         64		// Trigger something when picked up
-#define MTF_ONDEATH         128		// Trigger something when killed
-#define MTF_SECRET          256		// Count as secret for intermission when picked up
-#define MTF_NOINFIGHTING    512		// Ignore other attackers
-#define MTF_NODEATHMATCH    1024	// Don't spawn in deathmatch games
-#define MTF_NONETGAME       2048	// Don't spawn in standard netgame mode
+#define    MTF_EASY            1
+#define    MTF_NORMAL          2
+#define    MTF_HARD            4
+#define    MTF_AMBUSH          8        // Deaf monsters/do not react to sound.
+#define MTF_MULTI           16        // Multiplayer specific
+#define MTF_SPAWN           32        // Don't spawn until triggered in level
+#define MTF_ONTOUCH         64        // Trigger something when picked up
+#define MTF_ONDEATH         128        // Trigger something when killed
+#define MTF_SECRET          256        // Count as secret for intermission when picked up
+#define MTF_NOINFIGHTING    512        // Ignore other attackers
+#define MTF_NODEATHMATCH    1024    // Don't spawn in deathmatch games
+#define MTF_NONETGAME       2048    // Don't spawn in standard netgame mode
 
 typedef enum
 {
@@ -255,12 +255,12 @@ typedef enum
 // Ammunition types defined.
 typedef enum
 {
-    am_clip,	// Pistol / chaingun ammo.
-    am_shell,	// Shotgun / double barreled shotgun.
-    am_cell,	// Plasma rifle, BFG.
-    am_misl,	// Missile launcher.
+    am_clip,    // Pistol / chaingun ammo.
+    am_shell,    // Shotgun / double barreled shotgun.
+    am_cell,    // Plasma rifle, BFG.
+    am_misl,    // Missile launcher.
     NUMAMMO,
-    am_noammo	// Unlimited for chainsaw / fist.
+    am_noammo    // Unlimited for chainsaw / fist.
     
 } ammotype_t;
 
@@ -286,10 +286,10 @@ typedef enum
 //
 typedef enum
 {
-    INVULNTICS	= (30*TICRATE),
-    INVISTICS	= (60*TICRATE),
-    INFRATICS	= (120*TICRATE),
-    IRONTICS	= (60*TICRATE),
+    INVULNTICS    = (30*TICRATE),
+    INVISTICS    = (60*TICRATE),
+    INFRATICS    = (120*TICRATE),
+    IRONTICS    = (60*TICRATE),
     STRTICS     = (3*TICRATE)
     
 } powerduration_t;
@@ -332,36 +332,36 @@ extern dboolean windowpause;
 #define KEY_ESCAPE          27
 #define KEY_ENTER           13
 #define KEY_TAB             9
-#define KEY_F1		        (0x80+0x3b)
-#define KEY_F2		        (0x80+0x3c)
-#define KEY_F3		        (0x80+0x3d)
-#define KEY_F4		        (0x80+0x3e)
-#define KEY_F5		        (0x80+0x3f)
-#define KEY_F6		        (0x80+0x40)
-#define KEY_F7		        (0x80+0x41)
-#define KEY_F8		        (0x80+0x42)
-#define KEY_F9		        (0x80+0x43)
-#define KEY_F10		        (0x80+0x44)
-#define KEY_F11		        (0x80+0x57)
-#define KEY_F12		        (0x80+0x58)
+#define KEY_F1                (0x80+0x3b)
+#define KEY_F2                (0x80+0x3c)
+#define KEY_F3                (0x80+0x3d)
+#define KEY_F4                (0x80+0x3e)
+#define KEY_F5                (0x80+0x3f)
+#define KEY_F6                (0x80+0x40)
+#define KEY_F7                (0x80+0x41)
+#define KEY_F8                (0x80+0x42)
+#define KEY_F9                (0x80+0x43)
+#define KEY_F10                (0x80+0x44)
+#define KEY_F11                (0x80+0x57)
+#define KEY_F12                (0x80+0x58)
 
-#define KEY_BACKSPACE	    127
-#define KEY_PAUSE	        0xff
+#define KEY_BACKSPACE        127
+#define KEY_PAUSE            0xff
 
-#define KEY_KPSTAR	        298
-#define KEY_KPPLUS	        299
+#define KEY_KPSTAR            298
+#define KEY_KPPLUS            299
 
-#define KEY_EQUALS	        0x3d
-#define KEY_MINUS	        0x2d
+#define KEY_EQUALS            0x3d
+#define KEY_MINUS            0x2d
 
-#define KEY_SHIFT	        (0x80+0x36)
-#define KEY_CTRL	        (0x80+0x1d)
-#define KEY_ALT		        (0x80+0x38)
+#define KEY_SHIFT            (0x80+0x36)
+#define KEY_CTRL            (0x80+0x1d)
+#define KEY_ALT                (0x80+0x38)
 
 #define KEY_RSHIFT          (0x80+0x36)
 #define KEY_RCTRL           (0x80+0x1d)
 #define KEY_RALT            (0x80+0x38)
-#define KEY_CAPS		    0xba
+#define KEY_CAPS            0xba
 
 #define KEY_INSERT          0xd2
 #define KEY_HOME            0xc7
@@ -372,23 +372,23 @@ extern dboolean windowpause;
 #define KEY_SCROLLLOCK      0xc6
 #define KEY_SPACEBAR        0x20
 
-#define KEY_KEYPADENTER		269
-#define KEY_KEYPADMULTIPLY	298
-#define KEY_KEYPADPLUS		299
-#define KEY_NUMLOCK			300
-#define KEY_KEYPADMINUS		301
-#define KEY_KEYPADPERIOD	302
-#define KEY_KEYPADDIVIDE	303
-#define KEY_KEYPAD0			304
-#define KEY_KEYPAD1			305
-#define KEY_KEYPAD2			306
-#define KEY_KEYPAD3			307
-#define KEY_KEYPAD4			308
-#define KEY_KEYPAD5			309
-#define KEY_KEYPAD6			310
-#define KEY_KEYPAD7			311
-#define KEY_KEYPAD8			312
-#define KEY_KEYPAD9			313
+#define KEY_KEYPADENTER        269
+#define KEY_KEYPADMULTIPLY    298
+#define KEY_KEYPADPLUS        299
+#define KEY_NUMLOCK            300
+#define KEY_KEYPADMINUS        301
+#define KEY_KEYPADPERIOD    302
+#define KEY_KEYPADDIVIDE    303
+#define KEY_KEYPAD0            304
+#define KEY_KEYPAD1            305
+#define KEY_KEYPAD2            306
+#define KEY_KEYPAD3            307
+#define KEY_KEYPAD4            308
+#define KEY_KEYPAD5            309
+#define KEY_KEYPAD6            310
+#define KEY_KEYPAD7            311
+#define KEY_KEYPAD8            312
+#define KEY_KEYPAD9            313
 
 #define KEY_MWHEELUP        (0x80 + 0x6b)
 #define KEY_MWHEELDOWN      (0x80 + 0x6c)
@@ -403,7 +403,7 @@ extern dboolean windowpause;
 //#include "sounds.h"
 
 //code assumes MOUSE_BUTTONS<10
-#define MOUSE_BUTTONS		6
+#define MOUSE_BUTTONS        6
 
 #endif          // __DOOMDEF__
 

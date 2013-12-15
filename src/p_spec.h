@@ -30,19 +30,19 @@
 //
 // End-level timer (-TIMER option)
 //
-extern	dboolean levelTimer;
-extern	int	levelTimeCount;
+extern    dboolean levelTimer;
+extern    int    levelTimeCount;
 
 extern short globalint;
 
 typedef struct
 {
-	int			delay;
-    char		name[9];
-	int			frames;
-    int			speed;
-	dboolean	reverse;
-	dboolean	palette;
+    int            delay;
+    char        name[9];
+    int            frames;
+    int            speed;
+    dboolean    reverse;
+    dboolean    palette;
 } animdef_t;
 
 extern int          numanimdef;
@@ -86,61 +86,61 @@ int EV_DoFloorAndCeiling(line_t * line, dboolean fast, dboolean elevatorOrSplit)
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t*	sector;
-    int			count;
-    int			special;
+    thinker_t    thinker;
+    sector_t*    sector;
+    int            count;
+    int            special;
 } fireflicker_t;
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t*	sector;
-    int			count;
-    int			special;
+    thinker_t    thinker;
+    sector_t*    sector;
+    int            count;
+    int            special;
 } lightflash_t;
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t*	sector;
-    int			count;
-    int			maxlight;
-    int			darktime;
-    int			brighttime;
-    int			special;
+    thinker_t    thinker;
+    sector_t*    sector;
+    int            count;
+    int            maxlight;
+    int            darktime;
+    int            brighttime;
+    int            special;
 } strobe_t;
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t*	sector;
-    int			type;
-    int			count;
-    int			minlight;
-    int			direction;
-    int			maxlight;
-    int			special;
+    thinker_t    thinker;
+    sector_t*    sector;
+    int            type;
+    int            count;
+    int            minlight;
+    int            direction;
+    int            maxlight;
+    int            special;
 } glow_t;
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t	*sector;
-    sector_t	*headsector;
-    int			count;
-    int			start;
-    int			index;
-    int			special;
+    thinker_t    thinker;
+    sector_t    *sector;
+    sector_t    *headsector;
+    int            count;
+    int            start;
+    int            index;
+    int            special;
 } sequenceGlow_t;
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t	*sector;
-    thinker_t	*combiner;
-    int			special;
-    actionf_p1	func;
+    thinker_t    thinker;
+    sector_t    *sector;
+    thinker_t    *combiner;
+    int            special;
+    actionf_p1    func;
 } combine_t;
 
 typedef struct
@@ -154,30 +154,30 @@ typedef struct
     int inc;
 } lightmorph_t;
 
-#define GLOWSPEED			2
-#define STROBEBRIGHT		1
-#define SUPERFAST			10
-#define FASTDARK			15
-#define SLOWDARK			30
-#define PULSENORMAL			0
-#define PULSESLOW			1
-#define PULSERANDOM			2
+#define GLOWSPEED            2
+#define STROBEBRIGHT        1
+#define SUPERFAST            10
+#define FASTDARK            15
+#define SLOWDARK            30
+#define PULSENORMAL            0
+#define PULSESLOW            1
+#define PULSERANDOM            2
 
 void        P_SpawnFireFlicker (sector_t* sector);
 void        T_LightFlash(lightflash_t* flash);
 void        P_SpawnLightFlash (sector_t* sector);
 void        T_StrobeFlash(strobe_t* flash);
-void	    T_FireFlicker(fireflicker_t* flick);
-void	    P_UpdateLightThinker(light_t* destlight, light_t* srclight);
-void	    T_Sequence(sequenceGlow_t* seq);
-void	    P_SpawnStrobeFlash(sector_t* sector, int speed);
-void	    P_SpawnStrobeAltFlash(sector_t* sector, int speed);
-void	    EV_StartLightStrobing(line_t* line);
+void        T_FireFlicker(fireflicker_t* flick);
+void        P_UpdateLightThinker(light_t* destlight, light_t* srclight);
+void        T_Sequence(sequenceGlow_t* seq);
+void        P_SpawnStrobeFlash(sector_t* sector, int speed);
+void        P_SpawnStrobeAltFlash(sector_t* sector, int speed);
+void        EV_StartLightStrobing(line_t* line);
 void        T_Glow(glow_t* g);
 void        P_SpawnGlowingLight(sector_t* sector, byte type);
-void	    P_SpawnSequenceLight(sector_t* sector, dboolean first);
-void	    P_CombineLightSpecials(sector_t* sector);
-void	    T_Combine(combine_t *combine);
+void        P_SpawnSequenceLight(sector_t* sector, dboolean first);
+void        P_CombineLightSpecials(sector_t* sector);
+void        T_Combine(combine_t *combine);
 dboolean    P_ChangeLightByTag(int tag1, int tag2);
 void        P_DoSectorLightChange(line_t* line, short tag);
 void        P_FadeInBrightness(void);
@@ -204,15 +204,15 @@ typedef struct
 
 
 // max # of wall switches in a level
-#define MAXSWITCHES		11
+#define MAXSWITCHES        11
 
 // 4 players, 4 buttons each at once, max.
-#define MAXBUTTONS		16
+#define MAXBUTTONS        16
 
 // 1 second, in ticks.
 #define BUTTONTIME      15
 
-extern button_t	buttonlist[MAXBUTTONS];
+extern button_t    buttonlist[MAXBUTTONS];
 
 void P_ChangeSwitchTexture(line_t* line, int useAgain);
 
@@ -249,33 +249,33 @@ typedef enum
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t*	sector;
-    fixed_t		speed;
-    fixed_t		low;
-    fixed_t		high;
-    int			wait;
-    int			count;
-    plat_e		status;
-    plat_e		oldstatus;
-    dboolean	crush;
-    int			tag;
-    plattype_e	type;
+    thinker_t    thinker;
+    sector_t*    sector;
+    fixed_t        speed;
+    fixed_t        low;
+    fixed_t        high;
+    int            wait;
+    int            count;
+    plat_e        status;
+    plat_e        oldstatus;
+    dboolean    crush;
+    int            tag;
+    plattype_e    type;
 } plat_t;
 
 
 
-#define PLATWAIT		3
-#define PLATSLOWSPEED	(2*FRACUNIT)
-#define PLATSPEED		(8*FRACUNIT)
-#define PLATBLAZESPEED	(16*FRACUNIT)
-#define MAXPLATS		60
+#define PLATWAIT        3
+#define PLATSLOWSPEED    (2*FRACUNIT)
+#define PLATSPEED        (8*FRACUNIT)
+#define PLATBLAZESPEED    (16*FRACUNIT)
+#define MAXPLATS        60
 
 
-extern plat_t*	activeplats[MAXPLATS];
+extern plat_t*    activeplats[MAXPLATS];
 
-void    T_PlatRaise(plat_t*	plat);
-int		EV_DoPlat(line_t* line, plattype_e type, int amount);
+void    T_PlatRaise(plat_t*    plat);
+int        EV_DoPlat(line_t* line, plattype_e type, int amount);
 void    P_AddActivePlat(plat_t* plat);
 void    P_RemoveActivePlat(plat_t* plat);
 void    EV_StopPlat(line_t* line);
@@ -324,9 +324,9 @@ typedef struct
 
 
 
-#define VDOORSPEED		FRACUNIT*2
-#define VDOORBLAZESPEED	FRACUNIT*8
-#define VDOORWAIT		120
+#define VDOORSPEED        FRACUNIT*2
+#define VDOORBLAZESPEED    FRACUNIT*8
+#define VDOORWAIT        120
 
 void    EV_VerticalDoor(line_t* line, mobj_t* thing);
 int     EV_DoDoor(line_t* line, vldoor_e type);
@@ -354,34 +354,34 @@ typedef enum
 
 typedef struct
 {
-    thinker_t	thinker;
-    ceiling_e	type;
-    sector_t*	sector;
-    fixed_t		bottomheight;
-    fixed_t		topheight;
-    fixed_t		speed;
-    dboolean	crush;
-    int			direction;	// 1 = up, 0 = waiting, -1 = down
-    int			tag;		// ID
-    int			olddirection;
-    dboolean	instant;
+    thinker_t    thinker;
+    ceiling_e    type;
+    sector_t*    sector;
+    fixed_t        bottomheight;
+    fixed_t        topheight;
+    fixed_t        speed;
+    dboolean    crush;
+    int            direction;    // 1 = up, 0 = waiting, -1 = down
+    int            tag;        // ID
+    int            olddirection;
+    dboolean    instant;
 } ceiling_t;
 
 
 
 
 
-#define CEILSPEED		FRACUNIT*2
-#define CEILWAIT		150
-#define MAXCEILINGS		30
+#define CEILSPEED        FRACUNIT*2
+#define CEILWAIT        150
+#define MAXCEILINGS        30
 
-extern ceiling_t*	activeceilings[MAXCEILINGS];
+extern ceiling_t*    activeceilings[MAXCEILINGS];
 
-int		EV_DoCeiling(line_t* line, ceiling_e type, fixed_t speed);
+int        EV_DoCeiling(line_t* line, ceiling_e type, fixed_t speed);
 void    T_MoveCeiling (ceiling_t* ceiling);
 void    P_AddActiveCeiling(ceiling_t* c);
 void    P_RemoveActiveCeiling(ceiling_t* c);
-int		EV_CeilingCrushStop(line_t* line);
+int        EV_CeilingCrushStop(line_t* line);
 void    P_ActivateInStasisCeiling(line_t* line);
 
 
@@ -416,26 +416,26 @@ typedef enum
 
 typedef struct
 {
-    thinker_t	thinker;
-    floor_e		type;
-    dboolean	crush;
-    sector_t*	sector;
-    int			direction;
-    int			newspecial;
-    short		texture;
-    fixed_t		floordestheight;
-    fixed_t		speed;
-    dboolean	instant;
+    thinker_t    thinker;
+    floor_e        type;
+    dboolean    crush;
+    sector_t*    sector;
+    int            direction;
+    int            newspecial;
+    short        texture;
+    fixed_t        floordestheight;
+    fixed_t        speed;
+    dboolean    instant;
 } floormove_t;
 
 typedef struct
 {
-    thinker_t	thinker;
-    sector_t	*sector;
-    fixed_t		ceildest;
-    fixed_t		flrdest;
-    int			ceildir;
-    int			flrdir;
+    thinker_t    thinker;
+    sector_t    *sector;
+    fixed_t        ceildest;
+    fixed_t        flrdest;
+    int            ceildir;
+    int            flrdir;
 } splitmove_t;
 
 

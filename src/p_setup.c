@@ -218,7 +218,7 @@ void P_LoadVertexes(int lump)
 void P_LoadSegs(int lump)
 {
     int                 i;
-    mapseg_t*			ml;
+    mapseg_t*            ml;
     seg_t*              li;
     line_t*             ldef;
     int                 linedef;
@@ -511,7 +511,7 @@ void P_LoadLeafs(int lump)
     leafs = Z_Malloc((size * 2) * sizeof(leaf_t), PU_LEVEL, 0);
     numleafs = numsubsectors;
     
-    if(count <= 0)	// this is probably not a good thing..
+    if(count <= 0)    // this is probably not a good thing..
         return;
     
     lf = leafs;

@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//	PNG image system
+//    PNG image system
 //
 //-----------------------------------------------------------------------------
 
@@ -205,7 +205,7 @@ byte* I_PNGReadData(int lump, dboolean palette, dboolean nopack, dboolean alpha,
         if(bit_depth == 4 && nopack)
             png_set_packing(png_ptr);
     }
-    else	// data will be outputted as RGB(A) data
+    else    // data will be outputted as RGB(A) data
     {
         if(bit_depth == 16)
             png_set_strip_16(png_ptr);
@@ -225,7 +225,7 @@ byte* I_PNGReadData(int lump, dboolean palette, dboolean nopack, dboolean alpha,
                     for(i = 0; i < 16; i++)
                         dmemcpy(&pal[i], &pal[(16 * palindex) + i], sizeof(png_color));
                 }
-                else if(bit_depth >= 8)	// 8 bit and up requires an external palette lump
+                else if(bit_depth >= 8)    // 8 bit and up requires an external palette lump
                 {
                     png_colorp pallump;
                     char palname[9];

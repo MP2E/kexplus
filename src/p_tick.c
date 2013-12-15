@@ -61,8 +61,8 @@ void G_DoReborn(int playernum);
 // list processing.
 //
 
-thinker_t   thinkercap;		// Both the head and tail of the thinker list.
-mobj_t      mobjhead;		// Both the head and tail of the mobj list.
+thinker_t   thinkercap;        // Both the head and tail of the thinker list.
+mobj_t      mobjhead;        // Both the head and tail of the mobj list.
 mobj_t      *currentmobj;
 thinker_t   *currentthinker;
 
