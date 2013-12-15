@@ -1006,6 +1006,7 @@ void P_SetupSky(void)
     skybackdropnum      = -1;
     skyfadeback         = false;
     sky                 = NULL;
+    logoAlpha           = 0;
     
     if(skyflatnum == -1)
         return;
