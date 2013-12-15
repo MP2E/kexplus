@@ -38,16 +38,16 @@ typedef struct cvar_s
 } cvar_t;
 
 #define CVAR(name, str)                                     \
-    cvar_t name = { # name, # str, 0, NULL }
+    cvar_t name = { # name, # str, 0, NULL, 0, NULL, NULL }
 
 #define CVAR_CMD(name, str)                                 \
     void CvarCmd_ ## name(cvar_t* cvar);                    \
-    cvar_t name = { # name, # str, 0, CvarCmd_ ## name };   \
+    cvar_t name = { # name, # str, 0, CvarCmd_ ## name, 0, NULL, NULL };   \
     void CvarCmd_ ## name(cvar_t* cvar)
 
 #define CVAR_PARAM(name, str, var, flags)                   \
     void CvarCmd_ ## name(cvar_t* cvar);                    \
-    cvar_t name = { # name, #str, 0, CvarCmd_ ## name };    \
+    cvar_t name = { # name, #str, 0, CvarCmd_ ## name, 0, NULL, NULL };    \
     void CvarCmd_ ## name(cvar_t* cvar)                     \
     {                                                       \
         if(cvar->value > 0)                                 \
@@ -57,16 +57,16 @@ typedef struct cvar_s
     }
 
 #define NETCVAR(name, str)                                  \
-    cvar_t name = { # name, # str, 1, NULL }
+    cvar_t name = { # name, # str, 1, NULL, 0, NULL, NULL }
 
 #define NETCVAR_CMD(name, str)                              \
     void CvarCmd_ ## name(cvar_t* cvar);                    \
-    cvar_t name = { # name, # str, 1, CvarCmd_ ## name };   \
+    cvar_t name = { # name, # str, 1, CvarCmd_ ## name, 0, NULL, NULL };   \
     void CvarCmd_ ## name(cvar_t* cvar)
 
 #define NETCVAR_PARAM(name, str, var, flags)                \
     void CvarCmd_ ## name(cvar_t* cvar);                    \
-    cvar_t name = { # name, #str, 0, CvarCmd_ ## name };    \
+    cvar_t name = { # name, #str, 0, CvarCmd_ ## name, 0, NULL, NULL };    \
     void CvarCmd_ ## name(cvar_t* cvar)                     \
     {                                                       \
         if(cvar->value > 0)                                 \

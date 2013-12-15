@@ -85,7 +85,7 @@ static d_inline int D_abs(int x)
     }
 }
 #else
-static d_inline int D_abs(x)
+static d_inline int D_abs(int x)
 {
     fixed_t _t = (x),_s;
     _s = _t >> (8*sizeof _t-1);
