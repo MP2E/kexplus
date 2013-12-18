@@ -1124,6 +1124,13 @@ mobj_t* P_SpawnMapThing(mapthing_t* mthing)
     
     if(mthing->options & MTF_NOINFIGHTING)
         mobj->flags |= MF_NOINFIGHTING;
+
+    // [kex] check for nightmare flag
+    if(mthing->options & MTF_NIGHTMARE)
+    {
+        mobj->health *= 2;
+        mobj->flags |= MF_NIGHTMARE;
+    }
     
     if(mthing->options & MTF_SECRET)
     {
@@ -1293,6 +1300,7 @@ mobj_t* P_SpawnMissile(mobj_t* source, mobj_t* dest, mobjtype_t type,
     mobj_t* th;
     angle_t an;
     int dist;
+    int speed;
     fixed_t x;
     fixed_t y;
     fixed_t z;
@@ -1318,15 +1326,24 @@ mobj_t* P_SpawnMissile(mobj_t* source, mobj_t* dest, mobjtype_t type,
         if(dest->flags & MF_SHADOW)
             an += P_RandomShift(20);
     }
+
+    speed = th->info->speed;
+
+    // [kex] nightmare missiles move faster
+    if(source && (source->flags & MF_NIGHTMARE))
+    {
+        th->flags |= MF_NIGHTMARE;
+        speed *= 2;
+    }
     
     th->angle = an;
-    th->momx = FixedMul(th->info->speed, dcos(th->angle));
-    th->momy = FixedMul(th->info->speed, dsin(th->angle));
+    th->momx = FixedMul(speed, dcos(th->angle));
+    th->momy = FixedMul(speed, dsin(th->angle));
     
     if(dest)
     {
         dist = P_AproxDistance(dest->x - x, dest->y - y);
-        dist = dist / th->info->speed;
+        dist = dist / speed;
     
         if(dist < 1)
             dist = 1;

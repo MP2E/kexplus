@@ -123,7 +123,7 @@ typedef enum
     MF_DROPOFF              = 0x400,        // This allows jumps from high places.
     MF_PICKUP               = 0x800,        // For players, will pick up items.
     MF_NOCLIP               = 0x1000,       // Clip through walls (unused)
-    MF_SLIDE                = 0x2000,       // keep info about sliding walls (unused)
+    MF_NIGHTMARE            = 0x2000,       // [kex] Enables nightmare mode
     MF_FLOAT                = 0x4000,       // For active floaters, e.g. cacodemons, pain elementals.
     MF_TELEPORT             = 0x8000,       // (unused)
     MF_MISSILE              = 0x10000,      // Player missiles as well as fireballs of various kinds.

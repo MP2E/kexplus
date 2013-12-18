@@ -362,5 +362,8 @@ void R_RenderWorld(void)
     GL_SetState(GLSTATE_BLEND, 0);
     GL_SetState(GLSTATE_CULL, 1);
     GL_SetDefaultCombiner();
+
+    // villsa 12152013 - make sure we're using the default blend function
+    dglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

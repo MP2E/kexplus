@@ -108,6 +108,7 @@ void DL_ProcessDrawList(int tag, dboolean (*procfunc)(vtxlist_t*, int*))
     int drawcount = 0;
     vtxlist_t* head;
     vtxlist_t* tail;
+    dboolean checkNightmare = false;
 
     if(tag < 0 && tag >= NUMDRAWLISTS)
         return;
@@ -162,10 +163,27 @@ void DL_ProcessDrawList(int tag, dboolean (*procfunc)(vtxlist_t*, int*))
             // setup texture ID
             if(tag == DLT_SPRITE)
             {
+                int flags = ((visspritelist_t*)head->data)->spr->flags;
+
                 // textid in sprites contains hack that stores palette index data
                 palette = head->texid >> 24;
                 head->texid = head->texid & 0xffff;
                 GL_BindSpriteTexture(head->texid, palette);
+
+                // villsa 12152013 - change blend states for nightmare things
+                if((checkNightmare ^ (flags & MF_NIGHTMARE)))
+                {
+                    if(!checkNightmare && (flags & MF_NIGHTMARE))
+                    {
+                        dglBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+                        checkNightmare ^= 1;
+                    }
+                    else if(checkNightmare && !(flags & MF_NIGHTMARE))
+                    {
+                        dglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                        checkNightmare ^= 1;
+                    }
+                }
             }
             else
             {

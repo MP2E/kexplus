@@ -380,7 +380,10 @@ static dboolean R_GenerateSpritePlane(visspritelist_t* vissprite, vtx_t* vertex)
     else
         offs = 0.0f;
     
-    if((thing->frame & FF_FULLBRIGHT))
+    // [kex] nightmare things have a shade of dark green
+    if(thing->flags & MF_NIGHTMARE)
+        dglSetVertexColor(vertex, D_RGBA(64, 255, 0, thing->alpha), 4);
+    else if((thing->frame & FF_FULLBRIGHT))
         dglSetVertexColor(vertex, D_RGBA(255, 255, 255, thing->alpha), 4);
     else
     {

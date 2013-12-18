@@ -186,18 +186,19 @@ typedef enum
 //
 
 // Skill flags.
-#define    MTF_EASY            1
-#define    MTF_NORMAL          2
-#define    MTF_HARD            4
-#define    MTF_AMBUSH          8        // Deaf monsters/do not react to sound.
-#define MTF_MULTI           16        // Multiplayer specific
-#define MTF_SPAWN           32        // Don't spawn until triggered in level
-#define MTF_ONTOUCH         64        // Trigger something when picked up
-#define MTF_ONDEATH         128        // Trigger something when killed
-#define MTF_SECRET          256        // Count as secret for intermission when picked up
-#define MTF_NOINFIGHTING    512        // Ignore other attackers
+#define MTF_EASY            1
+#define MTF_NORMAL          2
+#define MTF_HARD            4
+#define MTF_AMBUSH          8       // Deaf monsters/do not react to sound.
+#define MTF_MULTI           16      // Multiplayer specific
+#define MTF_SPAWN           32      // Don't spawn until triggered in level
+#define MTF_ONTOUCH         64      // Trigger something when picked up
+#define MTF_ONDEATH         128     // Trigger something when killed
+#define MTF_SECRET          256     // Count as secret for intermission when picked up
+#define MTF_NOINFIGHTING    512     // Ignore other attackers
 #define MTF_NODEATHMATCH    1024    // Don't spawn in deathmatch games
 #define MTF_NONETGAME       2048    // Don't spawn in standard netgame mode
+#define MTF_NIGHTMARE       4096    // [kex] Nightmare thing
 
 typedef enum
 {
@@ -255,10 +256,10 @@ typedef enum
 // Ammunition types defined.
 typedef enum
 {
-    am_clip,    // Pistol / chaingun ammo.
+    am_clip,     // Pistol / chaingun ammo.
     am_shell,    // Shotgun / double barreled shotgun.
-    am_cell,    // Plasma rifle, BFG.
-    am_misl,    // Missile launcher.
+    am_cell,     // Plasma rifle, BFG.
+    am_misl,     // Missile launcher.
     NUMAMMO,
     am_noammo    // Unlimited for chainsaw / fist.
     
