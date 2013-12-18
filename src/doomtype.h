@@ -25,7 +25,7 @@
 #ifndef __DOOMTYPE__
 #define __DOOMTYPE__
 
-#ifdef _MSVC
+#ifdef _MSC_VER
 #include "SDL_config.h"
 #else
 #include <stdint.h>

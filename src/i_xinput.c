@@ -535,7 +535,7 @@ void I_XInputInit(void)
     if(M_CheckParm("-noxinput"))
         return;
 
-    #ifdef _MSVC_VER
+    #ifdef _MSC_VER
     //
     // locate xinput dynamic link library
     //
@@ -564,7 +564,7 @@ void I_XInputInit(void)
         //
         if(!(I_XInputGetState(0, &xgamepad.state)))
             xgamepad.connected = true;
-    #ifdef _MSVC_VER
+    #ifdef _MSC_VER
     }
     #endif
 }
