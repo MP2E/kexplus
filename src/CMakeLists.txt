@@ -106,7 +106,7 @@ add_executable(doom64ex
 if(MSVC)
 target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
 elseif(WIN32)
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} iphlpapi ws2_32 winmm dxguid -m)
+target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} iphlpapi ws2_32 winmm dxguid m)
 else()
 target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
 endif()
