@@ -1203,8 +1203,6 @@ void I_InitSequencer(void)
     //
     // init sequencer thread
     //
-    // 12282013MP2E: SDL_GetTicks prevents music from desyncing on TITLEMAP
-    SDL_GetTicks();
     doomseq.thread = SDL_CreateThread(Thread_PlayerHandler, &doomseq);
     if(doomseq.thread == NULL)
     {
