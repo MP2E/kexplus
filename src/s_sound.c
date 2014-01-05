@@ -170,10 +170,17 @@ void S_StopMusic(void)
 
 void S_ResetSound(void)
 {
+    int i;
+
     if(nosound && nomusic)
         return;
 
     I_ResetSound();
+
+    // villsa 12282013 - make sure we clear all sound sources
+    // during level transition
+    for(i = 0; i < I_GetMaxChannels(); i++)
+        I_RemoveSoundSource(i);
 }
 
 //

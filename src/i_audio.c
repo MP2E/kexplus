@@ -201,6 +201,9 @@ typedef struct
     dword       tics;
     dword       nexttic;
     dword       lasttic;
+    dword       starttic;
+    Uint32      starttime;
+    Uint32      curtime;
     chanstate_e state;
     dboolean    paused;
 
@@ -251,6 +254,7 @@ typedef struct
     fluid_audio_driver_t*   driver;
     int                     sfont_id; // 20120112 bkw: needs to be signed
     SDL_Thread*             thread;
+    dword                   playtime;
 
     dword                   voices;
 
@@ -425,7 +429,7 @@ static dword Chan_GetNextTick(channel_t* chan)
         }
     }
 
-    return (chan->tics + (dword)((double)tic * chan->song->timediv));
+    return (chan->starttic + (dword)((double)tic * chan->song->timediv));
 }
 
 //
@@ -480,6 +484,9 @@ static dboolean Chan_RemoveTrackFromPlaylist(doomseq_t* seq, channel_t* chan)
     chan->tics      = 0;
     chan->nexttic   = 0;
     chan->lasttic   = 0;
+    chan->starttic  = 0;
+    chan->curtime   = 0;
+    chan->starttime = 0;
     chan->pos       = 0;
     chan->key       = 0;
     chan->velocity  = 0;
@@ -516,6 +523,7 @@ static channel_t* Song_AddTrackToPlaylist(doomseq_t* seq, song_t* song, track_t*
             playlist[i].track       = track;
             playlist[i].tics        = 0;
             playlist[i].lasttic     = 0;
+            playlist[i].starttic    = 0;
             playlist[i].pos         = track->data;
             playlist[i].jump        = NULL;
             playlist[i].state       = CHAN_STATE_READY;
@@ -533,6 +541,8 @@ static channel_t* Song_AddTrackToPlaylist(doomseq_t* seq, song_t* song, track_t*
             playlist[i].pan         = 64;
             playlist[i].origin      = NULL;
             playlist[i].depth       = 0;
+            playlist[i].starttime   = 0;
+            playlist[i].curtime     = 0;
 
             // immediately start reading the midi track
             playlist[i].nexttic     = Chan_GetNextTick(&playlist[i]);
@@ -683,7 +693,11 @@ static void Event_Meta(doomseq_t* seq, channel_t* chan)
             (Chan_GetNextMidiByte(chan) << 8)  |
             (Chan_GetNextMidiByte(chan) & 0xff);
 
+        if(chan->song->tempo == 0)
+            return;
+
         chan->song->timediv = Song_GetTimeDivision(chan->song);
+        chan->starttime = chan->curtime;
         break;
 
         // game-specific midi event
@@ -911,7 +925,12 @@ static void Chan_RunSong(doomseq_t* seq, channel_t* chan, dword msecs)
     //
     // get next tic
     //
-    chan->tics += (msecs - chan->tics);
+    if(chan->starttime == 0)
+        chan->starttime = msecs;
+
+    // villsa 12292013 - try to get precise timing to avoid de-syncs
+    chan->curtime = msecs;
+    chan->tics += ((chan->curtime - chan->starttime) - chan->tics);
 
     if(Chan_CheckState(seq, chan))
         return;
@@ -937,6 +956,7 @@ static void Chan_RunSong(doomseq_t* seq, channel_t* chan, dword msecs)
         if(chan->tics < chan->nexttic)
             return;
 
+        chan->starttic = chan->nexttic;
         c = Chan_GetNextMidiByte(chan);
 
         if(c == 0xff)
@@ -989,6 +1009,8 @@ static void Seq_RunSong(doomseq_t* seq, dword msecs)
     int i;
     channel_t* chan;
 
+    seq->playtime = msecs;
+
     SEMAPHORE_LOCK()
     for(i = 0; i < MIDI_CHANNELS; i++)
     {
@@ -999,8 +1021,8 @@ static void Seq_RunSong(doomseq_t* seq, dword msecs)
 
         if(chan->stop)
             Chan_RemoveTrackFromPlaylist(seq, chan);
-
-        Chan_RunSong(seq, chan, msecs);
+        else
+            Chan_RunSong(seq, chan, msecs);
     }
     SEMAPHORE_UNLOCK()
 }
@@ -1150,7 +1172,12 @@ static int SDLCALL Thread_PlayerHandler(void *param)
             status = signal(seq);
 
             if(status == 0)
+            {
+                // villsa 12292013 - add a delay here so we don't
+                // thrash the loop while idling
+                SDL_Delay(1);
                 continue;
+            }
 
             if(status == -1)
                 return 1;
@@ -1166,7 +1193,7 @@ static int SDLCALL Thread_PlayerHandler(void *param)
         delay = count - (SDL_GetTicks() - start);
 
         if(delay > 0)
-            I_Sleep(delay);
+            SDL_Delay(delay);
     }
 
     return 0;
@@ -1203,6 +1230,14 @@ void I_InitSequencer(void)
     //
     // init sequencer thread
     //
+
+    // villsa 12292013 - I can't guarantee that this will resolve
+    // the issue of the titlemap/intermission/finale music to be
+    // off-sync when uncapped framerates are enabled but for some
+    // reason, calling SDL_GetTicks before initalizing the thread
+    // will reduce the chances of it happening
+    SDL_GetTicks();
+
     doomseq.thread = SDL_CreateThread(Thread_PlayerHandler, &doomseq);
     if(doomseq.thread == NULL)
     {

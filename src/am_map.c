@@ -344,31 +344,37 @@ dboolean AM_Responder(event_t* ev)
         }
 #endif
     }
-    else if(ev->type == ev_mouse && am_flags & AF_PANMODE)
+    else if(am_flags & AF_PANMODE)
     {
-        mpanx = ev->data2;
-        mpany = ev->data3;
-
-        if(ev->data1)
+        if(ev->type == ev_mouse)
         {
-            if(ev->data1 & 1)
-            {
-                am_flags &= ~AF_ZOOMOUT;
-                am_flags |= AF_ZOOMIN;
-            }
-            else if(ev->data1 & 4)
-            {
-                am_flags &= ~AF_ZOOMIN;
-                am_flags |= AF_ZOOMOUT;
-            }
+            mpanx = ev->data2;
+            mpany = ev->data3;
+            rc = true;
         }
         else
         {
-            am_flags &= ~AF_ZOOMOUT;
-            am_flags &= ~AF_ZOOMIN;
+            if(ev->type == ev_mousedown && ev->data1)
+            {
+                if(ev->data1 & 1)
+                {
+                    am_flags &= ~AF_ZOOMOUT;
+                    am_flags |= AF_ZOOMIN;
+                    rc = true;
+                }
+                else if(ev->data1 & 4)
+                {
+                    am_flags &= ~AF_ZOOMIN;
+                    am_flags |= AF_ZOOMOUT;
+                    rc = true;
+                }
+            }
+            else
+            {
+                am_flags &= ~AF_ZOOMOUT;
+                am_flags &= ~AF_ZOOMIN;
+            }
         }
-
-        rc = true;
     }
 #ifdef _USE_XINPUT  // XINPUT
 
