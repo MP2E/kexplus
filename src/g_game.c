@@ -140,6 +140,7 @@ int         bodyqueslot;
 
 byte forcecollision = 0;
 byte forcejump = 0;
+byte forcefreelook = 0;
 
 
 NETCVAR(sv_nomonsters, 0);
@@ -670,8 +671,11 @@ void G_BuildTiccmd(ticcmd_t* cmd)
         
         cmd->angleturn -= pc->mousex * 0x8;
         
-        if((int)v_mlook.value)
-            cmd->pitch -= (int)v_mlookinvert.value ? pc->mousey * 0x8 : -(pc->mousey * 0x8);
+        if(forcefreelook != 2)
+        {
+            if((int)v_mlook.value || forcefreelook)
+                cmd->pitch -= (int)v_mlookinvert.value ? pc->mousey * 0x8 : -(pc->mousey * 0x8);
+        }
     }
 
     if((int)v_yaxismove.value)
@@ -896,6 +900,7 @@ void G_DoLoadLevel (void)
 
     forcecollision  = map->oldcollision;
     forcejump       = map->allowjump;
+    forcefreelook   = map->allowfreelook;
 
     // This was quite messy with SPECIAL and commented parts.
     // Supposedly hacks to make the latest edition work.

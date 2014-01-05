@@ -1273,6 +1273,15 @@ static void P_InitMapInfo(void)
 
                         ok = true;
                     }
+                    else if(!dstricmp(sc_parser.token, "ALLOWFREELOOK"))
+                    {
+                        if(datoi(sc_parser.getstring()) == 1)
+                            mapdef.allowfreelook = 1;
+                        else if(datoi(sc_parser.getstring()) == 0)
+                            mapdef.allowfreelook = 2;
+
+                        ok = true;
+                    }
 
                     if(!ok)
                         sc_parser.error("P_InitMapInfo");

@@ -192,6 +192,7 @@ typedef struct
     dboolean    contmusexit;
     int         oldcollision;
     int         allowjump;
+    int         allowfreelook;
 } mapdef_t;
 
 typedef struct
