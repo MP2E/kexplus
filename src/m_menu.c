@@ -4735,6 +4735,7 @@ dboolean M_Responder(event_t* ev)
     if(ch == -1)
         return false;
 
+#ifdef _USE_XINPUT  // XINPUT
     switch(ch)
     {
     case BUTTON_DPAD_UP:
@@ -4762,6 +4763,7 @@ dboolean M_Responder(event_t* ev)
         ch = KEY_DEL;
         break;
     }
+#endif //XINPUT
 
     if(MenuBindActive == true)//key Bindings
     {
