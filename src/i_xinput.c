@@ -58,57 +58,6 @@ CVAR(i_rstickthreshold, 20.0);
 CVAR(i_xinputscheme, 0);
 
 //
-// Gamepad button layout table
-//
-
-const int xbtnlayout[2][XINPUT_BUTTONS + 2][2] =
-{
-    //
-    // modern layout
-    //
-    {
-        { PCKEY_USE                     ,XINPUT_GAMEPAD_A },
-        { -1                            ,XINPUT_GAMEPAD_B },
-        { PCF_NEXTWEAPON|PCF_GAMEPAD    ,XINPUT_GAMEPAD_Y },
-        { PCF_PREVWEAPON|PCF_GAMEPAD    ,XINPUT_GAMEPAD_X },
-        { PCKEY_JUMP                    ,XINPUT_GAMEPAD_LEFT_SHOULDER },
-        { -1                            ,XINPUT_GAMEPAD_RIGHT_SHOULDER },
-        { -1                            ,XINPUT_GAMEPAD_DPAD_LEFT },
-        { -1                            ,XINPUT_GAMEPAD_DPAD_RIGHT },
-        { -1                            ,XINPUT_GAMEPAD_DPAD_UP },
-        { -1                            ,XINPUT_GAMEPAD_DPAD_DOWN },
-        { -1                            ,XINPUT_GAMEPAD_LEFT_THUMB },
-        { PCKEY_CENTER                  ,XINPUT_GAMEPAD_RIGHT_THUMB },
-        { -1                            ,XINPUT_GAMEPAD_START },
-        { -1                            ,XINPUT_GAMEPAD_BACK },
-        { -1                            ,XINPUT_GAMEPAD_LEFT_TRIGGER },
-        { PCKEY_ATTACK                  ,XINPUT_GAMEPAD_RIGHT_TRIGGER }
-    },
-
-    //
-    // classic layout
-    //
-    {
-        { PCKEY_ATTACK                  ,XINPUT_GAMEPAD_A },
-        { PCKEY_USE                     ,XINPUT_GAMEPAD_B },
-        { PCKEY_STRAFE                  ,XINPUT_GAMEPAD_Y },
-        { PCKEY_RUN                     ,XINPUT_GAMEPAD_X },
-        { PCF_PREVWEAPON|PCF_GAMEPAD    ,XINPUT_GAMEPAD_LEFT_SHOULDER },
-        { PCF_NEXTWEAPON|PCF_GAMEPAD    ,XINPUT_GAMEPAD_RIGHT_SHOULDER },
-        { PCKEY_LEFT                    ,XINPUT_GAMEPAD_DPAD_LEFT },
-        { PCKEY_RIGHT                   ,XINPUT_GAMEPAD_DPAD_RIGHT },
-        { PCKEY_FORWARD                 ,XINPUT_GAMEPAD_DPAD_UP },
-        { PCKEY_BACK                    ,XINPUT_GAMEPAD_DPAD_DOWN },
-        { -1                            ,XINPUT_GAMEPAD_LEFT_THUMB },
-        { PCKEY_CENTER                  ,XINPUT_GAMEPAD_RIGHT_THUMB },
-        { -1                            ,XINPUT_GAMEPAD_START },
-        { -1                            ,XINPUT_GAMEPAD_BACK },
-        { PCKEY_STRAFELEFT              ,XINPUT_GAMEPAD_LEFT_TRIGGER },
-        { PCKEY_STRAFERIGHT             ,XINPUT_GAMEPAD_RIGHT_TRIGGER }
-    }
-};
-
-//
 // I_XInputClampDeadZone
 //
 
@@ -145,6 +94,9 @@ void I_XInputPollEvent(void)
     event_t event;
     dboolean ltrigger;
     dboolean rtrigger;
+    int i;
+    int j;
+    int bits;
 
     //
     // is xinput api even available?
@@ -248,13 +200,9 @@ void I_XInputPollEvent(void)
     //
     // read buttons
     //
-    if((buttons->data || (ltrigger || rtrigger)) || xgamepad.oldbuttons)
+    if((buttons->data || (ltrigger || rtrigger)))
     {
-        event.type = ev_gamepad;
-        event.data1 = buttons->data;
-        event.data2 = 0;
-        event.data3 = 0;
-        event.data4 = 0;
+        bits = buttons->data;
 
         //
         // left/right triggers isn't classified as buttons
@@ -262,99 +210,53 @@ void I_XInputPollEvent(void)
         //
 
         if(ltrigger)
-            event.data1 |= XINPUT_GAMEPAD_LEFT_TRIGGER;
+            bits |= XINPUT_GAMEPAD_LEFT_TRIGGER;
 
         if(rtrigger)
-            event.data1 |= XINPUT_GAMEPAD_RIGHT_TRIGGER;
+            bits |= XINPUT_GAMEPAD_RIGHT_TRIGGER;
 
-        D_PostEvent(&event);
-    }
-
-    xgamepad.oldbuttons = 0;
-}
-
-//
-// I_XInputTicButtonPress
-// Single press action. Cannot retrigger until user has
-// released key and pressed down on button again or until
-// a specified amount of tics has passed
-//
-
-static const int xbtntable[XINPUT_BUTTONS][2] =
-{
-    { XINPUT_GAMEPAD_DPAD_UP        , 0  },
-    { XINPUT_GAMEPAD_DPAD_DOWN      , 1  },
-    { XINPUT_GAMEPAD_DPAD_LEFT      , 2  },
-    { XINPUT_GAMEPAD_DPAD_RIGHT     , 3  },
-    { XINPUT_GAMEPAD_START          , 4  },
-    { XINPUT_GAMEPAD_BACK           , 5  },
-    { XINPUT_GAMEPAD_LEFT_THUMB     , 6  },
-    { XINPUT_GAMEPAD_RIGHT_THUMB    , 7  },
-    { XINPUT_GAMEPAD_LEFT_SHOULDER  , 8  },
-    { XINPUT_GAMEPAD_RIGHT_SHOULDER , 9  },
-    { XINPUT_GAMEPAD_A              , 10 },
-    { XINPUT_GAMEPAD_B              , 11 },
-    { XINPUT_GAMEPAD_X              , 12 },
-    { XINPUT_GAMEPAD_Y              , 13 }
-};
-
-dboolean I_XInputTicButtonPress(int btndata, int button, int tic)
-{
-    int i;
-    int idx = 0;
-
-    //
-    // get appropriate ID
-    //
-    for(i = 0; i < XINPUT_BUTTONS; i++)
-    {
-        idx = xbtntable[i][1];
-
-        if(!(btndata & xbtntable[i][0]) && xgamepad.refiretic[idx])
-            xgamepad.refiretic[idx] = 0;
-
-        if(xbtntable[i][0] == button)
-            break;
-    }
-
-    //
-    // button pressed?
-    //
-    if(btndata & button)
-    {
-        //
-        // check for tics if still held down
-        //
-        if(xgamepad.refiretic[idx] < I_GetTime())
+        // villsa 01052014 -  check for button press
+        bits &= ~xgamepad.oldbuttons;
+        for(j = 0, i = 1; i != 0x100000; i <<= 1)
         {
-            xgamepad.refiretic[idx] = I_GetTime() + tic;
-            return true;
+            if(!(i & 0xFF3FF))
+                continue;
+
+            if(bits & i)
+            {
+                event.type = ev_keydown;
+                event.data1 = BUTTON_DPAD_UP + j;
+                D_PostEvent(&event);
+            }
+
+            j++;
         }
     }
-    //
-    // button is released
-    //
-    else
-        xgamepad.refiretic[idx] = 0;
 
-    return false;
-}
+    bits = xgamepad.oldbuttons;
+    xgamepad.oldbuttons = buttons->data;
 
-//
-// I_XInputAbortTic
-//
+    if(ltrigger)
+        xgamepad.oldbuttons |= XINPUT_GAMEPAD_LEFT_TRIGGER;
 
-void I_XInputAbortTic(int btndata)
-{
-    int i;
-    int idx;
+    if(rtrigger)
+        xgamepad.oldbuttons |= XINPUT_GAMEPAD_RIGHT_TRIGGER;
 
-    for(i = 0; i < XINPUT_BUTTONS; i++)
+    // villsa 01052014 -  check for button release
+    bits &= ~xgamepad.oldbuttons;
+    for(j = 0, i = 1; i != 0x100000; i <<= 1)
     {
-        idx = xbtntable[i][1];
+        if(!(i & 0xFF3FF))
+            continue;
 
-        if(btndata & xbtntable[i][0])
-            xgamepad.refiretic[idx] = 0;
+        if(bits & i)
+        {
+            event.type = ev_keyup;
+            event.data1 = BUTTON_DPAD_UP + j;
+            D_PostEvent(&event);
+        }
+
+        j++;
     }
 }
 
@@ -389,7 +291,6 @@ void I_XInputVibrate(dboolean leftside, byte amount, int windDown)
 void I_XInputReadActions(event_t *ev)
 {
     playercontrols_t *pc = &Controls;
-    int i;
 
     if(ev->type == ev_gamepad)
     {
@@ -474,47 +375,6 @@ void I_XInputReadActions(event_t *ev)
 
             return;
         }
-
-        //
-        // gamepad buttons
-        //
-
-        xgamepad.oldbuttons = ev->data1;
-
-        //
-        // read scheme table and set action key based on what button is
-        // assigned to it
-        //
-        for(i = 0; i < XINPUT_BUTTONS + 2; i++)
-        {
-            int key;
-            int button;
-
-            key = xbtnlayout[i_xinputscheme.value > 0][i][0];
-            button = xbtnlayout[i_xinputscheme.value > 0][i][1];
-
-            if(key == -1)
-                continue;
-
-            if(button == -1)
-                break;
-
-            //
-            // hack for actions thats triggered by flags instead of key ID
-            //
-            if(key >= PCF_GAMEPAD)
-            {
-                //
-                // remove flag
-                //
-                key &= ~PCF_GAMEPAD;
-
-                if(I_XInputTicButtonPress(ev->data1, button, 32))
-                    pc->flags |= key;
-            }
-            else
-                pc->key[key] = ev->data1 & button;
-        }
     }
 }
 
@@ -570,5 +430,3 @@ void I_XInputInit(void)
 }
 
 #endif  // _USE_XINPUT
-
-

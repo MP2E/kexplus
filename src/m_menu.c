@@ -201,6 +201,8 @@ char    msgNames[2][4]          = {"Off","On"};
 static menu_t* currentMenu;
 static menu_t* nextmenu;
 
+extern menu_t ControlMenuDef;
+
 //------------------------------------------------------------------------
 //
 // PROTOTYPES
@@ -717,7 +719,6 @@ void M_ChooseSkill(int choice)
 
 void M_DrawOptions(void);
 void M_Controls(int choice);
-void M_Mouse(int choice);
 void M_Sound(int choice);
 void M_Display(int choice);
 void M_Video(int choice);
@@ -729,7 +730,6 @@ void M_Region(int choice);
 enum
 {
     options_controls,
-    options_mouse,
     options_misc,
     options_soundvol,
     options_display,
@@ -744,7 +744,6 @@ enum
 menuitem_t OptionsMenu[]=
 {
     {1,"Controls",M_Controls, 'c'},
-    {1,"Mouse",M_Mouse,'m'},
     {1,"Setup",M_Misc, 'e'},
     {1,"Sound",M_Sound,'s'},
     {1,"Display",M_Display, 'd'},
@@ -757,8 +756,7 @@ menuitem_t OptionsMenu[]=
 
 char* OptionHints[opt_end]=
 {
-    "change keyboard bindings",
-    "configure mouse functionality",
+    "control configuration",
     "miscellaneous options for gameplay and other features",
     "adjust sound volume",
     "settings for heads up display",
@@ -802,6 +800,7 @@ void M_DrawOptions(void)
         GL_SetOrthoScale(OptionsDef.scale);
     }
 }
+
 
 //------------------------------------------------------------------------
 //
@@ -1636,7 +1635,7 @@ menu_t MouseDef =
 {
     mouse_end,
     false,
-    &OptionsDef,
+    &ControlMenuDef,
     MouseMenu,
     M_DrawMouse,
     "Mouse",
@@ -1650,11 +1649,6 @@ menu_t MouseDef =
     NULL,
     MouseBars
 };
-
-void M_Mouse(int choice)
-{
-    M_SetupNextMenu(&MouseDef);
-}
 
 void M_DrawMouse(void)
 {
@@ -2946,8 +2940,6 @@ void M_DoFeature(int choice)
 
 #include "g_controls.h"
 
-void M_DrawXInputButton(int x, int y, int button);
-
 //------------------------------------------------------------------------
 //
 // XBOX 360 CONTROLLER MENU
@@ -2956,11 +2948,6 @@ void M_DrawXInputButton(int x, int y, int button);
 
 void M_XGamePadChoice(int choice);
 void M_DrawXGamePad(void);
-
-#if 0
-void M_XCtrlSchemeChoice(int choice);
-void M_DrawXCtrlScheme(void);
-#endif
 
 CVAR_EXTERNAL(i_rsticksensitivity);
 CVAR_EXTERNAL(i_rstickthreshold);
@@ -2972,7 +2959,6 @@ enum
     xgp_empty1,
     xgp_threshold,
     xgp_empty2,
-    xgp_layout,
     xgp_look,
     xgp_invert,
     xgp_default,
@@ -2980,67 +2966,22 @@ enum
     xgp_end
 } xgp_e;
 
-#if 0
-enum
-{
-    xcs_1,
-    xcs_2,
-    xcs_3,
-    xcs_4,
-    xcs_5,
-    xcs_6,
-    xcs_7,
-    xcs_8,
-    xcs_9,
-    xcs_10,
-    xcs_12,
-    xcs_13,
-    xcs_14,
-    xcs_default,
-    xcs_return,
-    xcs_end
-} xcs_e;
-#endif
-
 menuitem_t XGamePadMenu[]=
 {
     {3,"Stick Sensitivity",M_XGamePadChoice,'s'},
     {-1,"",0},
     {3,"Turn Threshold",M_XGamePadChoice,'t'},
     {-1,"",0},
-    {2,"Layout:",M_XGamePadChoice,'b'},
     {2,"Y Axis Look:",M_ChangeMouseLook,'l'},
     {2,"Invert Look:",M_ChangeMouseInvert, 'i'},
     {-2,"Default",M_DoDefaults,'d'},
     {1,"/r Return",M_Return, 0x20}
 };
 
-#if 0
-menuitem_t XCtrlSchemeMenu[]=
-{
-    {1,"   Attack", NULL, 0},
-    {1,"   Use", NULL, 0},
-    {1,"   Forward", NULL, 0},
-    {1,"   Back", NULL, 0},
-    {1,"   Left", NULL, 0},
-    {1,"   Right", NULL, 0},
-    {1,"   Strafe Left", NULL, 0},
-    {1,"   Strafe Right", NULL, 0},
-    {1,"   Run", NULL, 0},
-    {1,"   Jump", NULL, 0},
-    {1,"   Look Up", NULL, 0},
-    {1,"   Look Down", NULL, 0},
-    {1,"   Center View", NULL, 0},
-    {-2,"Default",M_DoDefaults,'d'},
-    {1,"/r Return",M_Return, 0x20}
-};
-#endif
-
 menudefault_t XGamePadDefault[] =
 {
     { &i_rsticksensitivity, 0.0080f },
     { &i_rstickthreshold, 20 },
-    { &i_xinputscheme, 0 },
     { &v_mlook, 0 },
     { &v_mlookinvert, 0 },
     { NULL, -1 }
@@ -3050,7 +2991,7 @@ menu_t XGamePadDef =
 {
     xgp_end,
     false,
-    &OptionsDef,
+    &ControlMenuDef,
     XGamePadMenu,
     M_DrawXGamePad,
     "XBOX 360 Gamepad",
@@ -3064,27 +3005,6 @@ menu_t XGamePadDef =
     NULL,
     NULL
 };
-
-#if 0
-menu_t XCtrlSchemeDef =
-{
-    xcs_end,
-    false,
-    &XGamePadDef,
-    XCtrlSchemeMenu,
-    M_DrawXCtrlScheme,
-    "Config Buttons",
-    96,56,
-    0,
-    false,
-    NULL,
-    8,
-    0,
-    1.0f,
-    NULL,
-    NULL
-};
-#endif
 
 void M_XGamePadChoice(int choice)
 {
@@ -3126,25 +3046,16 @@ void M_XGamePadChoice(int choice)
                 CON_CvarSetValue(i_rstickthreshold.name, 1);
         }
         break;
-
-    case xgp_layout:
-        M_SetOptionValue(choice, 0, 1, 1, &i_xinputscheme);
-        break;
     }
 }
 
 void M_DrawXGamePad(void)
 {
-    static const char* schemeType[] = { "Modern", "Classic" };
-
     M_DrawThermo(XGamePadDef.x, XGamePadDef.y + LINEHEIGHT*(xgp_sensitivity+1),
         100, i_rsticksensitivity.value * 8000.0f);
 
     M_DrawThermo(XGamePadDef.x, XGamePadDef.y + LINEHEIGHT*(xgp_threshold+1),
         50, i_rstickthreshold.value * 0.5f);
-
-     Draw_BigText(XGamePadDef.x + 128, XGamePadDef.y + LINEHEIGHT * xgp_layout, MENUCOLORRED,
-        schemeType[(int)i_xinputscheme.value]);
 
      Draw_BigText(XGamePadDef.x + 128, XGamePadDef.y + LINEHEIGHT * xgp_look, MENUCOLORRED,
         msgNames[(int)v_mlook.value]);
@@ -3152,44 +3063,6 @@ void M_DrawXGamePad(void)
     Draw_BigText(XGamePadDef.x + 128, XGamePadDef.y + LINEHEIGHT * xgp_invert, MENUCOLORRED,
         msgNames[(int)v_mlookinvert.value]);
 }
-
-#if 0
-void M_XCtrlSchemeChoice(int choice)
-{
-}
-
-void M_DrawXCtrlScheme(void)
-{
-    int i;
-    int j;
-    int keys[NUM_PCKEYS];
-
-    dmemset(keys, 0, sizeof(int)*NUM_PCKEYS);
-
-    for(i = 0; i < NUM_PCKEYS; i++)
-    {
-        for(j = 0; j < XINPUT_BUTTONS + 2; j++)
-        {
-            if(xbtnlayout[0][j][0] == i)
-            {
-                keys[i] = xbtnlayout[0][j][1];
-                continue;
-            }
-        }
-    }
-
-    for(i = xcs_1; i < xcs_14 + 1; i++)
-    {
-        if(currentMenu->menupageoffset <= i &&
-            i - currentMenu->menupageoffset < currentMenu->numpageitems)
-        {
-            M_DrawXInputButton(XCtrlSchemeDef.x,
-                XCtrlSchemeDef.y + LINEHEIGHT * (i - currentMenu->menupageoffset),
-                keys[i - 1]);
-        }
-    }
-}
-#endif
 
 #endif  // XINPUT
 
@@ -3205,7 +3078,7 @@ void M_DrawControls(void);
 
 #define NUM_NONBINDABLE_ITEMS   8
 #define NUM_CONTROL_ACTIONS     44
-#define    NUM_CONTROL_ITEMS        NUM_CONTROL_ACTIONS + NUM_NONBINDABLE_ITEMS
+#define NUM_CONTROL_ITEMS        NUM_CONTROL_ACTIONS + NUM_NONBINDABLE_ITEMS
 
 menuaction_t*   PlayerActions;
 menu_t          ControlsDef;
@@ -3261,16 +3134,7 @@ static menuaction_t mPlayerActionsDef[NUM_CONTROL_ITEMS] =
 
 void M_Controls(int choice)
 {
-#ifdef _USE_XINPUT  // XINPUT
-    if(xgamepad.connected)
-        M_SetupNextMenu(&XGamePadDef);
-    else
-#endif
-        
-    {
-        M_BuildControlMenu();
-        M_SetupNextMenu(&ControlsDef);
-    }
+    M_SetupNextMenu(&ControlMenuDef);
 }
 
 void M_BuildControlMenu(void)
@@ -3291,7 +3155,7 @@ void M_BuildControlMenu(void)
     menu->numitems = actions + NUM_NONBINDABLE_ITEMS;
     menu->textonly = false;
     menu->numpageitems = 16;
-    menu->prevMenu = &OptionsDef;
+    menu->prevMenu = &ControlMenuDef;
     menu->menuitems = ControlsItem;
     menu->routine = M_DrawControls;
     menu->x = 120;
@@ -3299,7 +3163,7 @@ void M_BuildControlMenu(void)
     menu->smallfont = true;
     menu->menupageoffset = 0;
     menu->scale = 0.75f;
-    sprintf(menu->title, "Controls");
+    sprintf(menu->title, "Bindings");
     menu->lastOn = itemOn;
 
     for(item = 0; item < actions; item++)
@@ -3354,6 +3218,94 @@ void M_DrawControls(void)
 {
     Draw_BigText(-1, 264, MENUCOLORWHITE , "Press Escape To Return");
     Draw_BigText(-1, 280, MENUCOLORWHITE , "Press Delete To Unbind");
+}
+
+//------------------------------------------------------------------------
+//
+// CONTROLS MENU
+//
+//------------------------------------------------------------------------
+
+void M_ControlChoice(int choice);
+void M_DrawControlMenu(void);
+
+enum
+{
+    controls_keyboard,
+    controls_mouse,
+#ifdef _USE_XINPUT  // XINPUT
+    controls_gamepad,
+#endif
+    controls_return,
+    controls_end
+} controls_e;
+
+menuitem_t ControlsMenu[]=
+{
+    {1,"Bindings",M_ControlChoice, 'k'},
+    {1,"Mouse",M_ControlChoice, 'm'},
+#ifdef _USE_XINPUT  // XINPUT
+    {1,"GamePad",M_ControlChoice, 'g'},
+#endif
+    {1,"/r Return",M_Return, 0x20}
+};
+
+char* ControlsHints[controls_end]=
+{
+    "configure bindings",
+    "configure mouse functionality",
+#ifdef _USE_XINPUT  // XINPUT
+    "configure gamepad functionality",
+#endif
+    NULL
+};
+
+menu_t ControlMenuDef =
+{
+    controls_end,
+    false,
+    &OptionsDef,
+    ControlsMenu,
+    M_DrawControlMenu,
+    "Controls",
+    120,64,
+    0,
+    false,
+    NULL,
+    -1,
+    0,
+    1,
+    ControlsHints,
+    NULL
+};
+
+void M_ControlChoice(int choice)
+{
+    switch(itemOn)
+    {
+    case controls_keyboard:
+        M_BuildControlMenu();
+        M_SetupNextMenu(&ControlsDef);
+        break;
+    case controls_mouse:
+        M_SetupNextMenu(&MouseDef);
+        break;
+#ifdef _USE_XINPUT  // XINPUT
+    case controls_gamepad:
+        M_SetupNextMenu(&XGamePadDef);
+        break;
+#endif
+    }
+}
+
+void M_DrawControlMenu(void)
+{
+    if(ControlMenuDef.hints[itemOn] != NULL)
+    {
+        GL_SetOrthoScale(0.5f);
+        Draw_BigText(-1, 410, MENUCOLORWHITE, ControlMenuDef.hints[itemOn]);
+        GL_SetOrthoScale(ControlMenuDef.scale);
+    }
 }
 
 //------------------------------------------------------------------------
@@ -4668,6 +4620,12 @@ void M_DrawXInputButton(int x, int y, int button)
     case XINPUT_GAMEPAD_BACK:
         index = 11;
         break;
+    case XINPUT_GAMEPAD_LEFT_TRIGGER:
+        index = 4;
+        break;
+    case XINPUT_GAMEPAD_RIGHT_TRIGGER:
+        index = 5;
+        break;
         //
         // [kex] TODO: finish adding remaining buttons?
         //
@@ -4717,55 +4675,6 @@ void M_DrawXInputButton(int x, int y, int button)
     dglDisable(GL_BLEND);
 }
 
-static const int xbtnmenutable[8][3] =
-{
-    { XINPUT_GAMEPAD_DPAD_UP        , KEY_UPARROW,      5000  },
-    { XINPUT_GAMEPAD_DPAD_DOWN      , KEY_DOWNARROW,    5000  },
-    { XINPUT_GAMEPAD_DPAD_LEFT      , KEY_LEFTARROW,    8  },
-    { XINPUT_GAMEPAD_DPAD_RIGHT     , KEY_RIGHTARROW,   8  },
-    { XINPUT_GAMEPAD_START          , KEY_ESCAPE,       5000  },
-    { XINPUT_GAMEPAD_BACK           , KEY_BACKSPACE,    5000  },
-    { XINPUT_GAMEPAD_A              , KEY_ENTER,        5000 },
-    { XINPUT_GAMEPAD_B              , KEY_BACKSPACE,    5000 }
-};
-
-//
-// M_GetXInputMenuKey
-// Interprete xinput buttons to PC keys...
-// pretty much a huge hack to avoid adding
-// any more code to this already huge system
-//
-
-static int M_GetXInputMenuKey(event_t *ev)
-{
-    int i;
-    int tic;
-
-    if(ev->data3)
-        return -1;
-
-    for(i = 0; i < 8; i++)
-    {
-        tic = xbtnmenutable[i][2];
-
-        //
-        // hack for thermo bar sliders...
-        // set tic to 0 so user can hold down button to slide
-        // the thermo bar
-        //
-        if(currentMenu->menuitems[itemOn].status == 3 &&
-            (xbtnmenutable[i][1] == KEY_LEFTARROW || xbtnmenutable[i][1] == KEY_RIGHTARROW))
-        {
-            tic = 0;
-        }
-
-        if(I_XInputTicButtonPress(ev->data1, xbtnmenutable[i][0], tic))
-            return xbtnmenutable[i][1];
-    }
-
-    return -1;
-}
-
 #endif
 
 //
@@ -4784,89 +4693,79 @@ dboolean M_Responder(event_t* ev)
     if(menufadefunc || !allowmenu || demoplayback)
         return false;
 
-#ifdef _USE_XINPUT  // XINPUT
-    if(ev->type == ev_gamepad && !ev->data3)
+    if(ev->type == ev_mousedown)
     {
-        //
-        // only check for start button if menu is not active
-        //
-        if(!menuactive)
+        if(ev->data1 & 1)
         {
-            if(I_XInputTicButtonPress(ev->data1, XINPUT_GAMEPAD_START, 5000))
-                ch = KEY_ESCAPE;
+            ch = KEY_ENTER;
         }
-        else
+    
+        if(ev->data1 & 4)
         {
-            ch = M_GetXInputMenuKey(ev);
-
-            //
-            // hack for thermo bar sliders
-            // call menu item routine immediately
-            //
-            if(currentMenu->menuitems[itemOn].status == 3)
-            {
-                if(ch == KEY_LEFTARROW)
-                {
-                    currentMenu->menuitems[itemOn].routine(0);
-                    return true;
-                }
-                else if(ch == KEY_RIGHTARROW)
-                {
-                    currentMenu->menuitems[itemOn].routine(1);
-                    return true;
-                }
-            }
+            ch = KEY_BACKSPACE;
         }
     }
-    else
-#endif
+    else if(ev->type == ev_keydown)
     {
-        if(ev->type == ev_mousedown)
-        {
-            if(ev->data1 & 1)
-            {
-                ch = KEY_ENTER;
-            }
-        
-            if(ev->data1 & 4)
-            {
-                ch = KEY_BACKSPACE;
-            }
-        }
-        else if(ev->type == ev_keydown)
+        ch = ev->data1;
+
+        if(ch == KEY_SHIFT)
+            shiftdown = true;
+    }
+    else if(ev->type == ev_keyup)
+    {
+        thermowait = 0;
+        if(ev->data1 == KEY_SHIFT)
         {
             ch = ev->data1;
-
-            if(ch == KEY_SHIFT)
-                shiftdown = true;
+            shiftdown = false;
         }
-        else if(ev->type == ev_keyup)
+    }
+    else if(ev->type == ev_mouse && (ev->data2 | ev->data3))
+    {
+        // handle mouse-over selection
+        if(m_menumouse.value)
         {
-            thermowait = 0;
-            if(ev->data1 == KEY_SHIFT)
-            {
-                ch = ev->data1;
-                shiftdown = false;
-            }
-        }
-        else if(ev->type == ev_mouse && (ev->data2 | ev->data3))
-        {
-            // handle mouse-over selection
-            if(m_menumouse.value)
-            {
-                M_CheckDragThermoBar(ev, currentMenu);
-                if(M_CursorHighlightItem(currentMenu))
-                    itemOn = itemSelected;
-            }
+            M_CheckDragThermoBar(ev, currentMenu);
+            if(M_CursorHighlightItem(currentMenu))
+                itemOn = itemSelected;
         }
     }
     
     if(ch == -1)
         return false;
 
+    switch(ch)
+    {
+    case BUTTON_DPAD_UP:
+        ch = KEY_UPARROW;
+        break;
+    case BUTTON_DPAD_DOWN:
+        ch = KEY_DOWNARROW;
+        break;
+    case BUTTON_DPAD_LEFT:
+        ch = KEY_LEFTARROW;
+        break;
+    case BUTTON_DPAD_RIGHT:
+        ch = KEY_RIGHTARROW;
+        break;
+    case BUTTON_START:
+        ch = KEY_ESCAPE;
+        break;
+    case BUTTON_BACK:
+        ch = KEY_BACKSPACE;
+        break;
+    case BUTTON_A:
+        ch = KEY_ENTER;
+        break;
+    case BUTTON_B:
+        ch = KEY_DEL;
+        break;
+    }
+
     if(MenuBindActive == true)//key Bindings
     {
-        if(ev->data1 == KEY_ESCAPE)
+        if(ch == KEY_ESCAPE)
         {
             MenuBindActive = false;
             M_BuildControlMenu();
@@ -5145,7 +5044,9 @@ dboolean M_Responder(event_t* ev)
         return true;
         
     case KEY_DEL:
-        if(currentMenu == &ControlsDef)
+        if(currentMenu == &PasswordDef)
+            M_PasswordDeSelect();
+        else if(currentMenu == &ControlsDef)
         {
             if(currentMenu->menuitems[itemOn].routine)
             {
@@ -5156,9 +5057,6 @@ dboolean M_Responder(event_t* ev)
         return true;
         
     case KEY_BACKSPACE:
-        if(currentMenu == &PasswordDef)
-            M_PasswordDeSelect();
-        else
             M_Return(0);
         return true;
 
@@ -5728,8 +5626,8 @@ void M_Ticker (void)
     //
     // hide mouse menu if xbox 360 controller is plugged in
     //
-    if(currentMenu == &OptionsDef)
-        currentMenu->menuitems[options_mouse].status = xgamepad.connected ? -3 : 1;
+    if(currentMenu == &ControlMenuDef)
+        currentMenu->menuitems[controls_gamepad].status = xgamepad.connected ? 1 : -3;
 #endif
 
     //

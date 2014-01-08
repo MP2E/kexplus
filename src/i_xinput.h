@@ -53,6 +53,23 @@
 #define XINPUT_GAMEPAD_LEFT_STICK       0x40000
 #define XINPUT_GAMEPAD_RIGHT_STICK      0x80000
 
+#define BUTTON_DPAD_UP                  400
+#define BUTTON_DPAD_DOWN                401
+#define BUTTON_DPAD_LEFT                402
+#define BUTTON_DPAD_RIGHT               403
+#define BUTTON_START                    404
+#define BUTTON_BACK                     405
+#define BUTTON_LEFT_THUMB               406
+#define BUTTON_RIGHT_THUMB              407
+#define BUTTON_LEFT_SHOULDER            408
+#define BUTTON_RIGHT_SHOULDER           409
+#define BUTTON_A                        410
+#define BUTTON_B                        411
+#define BUTTON_X                        412
+#define BUTTON_Y                        413
+#define BUTTON_LEFT_TRIGGER             414
+#define BUTTON_RIGHT_TRIGGER            415
+
 //
 // Structures used for XInput
 //
@@ -111,14 +128,14 @@ typedef struct
 } xinputgamepad_t;
 
 extern xinputgamepad_t xgamepad;
-extern const int xbtnlayout[2][XINPUT_BUTTONS + 2][2];
+extern int xbtnkeys[XINPUT_BUTTONS + 2][2];
 
+void        I_XInputBindButton(int index, int key);
 void        I_XInputPollEvent(void);
-dboolean    I_XInputTicButtonPress(int btndata, int button, int tic);
-void        I_XInputAbortTic(int btndata);
 void        I_XInputReadActions(event_t *ev);
 void        I_XInputVibrate(dboolean leftside, byte amount, int windDown);
 void        I_XInputInit(void);
+void        I_InitXInputCommands(void);
 
 #endif // _USE_XINPUT
 

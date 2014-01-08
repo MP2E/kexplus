@@ -154,7 +154,7 @@ static CMD(AutomapSetFlag)
 
         am_flags &= ~flags;
 
-        if(flags & AF_PANMODE)
+        if(flags & (AF_PANMODE|AF_PANGAMEPAD))
             automappany = automappanx = 0;
     }
     else
@@ -333,18 +333,7 @@ dboolean AM_Responder(event_t* ev)
 {
     int rc = false;
     
-    if(!automapactive)
-    {
-#ifdef _USE_XINPUT  // XINPUT
-        if(ev->type == ev_gamepad && !ev->data3 &&
-            I_XInputTicButtonPress(ev->data1, XINPUT_GAMEPAD_BACK, 5000))
-        {
-            AM_Start();
-            rc = true;
-        }
-#endif
-    }
-    else if(am_flags & AF_PANMODE)
+    if(am_flags & AF_PANMODE)
     {
         if(ev->type == ev_mouse)
         {
@@ -400,75 +389,100 @@ dboolean AM_Responder(event_t* ev)
                 rc = true;
             }
         }
-
-        //
-        // holding down the pan button will not eat the input/events
-        // but other buttons will, making this more easy to use if overlay
-        // mode is enabled
-        //
-
-        //
-        // no stick input
-        //
-        if(!ev->data3)
+    }
+    else if(automapactive)
+    {
+        if(ev->type == ev_keydown)
         {
-            word panbutton;
-
-            xgamepad.oldbuttons = ev->data1;
-
-            if(I_XInputTicButtonPress(ev->data1, XINPUT_GAMEPAD_BACK, 5000))
+            switch(ev->data1)
             {
-                rc = true;
+            //
+            // pan button
+            //
+            case BUTTON_A:
+                CMD_AutomapSetFlag(AF_PANGAMEPAD, NULL);
+                break;
 
-                if(!automapactive)
-                    automapactive = true;
-                else
+            case BUTTON_LEFT_SHOULDER:
+                if(am_flags & AF_PANGAMEPAD)
                 {
-                    if(++amModeCycle >= 2)
-                    {
-                        amModeCycle = 0;
-                        AM_Stop();
-                    }
-                }
-            }
-
-            panbutton = i_xinputscheme.value > 0 ? XINPUT_GAMEPAD_B : XINPUT_GAMEPAD_A;
-
-            if(ev->data1 & panbutton)
-            {
-                am_flags |= AF_PANGAMEPAD;
-                am_flags &= ~AF_PANMODE;
-
-                //
-                // zoom in button
-                //
-                if(ev->data1 & XINPUT_GAMEPAD_LEFT_SHOULDER)
-                {
-                    am_flags &= ~AF_ZOOMOUT;
-                    am_flags |= AF_ZOOMIN;
+                    CMD_AutomapSetFlag(AF_ZOOMIN, NULL);
                     rc = true;
                 }
-                else
-                    am_flags &= ~AF_ZOOMIN;
+                break;
 
-                //
-                // zoom out button
-                //
-                if(ev->data1 & XINPUT_GAMEPAD_RIGHT_SHOULDER)
+            case BUTTON_RIGHT_SHOULDER:
+                if(am_flags & AF_PANGAMEPAD)
                 {
-                    am_flags &= ~AF_ZOOMIN;
-                    am_flags |= AF_ZOOMOUT;
+                    CMD_AutomapSetFlag(AF_ZOOMOUT, NULL);
                     rc = true;
                 }
-                else
-                    am_flags &= ~AF_ZOOMOUT;
+                break;
+
+            case BUTTON_DPAD_UP:
+                if(am_flags & AF_PANGAMEPAD)
+                {
+                    CMD_AutomapSetFlag(AF_PANTOP, NULL);
+                    rc = true;
+                }
+                break;
+
+            case BUTTON_DPAD_DOWN:
+                if(am_flags & AF_PANGAMEPAD)
+                {
+                    CMD_AutomapSetFlag(AF_PANBOTTOM, NULL);
+                    rc = true;
+                }
+                break;
+
+            case BUTTON_DPAD_LEFT:
+                if(am_flags & AF_PANGAMEPAD)
+                {
+                    CMD_AutomapSetFlag(AF_PANLEFT, NULL);
+                    rc = true;
+                }
+                break;
+
+            case BUTTON_DPAD_RIGHT:
+                if(am_flags & AF_PANGAMEPAD)
+                {
+                    CMD_AutomapSetFlag(AF_PANRIGHT, NULL);
+                    rc = true;
+                }
+                break;
             }
-            else
+        }
+        else if(ev->type == ev_keyup)
+        {
+            switch(ev->data1)
             {
-                am_flags &= ~AF_PANGAMEPAD;
-                am_flags &= ~AF_ZOOMIN;
-                am_flags &= ~AF_ZOOMOUT;
-                automappany = automappanx = 0;
+            case BUTTON_A:
+                CMD_AutomapSetFlag(AF_PANGAMEPAD|PCKF_UP, NULL);
+                break;
+
+            case BUTTON_LEFT_SHOULDER:
+                CMD_AutomapSetFlag(AF_ZOOMIN|PCKF_UP, NULL);
+                break;
+
+            case BUTTON_RIGHT_SHOULDER:
+                CMD_AutomapSetFlag(AF_ZOOMOUT|PCKF_UP, NULL);
+                break;
+
+            case BUTTON_DPAD_UP:
+                CMD_AutomapSetFlag(AF_PANTOP|PCKF_UP, NULL);
+                break;
+
+            case BUTTON_DPAD_DOWN:
+                CMD_AutomapSetFlag(AF_PANBOTTOM|PCKF_UP, NULL);
+                break;
+
+            case BUTTON_DPAD_LEFT:
+                CMD_AutomapSetFlag(AF_PANLEFT|PCKF_UP, NULL);
+                break;
+
+            case BUTTON_DPAD_RIGHT:
+                CMD_AutomapSetFlag(AF_PANRIGHT|PCKF_UP, NULL);
+                break;
             }
         }
     }
@@ -547,7 +561,8 @@ void AM_Ticker(void)
 
 #endif
 
-    if(!followplayer && am_flags & (AF_PANLEFT|AF_PANRIGHT|AF_PANTOP|AF_PANBOTTOM))
+    if((!followplayer || (am_flags & AF_PANGAMEPAD)) &&
+        am_flags & (AF_PANLEFT|AF_PANRIGHT|AF_PANTOP|AF_PANBOTTOM))
     {
         if(am_flags & AF_PANTOP)
         {

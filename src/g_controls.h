@@ -26,11 +26,12 @@
 
 #include "doomdef.h"
 
-#define NUMKEYS        SDLK_LAST
+// villsa 01052014 - changed to 420
+#define NUMKEYS         420
 
-#define PCKF_DOUBLEUSE    0x4000
-#define PCKF_UP            0x8000
-#define PCKF_COUNTMASK    0x00ff
+#define PCKF_DOUBLEUSE  0x4000
+#define PCKF_UP         0x8000
+#define PCKF_COUNTMASK  0x00ff
 
 typedef enum
 {
@@ -49,7 +50,7 @@ typedef enum
     PCKEY_LOOKDOWN,
     PCKEY_CENTER,
     NUM_PCKEYS
-}pckeys_t;
+} pckeys_t;
 
 typedef struct
 {
