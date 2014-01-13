@@ -1639,8 +1639,8 @@ dboolean PIT_ChangeSector(mobj_t* thing)
             // spray blood in a random direction
             mo = P_SpawnMobj(thing->x, thing->y, thing->z + thing->height / 2, MT_BLOOD);
             
-            mo->momx = P_RandomShift(12);
-            mo->momy = P_RandomShift(12);
+            mo->momx = P_RandomShift(pr_crush, 12);
+            mo->momy = P_RandomShift(pr_crush, 12);
         }
     }
     

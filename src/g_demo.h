@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,36 +21,26 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __G_GAME__
-#define __G_GAME__
+#ifndef __G_DEMO_H__
+#define __G_DEMO_H__
 
-#include "doomdef.h"
-#include "d_event.h"
+#define DEMOMARKER      0x80
 
-extern dboolean sendpause;
+dboolean G_CheckDemoStatus(void);
 
-//
-// GAME
-//
+void G_RecordDemo(const char* name);
+void G_PlayDemo(const char* name);
+void G_ReadDemoTiccmd(ticcmd_t* cmd);
+void G_WriteDemoTiccmd(ticcmd_t* cmd);
 
-void G_Init(void);
-void G_ReloadDefaults(void);
-void G_DeathMatchSpawnPlayer(int playernum);
-void G_InitNew(skill_t skill, int map);
-void G_DeferedInitNew(skill_t skill, int map);
-void G_LoadGame(const char* name);
-void G_DoLoadGame(void);
-void G_SaveGame(int slot, const char* description);
-void G_DoSaveGame(void);
-void G_CompleteLevel(void);
-void G_ExitLevel(void);
-void G_SecretExitLevel(int map);
-void G_Ticker(void);
-void G_ScreenShot(void);
-void G_RunTitleMap(void);
-void G_RunGame(void);
-void G_RegisterCvars(void);
-
-dboolean G_Responder(event_t* ev);
+extern dboolean        timingdemo;
+extern char            demoname[32];
+extern dboolean        demorecording;
+extern dboolean        demoplayback;
+extern dboolean        netdemo;
+extern byte*           demobuffer;
+extern byte*           demo_p;
+extern byte*           demoend;
+extern dboolean        singledemo;
 
 #endif

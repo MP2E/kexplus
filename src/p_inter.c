@@ -908,7 +908,7 @@ void P_KillMobj(mobj_t* source, mobj_t* target)
     }
     else
         P_SetMobjState (target, target->info->deathstate);
-    target->tics -= P_Random()&3;
+    target->tics -= P_Random(pr_killtics)&3;
 
     if (target->tics < 1)
         target->tics = 1;
@@ -1005,7 +1005,7 @@ void P_DamageMobj(mobj_t* target, mobj_t* inflictor, mobj_t* source, int damage)
 
         // make fall forwards sometimes
         if(damage < 40 && damage > target->health && 
-            target->z - inflictor->z > 64*FRACUNIT && (P_Random () & 1))
+            target->z - inflictor->z > 64*FRACUNIT && (P_Random(pr_damagemobj) & 1))
         {
             ang += ANG180;
             thrust *= 4;
@@ -1095,7 +1095,7 @@ void P_DamageMobj(mobj_t* target, mobj_t* inflictor, mobj_t* source, int damage)
         }
     }
 
-    if((P_Random () < target->info->painchance) && !(target->flags & MF_SKULLFLY))
+    if((P_Random(pr_painchance) < target->info->painchance) && !(target->flags & MF_SKULLFLY))
     {
         target->flags |= MF_JUSTHIT;    // fight back!
         P_SetMobjState (target, target->info->painstate);

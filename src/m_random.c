@@ -24,6 +24,7 @@ static const char rcsid[] = "$Id: m_random.c 798 2010-11-10 03:18:24Z svkaiser $
 #endif
 
 #include "doomstat.h"
+#include "m_random.h"
 
 
 //
@@ -53,30 +54,46 @@ byte rndtable[256] = {
     120, 163, 236, 249 
 };
 
+rng_t rng;                      // the random number state
+
+unsigned int rngseed = 1993;   // killough 3/26/98: The seed
+
 int    rndindex = 0;
 int    prndindex = 0;
 
 // Which one is deterministic?
-int P_Random(void)
+int P_Random(pr_class_t pr_class)
 {
-    prndindex = (prndindex+1)&0xff;
-    return rndtable[prndindex];
+    unsigned long boom;
+
+    boom = rng.seed[pr_class];
+    rng.seed[pr_class] = boom * 1664525ul + 221297ul + pr_class*2;
+
+    boom >>= 20;
+    boom += (gametic - basetic) * 7;
+
+    return boom & 255;
 }
 
 int M_Random(void)
 {
-    rndindex = (rndindex+1)&0xff;
-    return rndtable[rndindex];
+    return P_Random(pr_misc);
 }
 
 void M_ClearRandom(void)
 {
-    rndindex = prndindex = 0;
+    int i;
+    unsigned int seed = rngseed*2+1;    // add 3/26/98: add rngseed
+
+    for(i = 0; i < NUMPRCLASS; i++)     // go through each pr_class and set
+        rng.seed[i] = seed *= 69069ul;  // each starting seed differently
+
+    rng.prndindex = rng.rndindex = 0;   // clear two compatibility indices
 }
 
-int P_RandomShift(int shift)
+int P_RandomShift(pr_class_t pr_class, int shift)
 {
-    int rand = P_Random();
-    return (rand - P_Random()) << shift;
+    int rand = P_Random(pr_class);
+    return (rand - P_Random(pr_class)) << shift;
 }
 

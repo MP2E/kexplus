@@ -30,6 +30,7 @@ add_executable(doom64ex
     dgl.c
     f_finale.c
     g_actions.c
+    g_demo.c
     g_game.c
     g_settings.c
     gl_draw.c

@@ -133,7 +133,7 @@ void P_ExplodeMissile (mobj_t* mo)
 
     mo->momx = mo->momy = mo->momz = 0;
     
-    mo->tics -= P_Random() & 3;
+    mo->tics -= P_Random(pr_explode) & 3;
     
     if(mo->tics < 1)
         mo->tics = 1;
@@ -161,7 +161,7 @@ void P_MissileHit(mobj_t* mo)
 
     if(missilething)
     {
-        damage = ((P_Random() & 7) + 1) * mo->info->damage;
+        damage = ((P_Random(pr_damage) & 7) + 1) * mo->info->damage;
         P_DamageMobj(missilething, mo, mo->target, damage);
 
         if(mo->type == MT_PROJ_RECTFIRE)
@@ -200,7 +200,7 @@ void P_SkullBash(mobj_t* mo)
     
     if(skullthing)
     {
-        damage = ((P_Random() & 7) + 1) * mo->info->damage;
+        damage = ((P_Random(pr_skullfly) & 7) + 1) * mo->info->damage;
         P_DamageMobj(skullthing, mo, mo, damage);
     }
     
@@ -425,7 +425,7 @@ void P_NightmareRespawn(mobj_t* mobj)
     if(leveltime & 31)
         return;
     
-    if(P_Random() > 4)
+    if(P_Random(pr_respawn) > 4)
         return;
     
     x = INT2F(mobj->spawnpoint.x);
@@ -1110,7 +1110,7 @@ mobj_t* P_SpawnMapThing(mapthing_t* mthing)
     }
     
     if(mobj->tics > 0)
-        mobj->tics = 1 + (P_Random() % mobj->tics);
+        mobj->tics = 1 + (P_Random(pr_spawnthing) % mobj->tics);
     
     mobj->angle = ANG45 * (mthing->angle/45);
     if(mthing->options & MTF_AMBUSH)
@@ -1159,11 +1159,11 @@ void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 {
     mobj_t* th;
     
-    z += P_RandomShift(10);
+    z += P_RandomShift(pr_spawnpuff, 10);
     
     th = P_SpawnMobj(x, y, z, MT_SMOKE_SMALL);
     th->momz = FRACUNIT;
-    th->tics -= P_Random() & 3;
+    th->tics -= P_Random(pr_spawnpuff) & 3;
     
     if(th->tics < 1)
         th->tics = 1;
@@ -1183,13 +1183,13 @@ void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
     
     for(i = 0; i < 3; i++)
     {
-        z += P_RandomShift(11);
-        x += P_RandomShift(12);
-        y += P_RandomShift(12);
+        z += P_RandomShift(pr_spawnblood, 11);
+        x += P_RandomShift(pr_spawnblood, 12);
+        y += P_RandomShift(pr_spawnblood, 12);
         
         th = P_SpawnMobj(x, y, z, MT_BLOOD);
         th->momz = FRACUNIT*2;
-        th->tics -= (P_Random() & 1);
+        th->tics -= (P_Random(pr_spawnblood) & 1);
         
         if(th->tics < 1)
             th->tics = 1;
@@ -1324,7 +1324,7 @@ mobj_t* P_SpawnMissile(mobj_t* source, mobj_t* dest, mobjtype_t type,
     if(dest)
     {
         if(dest->flags & MF_SHADOW)
-            an += P_RandomShift(20);
+            an += P_RandomShift(pr_shadow, 20);
     }
 
     speed = th->info->speed;

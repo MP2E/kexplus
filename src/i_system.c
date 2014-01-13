@@ -456,6 +456,16 @@ int I_GetTimeMS(void)
 }
 
 //
+// I_GetRandomTimeSeed
+//
+
+unsigned long I_GetRandomTimeSeed(void)
+{
+    // not exactly random....
+    return SDL_GetTicks();
+}
+
+//
 // I_Init
 //
 
