@@ -33,8 +33,7 @@ void G_PlayDemo(const char *name);
 void G_ReadDemoTiccmd(ticcmd_t * cmd);
 void G_WriteDemoTiccmd(ticcmd_t * cmd);
 
-extern dboolean timingdemo;
-extern char demoname[32];
+extern char demoname[256];
 extern dboolean demorecording;
 extern dboolean demoplayback;
 extern dboolean netdemo;
@@ -42,5 +41,6 @@ extern byte *demobuffer;
 extern byte *demo_p;
 extern byte *demoend;
 extern dboolean singledemo;
+extern dboolean endDemo;
 
 #endif

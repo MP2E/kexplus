@@ -791,14 +791,12 @@ static void FindResponseFile(void)
 			indexinfile++;	// SKIP PAST ARGV[0] (KEEP IT)
 			do {
 				myargv[indexinfile++] = infile + k;
-				while (k < size &&
-				       ((*(infile + k) >= ' ' + 1)
-					&& (*(infile + k) <= 'z')))
+				while (k < size && ((*(infile + k) >= ' ' + 1)
+						    && (*(infile + k) <= 'z')))
 					k++;
 				*(infile + k) = 0;
-				while (k < size &&
-				       ((*(infile + k) <= ' ')
-					|| (*(infile + k) > 'z')))
+				while (k < size && ((*(infile + k) <= ' ')
+						    || (*(infile + k) > 'z')))
 					k++;
 			} while (k < size);
 
@@ -845,29 +843,8 @@ static void D_Init(void)
 		}
 	}
 
-	if (M_CheckParm("-altdeath"))
-		deathmatch = 2;
-	else if (M_CheckParm("-deathmatch"))
+	if (M_CheckParm("-deathmatch")) {
 		deathmatch = 1;
-
-	// turbo option
-	p = M_CheckParm("-turbo");
-	if (p) {
-		int scale = 200;
-		extern int forwardmove[2];
-		extern int sidemove[2];
-
-		if (p < myargc - 1)
-			scale = datoi(myargv[p + 1]);
-		if (scale < 10)
-			scale = 10;
-		if (scale > 400)
-			scale = 400;
-		I_Printf("turbo scale: %i%%\n", scale);
-		forwardmove[0] = forwardmove[0] * scale / 100;
-		forwardmove[1] = forwardmove[1] * scale / 100;
-		sidemove[0] = sidemove[0] * scale / 100;
-		sidemove[1] = sidemove[1] * scale / 100;
 	}
 	// get skill / episode / map from parms
 	startskill = sk_medium;

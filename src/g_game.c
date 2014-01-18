@@ -565,6 +565,15 @@ static CMD(PlayerCamera)
 }
 
 //
+// G_CmdEndDemo
+//
+
+static CMD(EndDemo)
+{
+	endDemo = true;
+}
+
+//
 // G_ReloadDefaults
 //
 
@@ -991,18 +1000,11 @@ void G_Ticker(void)
 				if (demoplayback && gameaction == ga_nothing)
 					G_ReadDemoTiccmd(cmd);
 
-				if (demorecording)
+				if (demorecording) {
 					G_WriteDemoTiccmd(cmd);
-
-				// check for turbo cheats
-				if (cmd->forwardmove > TURBOTHRESHOLD
-				    && !(gametic & 31)
-				    && ((gametic >> 5) & 3) == i) {
-					static char turbomessage[80];
-					sprintf(turbomessage, "%s is turbo!",
-						player_names[i]);
-					players[consoleplayer].message =
-					    turbomessage;
+					if (endDemo == true) {
+						G_CheckDemoStatus();
+					}
 				}
 
 				if (netgame && !netdemo && !(gametic % ticdup)) {
@@ -1019,7 +1021,7 @@ void G_Ticker(void)
 						consistancy[i][buf] =
 						    players[i].mo->x;
 					else
-						consistancy[i][buf] = rndindex;
+						consistancy[i][buf] = 0;
 				}
 			}
 		}
@@ -1046,8 +1048,8 @@ void G_Ticker(void)
 						dstrcpy(savedescription,
 							"NET GAME");
 					savegameslot =
-					    (players[i].cmd.
-					     buttons & BTS_SAVEMASK) >>
+					    (players[i].
+					     cmd.buttons & BTS_SAVEMASK) >>
 					    BTS_SAVESHIFT;
 					savenow = true;
 				}
