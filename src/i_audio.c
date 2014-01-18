@@ -1238,6 +1238,8 @@ void I_InitSequencer(void)
 	// 20120111 bkw: look in the same places as doom64.wad. Someday this needs
 	// to be a config file setting and not hard-coded.
 	// 20120203 villsa - done :)
+    // 20140118 MP2E: refactor code to use an array char iterate through array
+    // dynamically at compile time. Also, this function is now case-insensitive
 	{
 		char *sfpath = NULL;
 		char *sfdirs[] =
