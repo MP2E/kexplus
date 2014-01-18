@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -25,6 +25,6 @@
 
 void D_DeveloperDisplay(void);
 void D_BoyISuck(void);
-dboolean D_DevKeyResponder(event_t* ev);
+dboolean D_DevKeyResponder(event_t * ev);
 
 #endif

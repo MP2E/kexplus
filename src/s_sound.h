@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,10 +21,8 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __S_SOUND__
 #define __S_SOUND__
-
 
 #ifdef __GNUG__
 #pragma interface
@@ -52,25 +50,23 @@ void S_ResumeSound(void);
 // Start sound for thing at <origin>
 //  using <sound_id> from sounds.h
 //
-void S_StartSound(mobj_t* origin, int sound_id);
+void S_StartSound(mobj_t * origin, int sound_id);
 
 void S_UpdateSounds(void);
-void S_RemoveOrigin(mobj_t* origin);
+void S_RemoveOrigin(mobj_t * origin);
 
 // Will start a sound at a given volume.
-void S_StartSoundAtVolume(mobj_t* origin, int sound_id, int volume);
+void S_StartSoundAtVolume(mobj_t * origin, int sound_id, int volume);
 
 // Stop sound for thing at <origin>
-void S_StopSound(mobj_t* origin, int sfx_id);
+void S_StopSound(mobj_t * origin, int sfx_id);
 
 int S_GetActiveSounds(void);
-
 
 // Start music using <music_id> from sounds.h
 void S_StartMusic(int mnum);
 void S_StopMusic(void);
 
 void S_RegisterCvars(void);
-
 
 #endif

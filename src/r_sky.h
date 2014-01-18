@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -27,21 +27,21 @@
 
 #include "p_setup.h"
 
-extern skydef_t*    sky;
-extern int          skypicnum;
-extern int          skybackdropnum;
-extern int          thunderCounter;
-extern int          lightningCounter;
-extern int          thundertic;
-extern dboolean     skyfadeback;
+extern skydef_t *sky;
+extern int skypicnum;
+extern int skybackdropnum;
+extern int thunderCounter;
+extern int lightningCounter;
+extern int thundertic;
+extern dboolean skyfadeback;
 
 // Needed to store the number of the dummy sky flat.
 // Used for rendering, as well as tracking projectiles etc.
-extern int          skyflatnum;
+extern int skyflatnum;
 
-extern byte*        fireBuffer;
-extern dPalette_t   firePal16[256];
-extern int          fireLump;
+extern byte *fireBuffer;
+extern dPalette_t firePal16[256];
+extern int fireLump;
 
 void R_SkyTicker(void);
 void R_DrawSky(void);

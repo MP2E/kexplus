@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,10 +21,8 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __F_FINALE__
 #define __F_FINALE__
-
 
 #include "doomtype.h"
 #include "d_event.h"
@@ -32,16 +30,14 @@
 // FINALE
 //
 
-void    F_Start(void);
-void    F_Stop(void);
-int     F_Ticker(void);     // Called by main loop.
-void    F_Drawer (void);
+void F_Start(void);
+void F_Stop(void);
+int F_Ticker(void);		// Called by main loop.
+void F_Drawer(void);
 
-void    IN_Start(void);
-void    IN_Stop(void);
-void    IN_Drawer(void);
-int     IN_Ticker(void);
-
-
+void IN_Start(void);
+void IN_Stop(void);
+void IN_Drawer(void);
+int IN_Ticker(void);
 
 #endif

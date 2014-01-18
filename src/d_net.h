@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -38,20 +38,18 @@
 #pragma interface
 #endif
 
-#define MAXNETNODES        8    // Max computers/players in a game.
-#define BACKUPTICS        128    // Networking and tick handling related.
-
+#define MAXNETNODES        8	// Max computers/players in a game.
+#define BACKUPTICS        128	// Networking and tick handling related.
 
 // Create any new ticcmds and broadcast to other players.
-void NetUpdate (void);
+void NetUpdate(void);
 
 // Broadcasts special packets to other players
 //  to notify of game exit
-void D_QuitNetGame (void);
+void D_QuitNetGame(void);
 
 extern dboolean ShowGun;
 extern dboolean drone;
-extern dboolean    net_cl_new_sync;
+extern dboolean net_cl_new_sync;
 
 #endif
-

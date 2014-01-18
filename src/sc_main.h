@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -20,42 +20,39 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __SC_MAIN__
 #define __SC_MAIN__
 
-typedef struct
-{
-    char    token[512];
-    char*   buffer;
-    char*   pointer_start;
-    char*   pointer_end;
-    int     linepos;
-    int     rowpos;
-    int     buffpos;
-    int     buffsize;
-    void    (*open)(void*);
-    void    (*close)(void);
-    void    (*compare)(void*);
-    int     (*find)(dboolean);
-    char    (*fgetchar)(void);
-    void    (*rewind)(void);
-    char*   (*getstring)(void);
-    int     (*getint)(void);
-    int     (*setdata)(void*, void*);
-    int     (*readtokens)(void);
-    void    (*error)(void*);
+typedef struct {
+	char token[512];
+	char *buffer;
+	char *pointer_start;
+	char *pointer_end;
+	int linepos;
+	int rowpos;
+	int buffpos;
+	int buffsize;
+	void (*open) (void *);
+	void (*close) (void);
+	void (*compare) (void *);
+	int (*find) (dboolean);
+	char (*fgetchar) (void);
+	void (*rewind) (void);
+	char *(*getstring) (void);
+	int (*getint) (void);
+	int (*setdata) (void *, void *);
+	int (*readtokens) (void);
+	void (*error) (void *);
 } scparser_t;
 
 extern scparser_t sc_parser;
 
-typedef struct
-{
-    char*   token;
-    int64   ptroffset;
-    char    type;
+typedef struct {
+	char *token;
+	int64 ptroffset;
+	char type;
 } scdatatable_t;
 
 void SC_Init(void);
 
-#endif // __SC_MAIN__
+#endif				// __SC_MAIN__

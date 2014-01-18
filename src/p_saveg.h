@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -22,10 +22,8 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __P_SAVEG__
 #define __P_SAVEG__
-
 
 #ifdef __GNUG__
 #pragma interface
@@ -36,9 +34,10 @@
 #define SAVESTRINGSIZE  16
 
 char *P_GetSaveGameName(int num);
-dboolean P_WriteSaveGame(char* description, int slot);
-dboolean P_ReadSaveGame(char* name);
-dboolean P_QuickReadSaveHeader(char* name, char* date, int* thumbnail, int* skill, int* map);
+dboolean P_WriteSaveGame(char *description, int slot);
+dboolean P_ReadSaveGame(char *name);
+dboolean P_QuickReadSaveHeader(char *name, char *date, int *thumbnail,
+			       int *skill, int *map);
 
 // Persistent storage/archiving.
 // These are the load / save game routines.

@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1999-2000 Paul Brook
@@ -24,7 +24,7 @@
 #ifndef M_SHIFT_H
 #define M_SHIFT_H
 
-extern const char*    shiftxform;
+extern const char *shiftxform;
 void M_InitShiftXForm(void);
 
 #endif

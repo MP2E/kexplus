@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,10 +21,8 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __M_MISC__
 #define __M_MISC__
-
 
 #include "doomtype.h"
 #include "m_fixed.h"
@@ -38,51 +36,46 @@
 #define O_BINARY 0
 #endif
 
-extern  int    myargc;
-extern  char**    myargv;
+extern int myargc;
+extern char **myargv;
 
 // Returns the position of the given parameter
 // in the arg list (0 if not found).
-int M_CheckParm (char* check);
+int M_CheckParm(char *check);
 
 // Bounding box coordinate storage.
-enum
-{
-    BOXTOP,
-    BOXBOTTOM,
-    BOXLEFT,
-    BOXRIGHT
-};    // bbox coordinates
+enum {
+	BOXTOP,
+	BOXBOTTOM,
+	BOXLEFT,
+	BOXRIGHT
+};				// bbox coordinates
 
 // Bounding box functions.
-void M_ClearBox (fixed_t*    box);
+void M_ClearBox(fixed_t * box);
 
-void
-M_AddToBox
-( fixed_t*    box,
- fixed_t    x,
- fixed_t    y );
+void M_AddToBox(fixed_t * box, fixed_t x, fixed_t y);
 
-dboolean M_WriteFile(char const* name, void* source, int length);
-int M_ReadFile(char const* name, byte** buffer);
+dboolean M_WriteFile(char const *name, void *source, int length);
+int M_ReadFile(char const *name, byte ** buffer);
 void M_NormalizeSlashes(char *str);
 int M_FileExists(char *filename);
-long M_FileLength(FILE *handle);
-dboolean M_WriteTextFile(char const* name, char* source, int length);
+long M_FileLength(FILE * handle);
+dboolean M_WriteTextFile(char const *name, char *source, int length);
 void M_ScreenShot(void);
-int M_CacheThumbNail(byte** data);
+int M_CacheThumbNail(byte ** data);
 void M_LoadDefaults(void);
 void M_SaveDefaults(void);
 
 //
 // DEFAULTS
 //
-extern int        DualMouse;
+extern int DualMouse;
 
-extern int      viewwidth;
-extern int      viewheight;
+extern int viewwidth;
+extern int viewheight;
 
-extern char*    chat_macros[];
+extern char *chat_macros[];
 
 //extern dboolean HighSound;
 

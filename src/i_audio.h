@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -34,16 +34,15 @@
 #define DEFAULT_FLUID_DRIVER "sndio"
 #endif
 
-typedef struct
-{
-    fixed_t x;
-    fixed_t y;
-    fixed_t z;
+typedef struct {
+	fixed_t x;
+	fixed_t y;
+	fixed_t z;
 } sndsrc_t;
 
 int I_GetMaxChannels(void);
 int I_GetVoiceCount(void);
-sndsrc_t* I_GetSoundSource(int c);
+sndsrc_t *I_GetSoundSource(int c);
 
 void I_InitSequencer(void);
 void I_ShutdownSound(void);
@@ -55,8 +54,9 @@ void I_ResetSound(void);
 void I_PauseSound(void);
 void I_ResumeSound(void);
 void I_SetGain(float db);
-void I_StopSound(sndsrc_t* origin, int sfx_id);
+void I_StopSound(sndsrc_t * origin, int sfx_id);
 void I_StartMusic(int mus_id);
-void I_StartSound(int sfx_id, sndsrc_t* origin, int volume, int pan, int reverb);
+void I_StartSound(int sfx_id, sndsrc_t * origin, int volume, int pan,
+		  int reverb);
 
-#endif // __I_AUDIO_H__
+#endif				// __I_AUDIO_H__

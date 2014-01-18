@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -38,9 +38,9 @@ void G_ReloadDefaults(void);
 void G_DeathMatchSpawnPlayer(int playernum);
 void G_InitNew(skill_t skill, int map);
 void G_DeferedInitNew(skill_t skill, int map);
-void G_LoadGame(const char* name);
+void G_LoadGame(const char *name);
 void G_DoLoadGame(void);
-void G_SaveGame(int slot, const char* description);
+void G_SaveGame(int slot, const char *description);
 void G_DoSaveGame(void);
 void G_CompleteLevel(void);
 void G_ExitLevel(void);
@@ -51,6 +51,6 @@ void G_RunTitleMap(void);
 void G_RunGame(void);
 void G_RegisterCvars(void);
 
-dboolean G_Responder(event_t* ev);
+dboolean G_Responder(event_t * ev);
 
 #endif

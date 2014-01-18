@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -31,7 +31,6 @@
 
 // Misc. other strings.
 #define SAVEGAMENAME    "doomsav"
-
 
 #define DEVMAPS "devmaps"
 #define DEVDATA "devdata"
@@ -143,7 +142,6 @@
 
 #define DEVKILLALL        "Boy I Suck!"
 
-
 //
 // P_Doors.C
 //
@@ -210,7 +208,6 @@
 #define STSTR_NCON        "No Clipping Mode ON"
 #define STSTR_NCOFF        "No Clipping Mode OFF"
 
-
 //
 // Character cast strings F_FINALE.C
 //
@@ -232,4 +229,3 @@
 #define CC_HERO        "Our Hero"
 
 #endif
-

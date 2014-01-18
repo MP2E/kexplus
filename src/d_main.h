@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -22,7 +22,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __D_MAIN__
 #define __D_MAIN__
 
@@ -40,12 +39,11 @@
 //
 void D_DoomMain(void);
 
-int D_MiniLoop(void (*start)(void), void (*stop)(void),
-               void (*draw)(void), dboolean (*tick)(void));
+int D_MiniLoop(void (*start) (void), void (*stop) (void),
+	       void (*draw) (void), dboolean(*tick) (void));
 
 // Called by IO functions when input is detected.
-void D_PostEvent (event_t* ev);
-
+void D_PostEvent(event_t * ev);
 
 //
 // BASE LEVEL

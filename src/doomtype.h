@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,7 +21,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __DOOMTYPE__
 #define __DOOMTYPE__
 
@@ -34,23 +33,23 @@
 #define false 0
 #define true (!false)
 
-typedef int             dboolean;
-typedef unsigned char   byte;
-typedef unsigned short  word;
-typedef unsigned long   dword;
-typedef int8_t          int8;
-typedef uint8_t         uint8;
-typedef int16_t         int16;
-typedef uint16_t        uint16;
-typedef int32_t         int32;
-typedef uint32_t        uint32;
+typedef int dboolean;
+typedef unsigned char byte;
+typedef unsigned short word;
+typedef unsigned long dword;
+typedef int8_t int8;
+typedef uint8_t uint8;
+typedef int16_t int16;
+typedef uint16_t uint16;
+typedef int32_t int32;
+typedef uint32_t uint32;
 
 #ifndef _MSC_VER
-    typedef signed long long int64;
-    typedef unsigned long long uint64;
+typedef signed long long int64;
+typedef unsigned long long uint64;
 #else
-    typedef __int64 int64;
-    typedef unsigned __int64 uint64;
+typedef __int64 int64;
+typedef unsigned __int64 uint64;
 #endif
 
 #include <limits.h>
@@ -81,5 +80,3 @@ typedef uint32_t        uint32;
 #define PATH_SEPARATOR ':'
 
 #endif
-
-

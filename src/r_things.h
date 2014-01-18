@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -30,23 +30,22 @@
 #include "d_player.h"
 #include "gl_main.h"
 
-typedef struct
-{
-    mobj_t* spr;
-    fixed_t dist;
-    float   x;
-    float   y;
-    float   z;
+typedef struct {
+	mobj_t *spr;
+	fixed_t dist;
+	float x;
+	float y;
+	float z;
 } visspritelist_t;
 
-void R_InitSprites (char** namelist);
-void R_AddSprites(subsector_t *sub);
+void R_InitSprites(char **namelist);
+void R_AddSprites(subsector_t * sub);
 void R_SetupSprites(void);
 void R_ClearSprites(void);
-void R_RenderPlayerSprites(player_t *player);
+void R_RenderPlayerSprites(player_t * player);
 void R_DrawThingBBox(void);
 
-extern spritedef_t    *spriteinfo;
-extern int            numsprites;
+extern spritedef_t *spriteinfo;
+extern int numsprites;
 
 #endif

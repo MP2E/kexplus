@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 Simon Howard
@@ -43,5 +43,4 @@ void W_NWTDashMerge(char *filename);
 
 void W_PrintDirectory(void);
 
-#endif /* #ifndef W_MERGE_H */
-
+#endif				/* #ifndef W_MERGE_H */

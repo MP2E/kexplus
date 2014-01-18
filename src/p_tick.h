@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,10 +21,8 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __P_TICK__
 #define __P_TICK__
-
 
 #ifdef __GNUG__
 #pragma interface
@@ -38,7 +36,5 @@ void P_Drawer(void);
 // can call G_PlayerExited.
 // Carries out all thinking of monsters and players.
 int P_Ticker(void);
-
-
 
 #endif

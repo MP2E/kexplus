@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -25,7 +25,7 @@
 #ifndef __Z_ZONE__
 #define __Z_ZONE__
 
-#include "d_keywds.h" // haleyjd 05/22/02
+#include "d_keywds.h"		// haleyjd 05/22/02
 
 // Include system definitions so that prototypes become
 // active before macro replacements below are in effect.
@@ -45,34 +45,33 @@
 // ZONE MEMORY
 
 // PU - purge tags.
-enum 
-{
-   PU_STATIC,  // block is static (remains until explicitly freed)
-   PU_MAPLUMP, // block is allocated for data stored in map wads
-   PU_AUTO,
-   PU_AUDIO,   // allocation of midi data
-   PU_LEVEL,   // allocation belongs to level (freed at next level load)
-   PU_LEVSPEC, // used for thinker_t's (same as PU_LEVEL basically)
-   PU_CACHE,   // block is cached (may be implicitly freed at any time!)
-   PU_MAX      // Must always be last -- killough
+enum {
+	PU_STATIC,		// block is static (remains until explicitly freed)
+	PU_MAPLUMP,		// block is allocated for data stored in map wads
+	PU_AUTO,
+	PU_AUDIO,		// allocation of midi data
+	PU_LEVEL,		// allocation belongs to level (freed at next level load)
+	PU_LEVSPEC,		// used for thinker_t's (same as PU_LEVEL basically)
+	PU_CACHE,		// block is cached (may be implicitly freed at any time!)
+	PU_MAX			// Must always be last -- killough
 };
 
-#define PU_PURGELEVEL PU_CACHE        /* First purgable tag's level */
+#define PU_PURGELEVEL PU_CACHE	/* First purgable tag's level */
 
-void*   (Z_Malloc)(int size, int tag, void *user, const char *, int);
-void    (Z_Free)(void *ptr, const char *, int);
-void    (Z_FreeTags)(int lowtag, int hightag, const char *, int);
-void    (Z_ChangeTag)(void *ptr, int tag, const char *, int);
-void    (Z_Init)(void);
-void*   (Z_Calloc)(int n, int tag, void *user, const char *, int);
-void*   (Z_Realloc)(void *ptr, int size, int tag, void *user, const char *, int);
-char*   (Z_Strdup)(const char *s, int tag, void *user, const char *, int);
-char*   (Z_Strdupa)(const char *s, const char *file, int line);
-void*   (Z_Alloca)(int n, const char *file, int line);
-void    (Z_FreeAlloca)(const char *file, int line);
-void    (Z_CheckHeap)(const char *,int);   // killough 3/22/98: add file/line info
-int     (Z_CheckTag)(void *,const char *,int);
-void    (Z_Touch)(void *ptr, const char *, int);
+void *(Z_Malloc) (int size, int tag, void *user, const char *, int);
+void (Z_Free) (void *ptr, const char *, int);
+void (Z_FreeTags) (int lowtag, int hightag, const char *, int);
+void (Z_ChangeTag) (void *ptr, int tag, const char *, int);
+void (Z_Init) (void);
+void *(Z_Calloc) (int n, int tag, void *user, const char *, int);
+void *(Z_Realloc) (void *ptr, int size, int tag, void *user, const char *, int);
+char *(Z_Strdup) (const char *s, int tag, void *user, const char *, int);
+char *(Z_Strdupa) (const char *s, const char *file, int line);
+void *(Z_Alloca) (int n, const char *file, int line);
+void (Z_FreeAlloca) (const char *file, int line);
+void (Z_CheckHeap) (const char *, int);	// killough 3/22/98: add file/line info
+int (Z_CheckTag) (void *, const char *, int);
+void (Z_Touch) (void *ptr, const char *, int);
 
 #define Z_Free(a)           (Z_Free)        (a,      __FILE__,__LINE__)
 #define Z_FreeTags(a,b)     (Z_FreeTags)    (a,b,    __FILE__,__LINE__)
@@ -95,4 +94,3 @@ int Z_TagUsage(int tag);
 int Z_FreeMemory(void);
 
 #endif
-

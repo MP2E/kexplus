@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -27,18 +27,18 @@
 CVAR_EXTERNAL(am_overlay);
 
 // Called by main loop.
-dboolean AM_Responder (event_t* ev);
+dboolean AM_Responder(event_t * ev);
 
 // Called by main loop.
-void AM_Ticker (void);
+void AM_Ticker(void);
 
 // Called by main loop,
 // called instead of view drawer if automap active.
-void AM_Drawer (void);
+void AM_Drawer(void);
 
 // Called to force the automap to quit
 // if the level is completed while it is up.
-void AM_Stop (void);
+void AM_Stop(void);
 
 // Called on P_Start; resets automap variables
 void AM_Reset(void);

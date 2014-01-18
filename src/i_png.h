@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -26,9 +26,9 @@
 #include "png.h"
 #include "doomtype.h"
 
-byte* I_PNGReadData(int lump, dboolean palette, dboolean nopack, dboolean alpha,
-                    int* w, int* h, int* offset, int palindex);
+byte *I_PNGReadData(int lump, dboolean palette, dboolean nopack, dboolean alpha,
+		    int *w, int *h, int *offset, int palindex);
 
-byte* I_PNGCreate(int width, int height, byte* data, int* size);
+byte *I_PNGCreate(int width, int height, byte * data, int *size);
 
-#endif // __I_PNG_H__
+#endif				// __I_PNG_H__

@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -26,15 +26,14 @@
 
 #include "doomtype.h"
 
-typedef struct cvar_s
-{
-    char*           name;
-    char*           string;
-    dboolean        nonclient;
-    void          (*callback)(struct cvar_s *);
-    float           value;
-    char*           defvalue;
-    struct cvar_s*  next;
+typedef struct cvar_s {
+	char *name;
+	char *string;
+	dboolean nonclient;
+	void (*callback) (struct cvar_s *);
+	float value;
+	char *defvalue;
+	struct cvar_s *next;
 } cvar_t;
 
 #define CVAR(name, str)                                     \
@@ -78,14 +77,13 @@ typedef struct cvar_s
 #define CVAR_EXTERNAL(name)                                 \
     extern cvar_t name
 
-extern cvar_t*  cvarcap;
+extern cvar_t *cvarcap;
 
 void CON_CvarInit(void);
-void CON_CvarRegister(cvar_t *variable);
+void CON_CvarRegister(cvar_t * variable);
 void CON_CvarSet(char *var_name, char *value);
 void CON_CvarSetValue(char *var_name, float value);
 void CON_CvarAutoComplete(char *partial);
 cvar_t *CON_CvarGet(char *name);
 
 #endif
-

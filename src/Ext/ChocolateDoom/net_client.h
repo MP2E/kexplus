@@ -32,12 +32,12 @@
 
 #define MAXPLAYERNAME 30
 
-dboolean NET_CL_Connect(net_addr_t *addr);
+dboolean NET_CL_Connect(net_addr_t * addr);
 void NET_CL_Disconnect(void);
 void NET_CL_Run(void);
 void NET_CL_Init(void);
 void NET_CL_StartGame();
-void NET_CL_SendTiccmd(ticcmd_t *ticcmd, int maketic);
+void NET_CL_SendTiccmd(ticcmd_t * ticcmd, int maketic);
 void NET_Init(void);
 void NET_CL_SendCheat(int player, int type, char *buff);
 
@@ -55,6 +55,4 @@ extern char *net_player_name;
 extern md5_digest_t net_server_wad_md5sum;
 extern md5_digest_t net_local_wad_md5sum;
 
-
-#endif /* #ifndef NET_CLIENT_H */
-
+#endif				/* #ifndef NET_CLIENT_H */

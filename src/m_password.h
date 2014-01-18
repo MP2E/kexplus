@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1997 Midway Home Entertainment, Inc
@@ -21,7 +21,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __M_PASSWORD_H__
 #define __M_PASSWORD_H__
 
@@ -34,4 +33,4 @@ extern dboolean doPassword;
 void M_EncodePassword(void);
 dboolean M_DecodePassword(dboolean checkOnly);
 
-#endif  // __M_PASSWORD_H__
+#endif				// __M_PASSWORD_H__

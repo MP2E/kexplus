@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -52,31 +52,29 @@ CVAR_EXTERNAL(sv_lockmonsters);
 
 void ST_DrawFPS(int offset)
 {
-    static int    frames;
-    static int    lasttick=0;
-    static int    fps;
-    int        ticks;
-    int        n;
-    
-    ticks = I_GetTime();
-    if(!lasttick)
-    {
-        lasttick = ticks;
-        frames = fps = 0;
-    }
+	static int frames;
+	static int lasttick = 0;
+	static int fps;
+	int ticks;
+	int n;
 
-    frames++;
+	ticks = I_GetTime();
+	if (!lasttick) {
+		lasttick = ticks;
+		frames = fps = 0;
+	}
 
-    if(ticks - lasttick >= TICRATE)
-    {
-        lasttick = ticks;
-        fps = frames;
-        frames = 0;
-        if(fps > 99)
-            fps = 99;
-    }
-    n = fps;
-    Draw_Text(0, offset, WHITE, 0.35f, false, "FPS: %i", n);
+	frames++;
+
+	if (ticks - lasttick >= TICRATE) {
+		lasttick = ticks;
+		fps = frames;
+		frames = 0;
+		if (fps > 99)
+			fps = 99;
+	}
+	n = fps;
+	Draw_Text(0, offset, WHITE, 0.35f, false, "FPS: %i", n);
 }
 
 //
@@ -85,127 +83,136 @@ void ST_DrawFPS(int offset)
 
 void D_DeveloperDisplay(void)
 {
-    rcolor    sevclr = WHITE;
-    int        p_nummobjthinkers = 0;
-    fixed_t px, py, pz, pa, pp;
-    int        y = 8;
-    mobj_t* mo;
+	rcolor sevclr = WHITE;
+	int p_nummobjthinkers = 0;
+	fixed_t px, py, pz, pa, pp;
+	int y = 8;
+	mobj_t *mo;
 
-    if(!showstats)
-    {
-        glBindCalls = 0;
-        vertCount = 0;
-        statindice = 0;
+	if (!showstats) {
+		glBindCalls = 0;
+		vertCount = 0;
+		statindice = 0;
 
-        return;
-    }
+		return;
+	}
 
-    /*PLAYER INFORMATION*/
+	/*PLAYER INFORMATION */
 
-    px=py=pz=pa=pp=0;
-    if(players[0].cameratarget && gamestate == GS_LEVEL)
-    {
-        px=players[0].cameratarget->x/FRACUNIT;
-        py=players[0].cameratarget->y/FRACUNIT;
-        pz=players[0].cameratarget->z/FRACUNIT;
-        pa=players[0].cameratarget->angle>>24;
-        pp=players[0].cameratarget->pitch>>24;
+	px = py = pz = pa = pp = 0;
+	if (players[0].cameratarget && gamestate == GS_LEVEL) {
+		px = players[0].cameratarget->x / FRACUNIT;
+		py = players[0].cameratarget->y / FRACUNIT;
+		pz = players[0].cameratarget->z / FRACUNIT;
+		pa = players[0].cameratarget->angle >> 24;
+		pp = players[0].cameratarget->pitch >> 24;
 
-        Draw_Text(0, y, WHITE, 0.35f, false, "x: %i, y: %i, z: %i, a: %i, p: %i", px, py, pz, pa, pp);
-        y+=16;
-    }
+		Draw_Text(0, y, WHITE, 0.35f, false,
+			  "x: %i, y: %i, z: %i, a: %i, p: %i", px, py, pz, pa,
+			  pp);
+		y += 16;
+	}
 
+	/*Z_MALLOC INFORMATION */
 
-    /*Z_MALLOC INFORMATION*/
+	Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_STATIC Usage: %6d kb",
+		  Z_TagUsage(PU_STATIC) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_STATIC Usage: %6d kb", Z_TagUsage(PU_STATIC) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_LEVEL Usage: %7d kb",
+		  Z_TagUsage(PU_LEVEL) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_LEVEL Usage: %7d kb", Z_TagUsage(PU_LEVEL) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_CACHE Usage: %7d kb",
+		  Z_TagUsage(PU_CACHE) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_CACHE Usage: %7d kb", Z_TagUsage(PU_CACHE) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_LEVSPEC Usage: %5d kb",
+		  Z_TagUsage(PU_LEVSPEC) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_LEVSPEC Usage: %5d kb", Z_TagUsage(PU_LEVSPEC) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_AUTO Usage: %8d kb",
+		  Z_TagUsage(PU_AUTO) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Zone PU_AUTO Usage: %8d kb", Z_TagUsage(PU_AUTO) >> 10);
-    y+=16;
+	/*DRAW LIST INFORMATION */
+	Draw_Text(0, y, WHITE, 0.35f, false, "Draw List WALL Usage: %6d kb",
+		  DL_GetDrawListSize(DLT_WALL) >> 10);
+	y += 16;
 
-    /*DRAW LIST INFORMATION*/
-    Draw_Text(0, y, WHITE, 0.35f, false, "Draw List WALL Usage: %6d kb", DL_GetDrawListSize(DLT_WALL) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Draw List FLAT Usage: %6d kb",
+		  DL_GetDrawListSize(DLT_FLAT) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Draw List FLAT Usage: %6d kb", DL_GetDrawListSize(DLT_FLAT) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Draw List SPRITE Usage: %4d kb",
+		  DL_GetDrawListSize(DLT_SPRITE) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Draw List SPRITE Usage: %4d kb", DL_GetDrawListSize(DLT_SPRITE) >> 10);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Draw List AMAP Usage: %6d kb",
+		  DL_GetDrawListSize(DLT_AMAP) >> 10);
+	y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Draw List AMAP Usage: %6d kb", DL_GetDrawListSize(DLT_AMAP) >> 10);
-    y+=16;
+	if (gamestate == GS_LEVEL) {
+		ST_DrawFPS(y);
+		y += 16;
+	}
 
-    if(gamestate == GS_LEVEL)
-    {
-        ST_DrawFPS(y);
-        y+=16;
-    }
+	/*MOBJ INFORMATION */
 
+	if (gamestate == GS_LEVEL) {
+		for (mo = mobjhead.next; mo != &mobjhead; mo = mo->next) {
+			if (!mo->player)
+				p_nummobjthinkers++;
+		}
 
-    /*MOBJ INFORMATION*/
+		Draw_Text(0, y, WHITE, 0.35f, false, "P_Mobj Total Things: %i",
+			  p_nummobjthinkers);
+		y += 16;
+	}
 
-    if(gamestate == GS_LEVEL)
-    {
-        for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
-        {
-            if(!mo->player)
-                p_nummobjthinkers++;
-        }
+	/*RENDERING INFORMATION */
 
-        Draw_Text(0, y, WHITE, 0.35f, false, "P_Mobj Total Things: %i", p_nummobjthinkers);
-        y+=16;
-    }
+	sevclr = vertCount >= 4000 ? YELLOW : WHITE;
+	Draw_Text(0, y, sevclr, 0.35f, false, "Total Vertices: %i", vertCount);
+	y += 16;
 
-    /*RENDERING INFORMATION*/
+	sevclr = (vertCount / 2) >= 2000 ? YELLOW : WHITE;
+	Draw_Text(0, y, sevclr, 0.35f, false, "Total Tris: %i", vertCount / 2);
+	y += 16;
 
-    sevclr = vertCount >= 4000 ? YELLOW : WHITE;
-    Draw_Text(0, y, sevclr, 0.35f, false, "Total Vertices: %i", vertCount);
-    y+=16;
+	sevclr = glBindCalls >= 100 ? YELLOW : WHITE;
+	Draw_Text(0, y, sevclr, 0.35f, false, "Texture Bind Calls: %i",
+		  glBindCalls);
+	y += 16;
 
-    sevclr = (vertCount/2) >= 2000 ? YELLOW : WHITE;
-    Draw_Text(0, y, sevclr, 0.35f, false, "Total Tris: %i", vertCount/2);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Draw Indices: %i", statindice);
+	y += 16;
 
-    sevclr = glBindCalls >= 100 ? YELLOW : WHITE;
-    Draw_Text(0, y, sevclr, 0.35f, false, "Texture Bind Calls: %i", glBindCalls);
-    y+=16;
+	if (gamestate == GS_LEVEL && !automapactive) {
+		Draw_Text(0, y, WHITE, 0.35f, false,
+			  "PlayerView Render Time: %ims", renderTic);
+		y += 16;
 
-    Draw_Text(0, y, WHITE, 0.35f, false, "Draw Indices: %i", statindice);
-    y+=16;
+		Draw_Text(0, y, WHITE, 0.35f, false, "Sprite Render Time: %ims",
+			  spriteRenderTic);
+		y += 16;
+	}
 
-    if(gamestate == GS_LEVEL && !automapactive)
-    {
-        Draw_Text(0, y, WHITE, 0.35f, false, "PlayerView Render Time: %ims", renderTic);
-        y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Active Sounds: %i",
+		  S_GetActiveSounds());
+	y += 16;
 
-        Draw_Text(0, y, WHITE, 0.35f, false, "Sprite Render Time: %ims", spriteRenderTic);
-        y+=16;
-    }
-
-    Draw_Text(0, y, WHITE, 0.35f, false, "Active Sounds: %i", S_GetActiveSounds());
-    y+=16;
-
-    Draw_Text(0, y, WHITE, 0.35f, false, "Mouse Cursor: %i, %i", mouse_x, mouse_y);
-    y+=16;
+	Draw_Text(0, y, WHITE, 0.35f, false, "Mouse Cursor: %i, %i", mouse_x,
+		  mouse_y);
+	y += 16;
 
 #ifdef INSTRUMENTED
-    Z_PrintStats();
+	Z_PrintStats();
 #endif
 
-    glBindCalls = 0;
-    vertCount = 0;
-    statindice = 0;
+	glBindCalls = 0;
+	vertCount = 0;
+	statindice = 0;
 }
 
 //
@@ -214,19 +221,17 @@ void D_DeveloperDisplay(void)
 
 void D_BoyISuck(void)
 {
-    mobj_t* mo;
+	mobj_t *mo;
 
-    for(mo = mobjhead.next; mo != &mobjhead; mo = mo->next)
-    {
-        if(mo->player)
-            continue;
+	for (mo = mobjhead.next; mo != &mobjhead; mo = mo->next) {
+		if (mo->player)
+			continue;
 
-        if(mo->health > 0 && mo->flags & MF_COUNTKILL)
-        {
-            P_DamageMobj (mo, NULL, NULL, 99999);
-            continue;
-        }
-    }
+		if (mo->health > 0 && mo->flags & MF_COUNTKILL) {
+			P_DamageMobj(mo, NULL, NULL, 99999);
+			continue;
+		}
+	}
 }
 
 //
@@ -235,78 +240,89 @@ void D_BoyISuck(void)
 //
 
 static dboolean freelook = false;
-dboolean D_DevKeyResponder(event_t* ev)
+dboolean D_DevKeyResponder(event_t * ev)
 {
-    if(ev->type == ev_keydown)
-    {
-        switch(ev->data1)
-        {
-            case KEY_F7:    // toggle wireframe
-                R_DrawWireframe(r_fillmode.value?1:0);
-                return true;
+	if (ev->type == ev_keydown) {
+		switch (ev->data1) {
+		case KEY_F7:	// toggle wireframe
+			R_DrawWireframe(r_fillmode.value ? 1 : 0);
+			return true;
 
-            case KEY_F9:    // toggle display stats
-                showstats ^= 1;
-                return true;
-        }
+		case KEY_F9:	// toggle display stats
+			showstats ^= 1;
+			return true;
+		}
 
-        if(gamestate == GS_LEVEL)
-        {
-            switch(ev->data1)
-            {
-            case KEY_F1:    // toggle demo mode - take damage but never die
-                players[consoleplayer].cheats |= CF_UNDYING;
-                players[consoleplayer].message = "Demo Mode On";
-                players[consoleplayer].health = 100;
-                players[consoleplayer].mo->health = 100;
-                return true;
+		if (gamestate == GS_LEVEL) {
+			switch (ev->data1) {
+			case KEY_F1:	// toggle demo mode - take damage but never die
+				players[consoleplayer].cheats |= CF_UNDYING;
+				players[consoleplayer].message = "Demo Mode On";
+				players[consoleplayer].health = 100;
+				players[consoleplayer].mo->health = 100;
+				return true;
 
-            case KEY_F2:    // toggle spectator mode
-                if(!(players[consoleplayer].cheats & CF_SPECTATOR))
-                {
-                    players[consoleplayer].cheats |= CF_SPECTATOR;
-                    players[consoleplayer].message = "Spectator Mode On";
-                          
-                    freelook = (int)v_mlook.value;
-                    CON_CvarSetValue(v_mlook.name, 1);
-                          
-                    players[consoleplayer].mo->flags |= MF_FLOAT;
-                    players[consoleplayer].mo->flags |= MF_NOCLIP;
-                    players[consoleplayer].mo->flags &= ~MF_GRAVITY;
-                }
-                else
-                {
-                    players[consoleplayer].cheats &= ~CF_SPECTATOR;
-                    players[consoleplayer].message = "Spectator Mode Off";
-                          
-                    CON_CvarSetValue(v_mlook.name, (float)freelook);
-                    freelook = false;
-                          
-                    players[consoleplayer].mo->flags &= ~MF_FLOAT;
-                    players[consoleplayer].mo->flags &= ~MF_NOCLIP;
-                    players[consoleplayer].mo->flags |= MF_GRAVITY;
-                }
-                return true;
+			case KEY_F2:	// toggle spectator mode
+				if (!
+				    (players[consoleplayer].
+				     cheats & CF_SPECTATOR)) {
+					players[consoleplayer].cheats |=
+					    CF_SPECTATOR;
+					players[consoleplayer].message =
+					    "Spectator Mode On";
 
-            case KEY_F3:    // freeze all mobj thinkers
-                CON_CvarSetValue(sv_lockmonsters.name, (float)((int)sv_lockmonsters.value ^ 1));
-                players[consoleplayer].message = sv_lockmonsters.value?"Lock Monsters On":"Lock Monsters Off";
-                return true;
+					freelook = (int)v_mlook.value;
+					CON_CvarSetValue(v_mlook.name, 1);
 
-            case KEY_F4:    // kill everything
-                D_BoyISuck();
-                players[consoleplayer].message = DEVKILLALL;
-                return true;
+					players[consoleplayer].mo->flags |=
+					    MF_FLOAT;
+					players[consoleplayer].mo->flags |=
+					    MF_NOCLIP;
+					players[consoleplayer].mo->flags &=
+					    ~MF_GRAVITY;
+				} else {
+					players[consoleplayer].cheats &=
+					    ~CF_SPECTATOR;
+					players[consoleplayer].message =
+					    "Spectator Mode Off";
 
-            case KEY_F8:    // toggle fullbright
-                nolights ^= 1;
-                players[consoleplayer].message = nolights?"Lights Disabled":"Lights Enabled";
-                return true;
-            }
-        }
-    }
+					CON_CvarSetValue(v_mlook.name,
+							 (float)freelook);
+					freelook = false;
 
-    return false;
+					players[consoleplayer].mo->flags &=
+					    ~MF_FLOAT;
+					players[consoleplayer].mo->flags &=
+					    ~MF_NOCLIP;
+					players[consoleplayer].mo->flags |=
+					    MF_GRAVITY;
+				}
+				return true;
+
+			case KEY_F3:	// freeze all mobj thinkers
+				CON_CvarSetValue(sv_lockmonsters.name,
+						 (float)((int)sv_lockmonsters.
+							 value ^ 1));
+				players[consoleplayer].message =
+				    sv_lockmonsters.
+				    value ? "Lock Monsters On" :
+				    "Lock Monsters Off";
+				return true;
+
+			case KEY_F4:	// kill everything
+				D_BoyISuck();
+				players[consoleplayer].message = DEVKILLALL;
+				return true;
+
+			case KEY_F8:	// toggle fullbright
+				nolights ^= 1;
+				players[consoleplayer].message =
+				    nolights ? "Lights Disabled" :
+				    "Lights Enabled";
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
-
-

@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1999-2000 Paul Brook
@@ -33,37 +33,35 @@
 #define PCKF_UP         0x8000
 #define PCKF_COUNTMASK  0x00ff
 
-typedef enum
-{
-    PCKEY_ATTACK,
-    PCKEY_USE,
-    PCKEY_STRAFE,
-    PCKEY_FORWARD,
-    PCKEY_BACK,
-    PCKEY_LEFT,
-    PCKEY_RIGHT,
-    PCKEY_STRAFELEFT,
-    PCKEY_STRAFERIGHT,
-    PCKEY_RUN,
-    PCKEY_JUMP,
-    PCKEY_LOOKUP,
-    PCKEY_LOOKDOWN,
-    PCKEY_CENTER,
-    NUM_PCKEYS
+typedef enum {
+	PCKEY_ATTACK,
+	PCKEY_USE,
+	PCKEY_STRAFE,
+	PCKEY_FORWARD,
+	PCKEY_BACK,
+	PCKEY_LEFT,
+	PCKEY_RIGHT,
+	PCKEY_STRAFELEFT,
+	PCKEY_STRAFERIGHT,
+	PCKEY_RUN,
+	PCKEY_JUMP,
+	PCKEY_LOOKUP,
+	PCKEY_LOOKDOWN,
+	PCKEY_CENTER,
+	NUM_PCKEYS
 } pckeys_t;
 
-typedef struct
-{
-    int            mousex;
-    int            mousey;
-    int            joyx;
-    int            joyy;
-    int            key[NUM_PCKEYS];
-    int            nextweapon;
-    int            sdclicktime;
-    int            fdclicktime;
-    int            flags;
-}playercontrols_t;
+typedef struct {
+	int mousex;
+	int mousey;
+	int joyx;
+	int joyy;
+	int key[NUM_PCKEYS];
+	int nextweapon;
+	int sdclicktime;
+	int fdclicktime;
+	int flags;
+} playercontrols_t;
 
 #define PCF_NEXTWEAPON    0x01
 #define PCF_FDCLICK        0x02
@@ -73,7 +71,7 @@ typedef struct
 #define PCF_PREVWEAPON    0x20
 #define PCF_GAMEPAD     0x40
 
-extern playercontrols_t    Controls;
+extern playercontrols_t Controls;
 extern char *G_GetConfigFileName(void);
 
 #endif

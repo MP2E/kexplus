@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1997 Midway Home Entertainment, Inc
@@ -26,21 +26,20 @@
 
 #include "r_local.h"
 
-enum
-{
-    LIGHT_FLOOR,
-    LIGHT_CEILING,
-    LIGHT_THING,
-    LIGHT_UPRWALL,
-    LIGHT_LWRWALL
+enum {
+	LIGHT_FLOOR,
+	LIGHT_CEILING,
+	LIGHT_THING,
+	LIGHT_UPRWALL,
+	LIGHT_LWRWALL
 };
 
-extern rcolor    bspColor[5];
+extern rcolor bspColor[5];
 
 rcolor R_GetSectorLight(byte alpha, word ptr);
 void R_SetLightFactor(float lightfactor);
 void R_RefreshBrightness(void);
-void R_LightToVertex(vtx_t *v, int idx, word c);
-void R_SetSegLineColor(seg_t *line, vtx_t* v, byte side);
+void R_LightToVertex(vtx_t * v, int idx, word c);
+void R_SetSegLineColor(seg_t * line, vtx_t * v, byte side);
 
 #endif

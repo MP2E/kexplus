@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,7 +21,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __M_CHEAT__
 #define __M_CHEAT__
 
@@ -33,17 +32,17 @@
 // CHEAT SEQUENCE PACKAGE
 //
 
-void M_CheatProcess(player_t* plyr, event_t* ev);
+void M_CheatProcess(player_t * plyr, event_t * ev);
 void M_ParseNetCheat(int player, int type, char *buff);
 
-void M_CheatGod(player_t* player, char dat[4]);
-void M_CheatClip(player_t* player, char dat[4]);
-void M_CheatKfa(player_t* player, char dat[4]);
-void M_CheatGiveWeapon(player_t* player, char dat[4]);
-void M_CheatArtifacts(player_t* player, char dat[4]);
-void M_CheatBoyISuck(player_t* player, char dat[4]);
-void M_CheatGiveKey(player_t* player, char dat[4]);
+void M_CheatGod(player_t * player, char dat[4]);
+void M_CheatClip(player_t * player, char dat[4]);
+void M_CheatKfa(player_t * player, char dat[4]);
+void M_CheatGiveWeapon(player_t * player, char dat[4]);
+void M_CheatArtifacts(player_t * player, char dat[4]);
+void M_CheatBoyISuck(player_t * player, char dat[4]);
+void M_CheatGiveKey(player_t * player, char dat[4]);
 
-extern int        amCheating;
+extern int amCheating;
 
 #endif

@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -42,4 +42,4 @@
 #define SYS_BIG_ENDIAN
 #endif
 
-#endif // __I_SWAP_H__
+#endif				// __I_SWAP_H__

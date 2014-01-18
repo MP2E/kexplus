@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2007-2012 Samuel Villarreal
@@ -25,10 +25,10 @@
 
 #include "gl_main.h"
 
-void Draw_GfxImage(int x, int y, const char* name,
-                   rcolor color, dboolean alpha);
+void Draw_GfxImage(int x, int y, const char *name,
+		   rcolor color, dboolean alpha);
 void Draw_Sprite2D(int type, int rot, int frame, int x, int y,
-                   float scale, int pal, rcolor c);
+		   float scale, int pal, rcolor c);
 
 #define SM_FONT1        16
 #define SM_FONT2        42
@@ -38,29 +38,27 @@ void Draw_Sprite2D(int type, int rot, int frame, int x, int y,
 #define SM_THERMO        68
 #define SM_MICONS        78
 
-typedef struct
-{
-    int x;
-    int y;
-    int w;
-    int h;
+typedef struct {
+	int x;
+	int y;
+	int w;
+	int h;
 } symboldata_t;
 
 extern const symboldata_t symboldata[];
 
 #define ST_FONTWHSIZE    8
-#define ST_FONTNUMSET    32    //# of fonts per row in font pic
-#define ST_FONTSTART    '!'    // the first font characters
-#define ST_FONTEND        '_'    // the last font characters
-#define ST_FONTSIZE        (ST_FONTEND - ST_FONTSTART + 1) // Calculate # of glyphs in font.
+#define ST_FONTNUMSET    32	//# of fonts per row in font pic
+#define ST_FONTSTART    '!'	// the first font characters
+#define ST_FONTEND        '_'	// the last font characters
+#define ST_FONTSIZE        (ST_FONTEND - ST_FONTSTART + 1)	// Calculate # of glyphs in font.
 
 int Draw_Text(int x, int y, rcolor color, float scale,
-              dboolean wrap, const char* string, ...);
-int Center_Text(const char* string);
-int Draw_BigText(int x, int y, rcolor color, const char* string);
+	      dboolean wrap, const char *string, ...);
+int Center_Text(const char *string);
+int Draw_BigText(int x, int y, rcolor color, const char *string);
 void Draw_Number(int x, int y, int num, int type, rcolor c);
 float Draw_ConsoleText(float x, float y, rcolor color,
-                   float scale, const char* string, ...);
+		       float scale, const char *string, ...);
 
 #endif
-

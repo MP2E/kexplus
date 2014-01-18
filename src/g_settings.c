@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1999-2000 Paul Brook
@@ -45,71 +45,72 @@
 
 static char *ConfigFileName =
 #ifdef _WIN32
-"config.cfg"
+    "config.cfg"
 #else
-NULL
+    NULL
 #endif
-;
+    ;
 
-char    DefaultConfig[] =
-#include "defconfig.inc"    // wtf?
-;
+char DefaultConfig[] =
+#include "defconfig.inc"	// wtf?
+    ;
 
 //
 // G_ExecuteMultipleCommands
 //
 
-char *G_GetConfigFileName(void) {
+char *G_GetConfigFileName(void)
+{
 #ifdef _WIN32
-    CON_DPrintf("Loading config: %s\\%s\n", I_DoomExeDir(), ConfigFileName);
-    return ConfigFileName;
+	CON_DPrintf("Loading config: %s\\%s\n", I_DoomExeDir(), ConfigFileName);
+	return ConfigFileName;
 #else
-    // 20120105 bkw: Be UNIX-friendly and use ~/.doom64ex/config.cfg
-    if(ConfigFileName == NULL) {
-        char confdir[PATH_MAX];
-        static char conffile[PATH_MAX];
-        
-        char *homedir = getenv("HOME");
-        
-        if(!homedir) homedir = "."; // Fall back to ./.doom64ex if HOME not set
-        
-        // make sure the directory exists
-        sprintf(confdir, "%s/.doom64ex", homedir);
-        (void)mkdir(confdir, 0755); // ignore return value
-        
-        sprintf(conffile, "%s/config.cfg", confdir);
-        ConfigFileName = conffile;
-        I_Printf("G_GetConfigFileName: using config file '%s'\n", ConfigFileName);
-    }
-    
-    CON_DPrintf("Loading config: %s\n", ConfigFileName);
-    return ConfigFileName;
+	// 20120105 bkw: Be UNIX-friendly and use ~/.doom64ex/config.cfg
+	if (ConfigFileName == NULL) {
+		char confdir[PATH_MAX];
+		static char conffile[PATH_MAX];
+
+		char *homedir = getenv("HOME");
+
+		if (!homedir)
+			homedir = ".";	// Fall back to ./.doom64ex if HOME not set
+
+		// make sure the directory exists
+		sprintf(confdir, "%s/.doom64ex", homedir);
+		(void)mkdir(confdir, 0755);	// ignore return value
+
+		sprintf(conffile, "%s/config.cfg", confdir);
+		ConfigFileName = conffile;
+		I_Printf("G_GetConfigFileName: using config file '%s'\n",
+			 ConfigFileName);
+	}
+
+	CON_DPrintf("Loading config: %s\n", ConfigFileName);
+	return ConfigFileName;
 #endif
 }
 
 void G_ExecuteMultipleCommands(char *data)
 {
-    char    *p;
-    char    *q;
-    char    c;
-    char    line[1024];
-    
-    p=data;
-    c=*p;
-    while (c)
-    {
-        q=line;
-        c=*(p++);
-        while (c&&(c!='\n'))
-        {
-            if (c!='\r')
-                *(q++)=c;
-            c=*(p++);
-        }
-        *q=0;
-        if (line[0])
-            G_ExecuteCommand(line);
-    }
+	char *p;
+	char *q;
+	char c;
+	char line[1024];
+
+	p = data;
+	c = *p;
+	while (c) {
+		q = line;
+		c = *(p++);
+		while (c && (c != '\n')) {
+			if (c != '\r')
+				*(q++) = c;
+			c = *(p++);
+		}
+		*q = 0;
+		if (line[0])
+			G_ExecuteCommand(line);
+	}
 }
 
 //
@@ -118,38 +119,37 @@ void G_ExecuteMultipleCommands(char *data)
 
 void G_ExecuteFile(char *name)
 {
-    FILE    *fh;
-    char    *buff;
-    int        len;
-    
-    if(!name)
-        I_Error("G_ExecuteFile: No config name specified");
-    
-    fh = fopen(name, "rb");
-    
-    if(!fh)
-    {
-        fh = fopen(name, "w");
-        if(!fh)
-            I_Error("G_ExecuteFile: Unable to create %s", name);
-        
-        fprintf(fh, "%s", DefaultConfig);
-        fclose(fh);
-        
-        fh = fopen(name, "rb");
-        
-        if(!fh)
-            I_Error("G_ExecuteFile: Failed to read %s", name);
-    }
-    
-    fseek(fh, 0, SEEK_END);
-    len = ftell(fh);
-    fseek(fh, 0, SEEK_SET);
-    buff = Z_Malloc(len + 1, PU_STATIC, NULL);
-    fread(buff, 1, len, fh);
-    buff[len] = 0;
-    G_ExecuteMultipleCommands(buff);
-    Z_Free(buff);
+	FILE *fh;
+	char *buff;
+	int len;
+
+	if (!name)
+		I_Error("G_ExecuteFile: No config name specified");
+
+	fh = fopen(name, "rb");
+
+	if (!fh) {
+		fh = fopen(name, "w");
+		if (!fh)
+			I_Error("G_ExecuteFile: Unable to create %s", name);
+
+		fprintf(fh, "%s", DefaultConfig);
+		fclose(fh);
+
+		fh = fopen(name, "rb");
+
+		if (!fh)
+			I_Error("G_ExecuteFile: Failed to read %s", name);
+	}
+
+	fseek(fh, 0, SEEK_END);
+	len = ftell(fh);
+	fseek(fh, 0, SEEK_SET);
+	buff = Z_Malloc(len + 1, PU_STATIC, NULL);
+	fread(buff, 1, len, fh);
+	buff[len] = 0;
+	G_ExecuteMultipleCommands(buff);
+	Z_Free(buff);
 }
 
 //
@@ -158,14 +158,13 @@ void G_ExecuteFile(char *name)
 
 void G_LoadSettings(void)
 {
-    int        p;
-    
-    p = M_CheckParm("-config");
-    if(p && (p < myargc - 1))
-    {
-        if(myargv[p + 1][0] != '-')
-            ConfigFileName = myargv[p + 1];
-    }
-    
-    G_ExecuteFile(G_GetConfigFileName());
+	int p;
+
+	p = M_CheckParm("-config");
+	if (p && (p < myargc - 1)) {
+		if (myargv[p + 1][0] != '-')
+			ConfigFileName = myargv[p + 1];
+	}
+
+	G_ExecuteFile(G_GetConfigFileName());
 }

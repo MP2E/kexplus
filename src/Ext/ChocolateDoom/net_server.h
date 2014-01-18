@@ -41,11 +41,10 @@ void NET_SV_Shutdown(void);
 
 // Add a network module to the context used by the server
 
-void NET_SV_AddModule(net_module_t *module);
+void NET_SV_AddModule(net_module_t * module);
 
 // Update server cvars across all clients if changed by host/listen server
 
-void NET_SV_UpdateCvars(cvar_t* cvar);
+void NET_SV_UpdateCvars(cvar_t * cvar);
 
-#endif /* #ifndef NET_SERVER_H */
-
+#endif				/* #ifndef NET_SERVER_H */

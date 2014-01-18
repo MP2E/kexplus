@@ -34,23 +34,23 @@
 
 #ifdef _MSC_VER
 
-  #include <direct.h>
-  #include <io.h>
-  #define F_OK 0
-  #define W_OK 2
-  #define R_OK 4
-  #define S_ISDIR(x) (((sbuf.st_mode & S_IFDIR)==S_IFDIR)?1:0)
-  #ifndef TRUE
-     #define TRUE true
-  #endif
-  #ifndef FALSE
-     #define FALSE false
-  #endif
-  #define strcasecmp _stricmp
-  #define strncasecmp _strnicmp
-  #ifndef PATH_MAX
-     #define PATH_MAX _MAX_PATH
-  #endif
+#include <direct.h>
+#include <io.h>
+#define F_OK 0
+#define W_OK 2
+#define R_OK 4
+#define S_ISDIR(x) (((sbuf.st_mode & S_IFDIR)==S_IFDIR)?1:0)
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#ifndef PATH_MAX
+#define PATH_MAX _MAX_PATH
+#endif
 
 #else
 #include <unistd.h>
@@ -60,12 +60,11 @@
 #define FILENAME_MAX 260
 #endif
 
-struct dirent
-{
-   long          d_ino;    /* Always zero. */
-   unsigned short d_reclen; /* Always zero. */
-   unsigned short d_namlen; /* Length of name in d_name. */
-   char           d_name[FILENAME_MAX]; /* File name. */
+struct dirent {
+	long d_ino;		/* Always zero. */
+	unsigned short d_reclen;	/* Always zero. */
+	unsigned short d_namlen;	/* Length of name in d_name. */
+	char d_name[FILENAME_MAX];	/* File name. */
 };
 
 /*
@@ -73,29 +72,28 @@ struct dirent
  * except as an argument to one of the functions below.
  * dd_stat field is now int (was short in older versions).
  */
-typedef struct
-{
-   /* disk transfer area for this dir */
-   struct _finddata_t dd_dta;
+typedef struct {
+	/* disk transfer area for this dir */
+	struct _finddata_t dd_dta;
 
-   /* dirent struct to return from dir (NOTE: this makes this thread
-    * safe as long as only one thread uses a particular DIR struct at
-    * a time) */
-   struct dirent dd_dir;
+	/* dirent struct to return from dir (NOTE: this makes this thread
+	 * safe as long as only one thread uses a particular DIR struct at
+	 * a time) */
+	struct dirent dd_dir;
 
-   /* _findnext handle */
-   long    dd_handle;
+	/* _findnext handle */
+	long dd_handle;
 
-   /*
-    * Status of search:
-    *   0 = not started yet (next entry to read is first entry)
-    *  -1 = off the end
-    *   positive = 0 based index of next entry
-    */
-   int dd_stat;
+	/*
+	 * Status of search:
+	 *   0 = not started yet (next entry to read is first entry)
+	 *  -1 = off the end
+	 *   positive = 0 based index of next entry
+	 */
+	int dd_stat;
 
-   /* given path for dir with search pattern (struct is extended) */
-   char dd_name[1];
+	/* given path for dir with search pattern (struct is extended) */
+	char dd_name[1];
 } DIR;
 
 DIR *opendir(const char *);
@@ -106,4 +104,3 @@ long telldir(DIR *);
 void seekdir(DIR *, long);
 
 #endif
-

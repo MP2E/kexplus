@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
@@ -21,7 +21,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
 #ifndef __I_SYSTEM__
 #define __I_SYSTEM__
 
@@ -36,7 +35,7 @@
 #endif
 
 // Called by DoomMain.
-void I_Init (void);
+void I_Init(void);
 
 #ifdef _WIN32
 
@@ -47,21 +46,20 @@ void I_ShowSysConsole(dboolean show);
 
 #endif
 
-
 // Called by D_DoomLoop,
 // returns current time in tics.
 
 extern fixed_t rendertic_frac;
 
-extern int      (*I_GetTime)(void);
-void            I_InitClockRate(void);
-int             I_GetTimeMS(void);
-void            I_Sleep(unsigned long usecs);
-dboolean        I_StartDisplay(void);
-void            I_EndDisplay(void);
-fixed_t         I_GetTimeFrac(void);
-void            I_GetTime_SaveMS(void);
-unsigned long   I_GetRandomTimeSeed(void);
+extern int (*I_GetTime) (void);
+void I_InitClockRate(void);
+int I_GetTimeMS(void);
+void I_Sleep(unsigned long usecs);
+dboolean I_StartDisplay(void);
+void I_EndDisplay(void);
+fixed_t I_GetTimeFrac(void);
+void I_GetTime_SaveMS(void);
+unsigned long I_GetRandomTimeSeed(void);
 
 // Asynchronous interrupt functions should maintain private queues
 // that are read by the synchronous functions
@@ -71,21 +69,20 @@ unsigned long   I_GetRandomTimeSeed(void);
 // or calls a loadable driver to build it.
 // This ticcmd will then be modified by the gameloop
 // for normal input.
-ticcmd_t* I_BaseTiccmd (void);
-
+ticcmd_t *I_BaseTiccmd(void);
 
 // Called by M_Responder when quit is selected.
 // Clean exit, displays sell blurb.
-void I_Quit (void);
+void I_Quit(void);
 
 void I_BeginRead(void);
-void I_Error (char *error, ...);
+void I_Error(char *error, ...);
 void I_Printf(char *msg, ...);
 char *I_DoomExeDir(void);
 
 void I_RegisterCvars(void);
 
-extern FILE    *DebugFile;
-extern dboolean    DigiJoy;
+extern FILE *DebugFile;
+extern dboolean DigiJoy;
 
 #endif

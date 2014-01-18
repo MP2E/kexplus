@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1997 Midway Home Entertainment, Inc
@@ -36,10 +36,10 @@
 #include "gl_texture.h"
 #include "doomstat.h"
 
-void M_ClearMenus(void);    // from m_menu.c
+void M_ClearMenus(void);	// from m_menu.c
 
 static dtexture wipeMeltTexture = 0;
-static int wipeFadeAlpha        = 0;
+static int wipeFadeAlpha = 0;
 
 //
 // WIPE_DisplayScreen
@@ -47,18 +47,17 @@ static int wipeFadeAlpha        = 0;
 
 static void WIPE_RefreshDelay(void)
 {
-    int starttime = I_GetTime();
-    int tics = 0;
+	int starttime = I_GetTime();
+	int tics = 0;
 
-    do
-    {
-        tics = I_GetTime() - starttime;
-        //
-        // don't bash the CPU
-        //
-        I_Sleep(1);
-    }
-    while(!tics);
+	do {
+		tics = I_GetTime() - starttime;
+		//
+		// don't bash the CPU
+		//
+		I_Sleep(1);
+	}
+	while (!tics);
 }
 
 //
@@ -67,77 +66,77 @@ static void WIPE_RefreshDelay(void)
 
 void WIPE_FadeScreen(int fadetics)
 {
-    int padw, padh;
-    vtx_t v[4];
-    float left, right, top, bottom;
+	int padw, padh;
+	vtx_t v[4];
+	float left, right, top, bottom;
 
-    allowmenu = false;
+	allowmenu = false;
 
-    wipeFadeAlpha = 0xff;
-    wipeMeltTexture = GL_ScreenToTexture();
+	wipeFadeAlpha = 0xff;
+	wipeMeltTexture = GL_ScreenToTexture();
 
-    padw = GL_PadTextureDims(video_width);
-    padh = GL_PadTextureDims(video_height);
-    
-    GL_SetState(GLSTATE_BLEND, 1);
-    dglEnable(GL_TEXTURE_2D);
+	padw = GL_PadTextureDims(video_width);
+	padh = GL_PadTextureDims(video_height);
 
-    //
-    // setup vertex coordinates for plane
-    //
-    left = (float)(ViewWindowX * ViewWidth / video_width);
-    right = left + (SCREENWIDTH * ViewWidth / video_width);
-    top = (float)(ViewWindowY * ViewHeight / video_height);
-    bottom = top + (SCREENHEIGHT * ViewHeight / video_height);
-    
-    v[0].x = v[2].x = left;
-    v[1].x = v[3].x = right;
-    v[0].y = v[1].y = top;
-    v[2].y = v[3].y = bottom;
+	GL_SetState(GLSTATE_BLEND, 1);
+	dglEnable(GL_TEXTURE_2D);
 
-    v[0].z = v[1].z = v[2].z = v[3].z = 0.0f;
-    
-    v[0].tu = v[2].tu = 0.0f;
-    v[1].tu = v[3].tu = (float)video_width / (float)padw;
-    v[0].tv = v[1].tv = (float)video_height / (float)padh;
-    v[2].tv = v[3].tv = 0.0f;
+	//
+	// setup vertex coordinates for plane
+	//
+	left = (float)(ViewWindowX * ViewWidth / video_width);
+	right = left + (SCREENWIDTH * ViewWidth / video_width);
+	top = (float)(ViewWindowY * ViewHeight / video_height);
+	bottom = top + (SCREENHEIGHT * ViewHeight / video_height);
 
-    dglBindTexture(GL_TEXTURE_2D, wipeMeltTexture);
+	v[0].x = v[2].x = left;
+	v[1].x = v[3].x = right;
+	v[0].y = v[1].y = top;
+	v[2].y = v[3].y = bottom;
 
-    //
-    // begin fade out
-    //
-    while(wipeFadeAlpha > 0)
-    {
-        rcolor color;
+	v[0].z = v[1].z = v[2].z = v[3].z = 0.0f;
 
-        //
-        // clear frame
-        //
-        GL_ClearView(0xFF000000);
+	v[0].tu = v[2].tu = 0.0f;
+	v[1].tu = v[3].tu = (float)video_width / (float)padw;
+	v[0].tv = v[1].tv = (float)video_height / (float)padh;
+	v[2].tv = v[3].tv = 0.0f;
 
-        if(wipeFadeAlpha < 0)
-            wipeFadeAlpha = 0;
+	dglBindTexture(GL_TEXTURE_2D, wipeMeltTexture);
 
-        //
-        // display screen overlay
-        //
-        color = D_RGBA(wipeFadeAlpha, wipeFadeAlpha, wipeFadeAlpha, 0xff);
+	//
+	// begin fade out
+	//
+	while (wipeFadeAlpha > 0) {
+		rcolor color;
 
-        dglSetVertexColor(v, color, 4);
-        GL_Draw2DQuad(v, 1);
+		//
+		// clear frame
+		//
+		GL_ClearView(0xFF000000);
 
-        GL_SwapBuffers();
+		if (wipeFadeAlpha < 0)
+			wipeFadeAlpha = 0;
 
-        WIPE_RefreshDelay();
+		//
+		// display screen overlay
+		//
+		color =
+		    D_RGBA(wipeFadeAlpha, wipeFadeAlpha, wipeFadeAlpha, 0xff);
 
-        wipeFadeAlpha -= fadetics;
-    }
+		dglSetVertexColor(v, color, 4);
+		GL_Draw2DQuad(v, 1);
 
-    GL_SetState(GLSTATE_BLEND, 0);
-    GL_UnloadTexture(&wipeMeltTexture);
+		GL_SwapBuffers();
 
-    allowmenu = true;
+		WIPE_RefreshDelay();
+
+		wipeFadeAlpha -= fadetics;
+	}
+
+	GL_SetState(GLSTATE_BLEND, 0);
+	GL_UnloadTexture(&wipeMeltTexture);
+
+	allowmenu = true;
 }
 
 //
@@ -146,97 +145,86 @@ void WIPE_FadeScreen(int fadetics)
 
 void WIPE_MeltScreen(void)
 {
-    int padw, padh;
-    vtx_t v[4];
-    vtx_t v2[4];
-    float left, right, top, bottom;
-    int i = 0;
+	int padw, padh;
+	vtx_t v[4];
+	vtx_t v2[4];
+	float left, right, top, bottom;
+	int i = 0;
 
-    M_ClearMenus();
-    allowmenu = false;
+	M_ClearMenus();
+	allowmenu = false;
 
-    wipeMeltTexture = GL_ScreenToTexture();
+	wipeMeltTexture = GL_ScreenToTexture();
 
-    padw = GL_PadTextureDims(video_width);
-    padh = GL_PadTextureDims(video_height);
-    
-    GL_SetState(GLSTATE_BLEND, 1);
-    dglEnable(GL_TEXTURE_2D);
+	padw = GL_PadTextureDims(video_width);
+	padh = GL_PadTextureDims(video_height);
 
-    //
-    // setup vertex coordinates for plane
-    //
-    left = (float)(ViewWindowX * ViewWidth / video_width);
-    right = left + (SCREENWIDTH * ViewWidth / video_width);
-    top = (float)(ViewWindowY * ViewHeight / video_height);
-    bottom = top + (SCREENHEIGHT * ViewHeight / video_height);
-    
-    v[0].x = v[2].x = left;
-    v[1].x = v[3].x = right;
-    v[0].y = v[1].y = top;
-    v[2].y = v[3].y = bottom;
+	GL_SetState(GLSTATE_BLEND, 1);
+	dglEnable(GL_TEXTURE_2D);
 
-    v[0].z = v[1].z = v[2].z = v[3].z = 0.0f;
-    
-    v[0].tu = v[2].tu = 0.0f;
-    v[1].tu = v[3].tu = (float)video_width / (float)padw;
-    v[0].tv = v[1].tv = (float)video_height / (float)padh;
-    v[2].tv = v[3].tv = 0.0f;
+	//
+	// setup vertex coordinates for plane
+	//
+	left = (float)(ViewWindowX * ViewWidth / video_width);
+	right = left + (SCREENWIDTH * ViewWidth / video_width);
+	top = (float)(ViewWindowY * ViewHeight / video_height);
+	bottom = top + (SCREENHEIGHT * ViewHeight / video_height);
 
-    dmemcpy(v2, v, sizeof(vtx_t) * 4);
+	v[0].x = v[2].x = left;
+	v[1].x = v[3].x = right;
+	v[0].y = v[1].y = top;
+	v[2].y = v[3].y = bottom;
 
-    dglBindTexture(GL_TEXTURE_2D, wipeMeltTexture);
-    GL_SetTextureMode(GL_ADD);
+	v[0].z = v[1].z = v[2].z = v[3].z = 0.0f;
 
-    for(i = 0; i < 160; i += 2)
-    {
-        int j;
+	v[0].tu = v[2].tu = 0.0f;
+	v[1].tu = v[3].tu = (float)video_width / (float)padw;
+	v[0].tv = v[1].tv = (float)video_height / (float)padh;
+	v[2].tv = v[3].tv = 0.0f;
 
-        GL_ClearView(0xFF000000);
+	dmemcpy(v2, v, sizeof(vtx_t) * 4);
 
-        dglSetVertexColor(v2, D_RGBA(1, 0, 0, 0xff), 4);
-        GL_Draw2DQuad(v2, 1);
+	dglBindTexture(GL_TEXTURE_2D, wipeMeltTexture);
+	GL_SetTextureMode(GL_ADD);
 
-        dglSetVertexColor(v, D_RGBA(0, 0, 0, 0x10), 4);
-        GL_Draw2DQuad(v, 1);
+	for (i = 0; i < 160; i += 2) {
+		int j;
 
-        //
-        // move screen down. without clearing the frame, we should
-        // get a nice melt effect using the HOM effect
-        //
-        for(j = 0; j < 4; j++)
-            v[j].y += 0.5f;
+		GL_ClearView(0xFF000000);
 
-        //
-        // update screen buffer
-        //
-        dglCopyTexSubImage2D(
-            GL_TEXTURE_2D,
-            0,
-            0,
-            0,
-            0,
-            0,
-            padw,
-            padh
-            );
+		dglSetVertexColor(v2, D_RGBA(1, 0, 0, 0xff), 4);
+		GL_Draw2DQuad(v2, 1);
 
-        GL_SwapBuffers();
+		dglSetVertexColor(v, D_RGBA(0, 0, 0, 0x10), 4);
+		GL_Draw2DQuad(v, 1);
 
-        WIPE_RefreshDelay();
-    }
+		//
+		// move screen down. without clearing the frame, we should
+		// get a nice melt effect using the HOM effect
+		//
+		for (j = 0; j < 4; j++)
+			v[j].y += 0.5f;
 
-    //
-    // reset combiners and blending
-    //
-    GL_SetTextureMode(GL_MODULATE);
-    GL_SetDefaultCombiner();
-    GL_SetState(GLSTATE_BLEND, 0);
-    GL_UnloadTexture(&wipeMeltTexture);
+		//
+		// update screen buffer
+		//
+		dglCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, padw, padh);
 
-    //
-    // fade screen out
-    //
-    WIPE_FadeScreen(6);
+		GL_SwapBuffers();
+
+		WIPE_RefreshDelay();
+	}
+
+	//
+	// reset combiners and blending
+	//
+	GL_SetTextureMode(GL_MODULATE);
+	GL_SetDefaultCombiner();
+	GL_SetState(GLSTATE_BLEND, 0);
+	GL_UnloadTexture(&wipeMeltTexture);
+
+	//
+	// fade screen out
+	//
+	WIPE_FadeScreen(6);
 }
-

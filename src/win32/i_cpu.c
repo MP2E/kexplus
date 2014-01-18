@@ -41,11 +41,11 @@
 #include "con_cvar.h"
 
 // cannot include DOOM headers here; required externs:
-extern void     I_Printf(char* string, ...);
-extern int      M_CheckParm(const char *);
-extern int      datoi(const char *str);
-extern int      myargc;
-extern char**   myargv;
+extern void I_Printf(char *string, ...);
+extern int M_CheckParm(const char *);
+extern int datoi(const char *str);
+extern int myargc;
+extern char **myargv;
 
 unsigned int process_affinity_mask;
 
@@ -55,7 +55,7 @@ unsigned int process_affinity_mask;
 // multiple processors anyway so I fail to see the necessity of even
 // calling the function there if it did exist.
 
-typedef BOOL (WINAPI *SetAffinityFunc)(HANDLE, DWORD);
+typedef BOOL(WINAPI * SetAffinityFunc) (HANDLE, DWORD);
 
 //
 // I_SetAffinityMask
@@ -69,48 +69,46 @@ typedef BOOL (WINAPI *SetAffinityFunc)(HANDLE, DWORD);
 //
 void I_SetAffinityMask(void)
 {
-   int p;
-   HMODULE kernel32_dll;
-   SetAffinityFunc SetAffinity;
+	int p;
+	HMODULE kernel32_dll;
+	SetAffinityFunc SetAffinity;
 
-   // Find the kernel interface DLL.
+	// Find the kernel interface DLL.
 
-   kernel32_dll = LoadLibrary("kernel32.dll");
+	kernel32_dll = LoadLibrary("kernel32.dll");
 
-   if(kernel32_dll == NULL)
-   {
-      // This should never happen...
-      fprintf(stderr, "Failed to load kernel32.dll\n");
-      return;
-   }
+	if (kernel32_dll == NULL) {
+		// This should never happen...
+		fprintf(stderr, "Failed to load kernel32.dll\n");
+		return;
+	}
+	// Find the SetProcessAffinityMask function.
+	SetAffinity =
+	    (SetAffinityFunc) GetProcAddress(kernel32_dll,
+					     "SetProcessAffinityMask");
 
-   // Find the SetProcessAffinityMask function.
-   SetAffinity =
-      (SetAffinityFunc)GetProcAddress(kernel32_dll, "SetProcessAffinityMask");
+	if (!SetAffinity) {
+		I_Printf
+		    ("I_SetAffinityMask: system does not support multiple CPUs.\n");
+		return;
+	}
 
-   if(!SetAffinity)
-   {
-      I_Printf("I_SetAffinityMask: system does not support multiple CPUs.\n");
-      return;
-   }
+	p = M_CheckParm("-affinity");
+	if (p && p < myargc - 1)
+		process_affinity_mask = datoi(myargv[p + 1]);
+	else
+		process_affinity_mask = 0;
 
-   p = M_CheckParm("-affinity");
-   if(p && p < myargc - 1)
-       process_affinity_mask = datoi(myargv[p + 1]);
-   else
-       process_affinity_mask = 0;
-
-   // Set the process affinity mask so that all threads
-   // run on the same processor.  This is a workaround for a bug in
-   // SDL_mixer that causes occasional crashes.
-   if(process_affinity_mask)
-   {
-      if(!SetAffinity(GetCurrentProcess(), process_affinity_mask))
-         I_Printf("I_SetAffinityMask: failed to set process affinity mask.\n");
-      else
-         I_Printf("I_SetAffinityMask: applied affinity mask.\n");
-   }
+	// Set the process affinity mask so that all threads
+	// run on the same processor.  This is a workaround for a bug in
+	// SDL_mixer that causes occasional crashes.
+	if (process_affinity_mask) {
+		if (!SetAffinity(GetCurrentProcess(), process_affinity_mask))
+			I_Printf
+			    ("I_SetAffinityMask: failed to set process affinity mask.\n");
+		else
+			I_Printf("I_SetAffinityMask: applied affinity mask.\n");
+	}
 }
 
 // EOF
-
