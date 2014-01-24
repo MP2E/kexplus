@@ -5164,20 +5164,23 @@ void M_Drawer(void)
 
 #ifdef _USE_XINPUT		// XINPUT
 	if (xgamepad.connected && currentMenu != &MainDef) {
-		if (currentMenu == &PasswordDef) {
-			M_DrawXInputButton(4, 184, XINPUT_GAMEPAD_B);
-			Draw_Text(22, 188, MENUCOLORWHITE, 1.0f, false,
-				  "Change");
+        GL_SetOrthoScale(0.75f);
+		if(currentMenu == &PasswordDef) {
+			M_DrawXInputButton(4, 271, XINPUT_GAMEPAD_B);
+			Draw_Text(22, 276, MENUCOLORWHITE, 0.75f, false, "Change");
 		}
 
-		M_DrawXInputButton(4, 200, XINPUT_GAMEPAD_A);
-		Draw_Text(22, 204, MENUCOLORWHITE, 1.0f, false, "Select");
+		GL_SetOrthoScale(0.75f);
+        M_DrawXInputButton(4, 287, XINPUT_GAMEPAD_A);
+		Draw_Text(22, 292, MENUCOLORWHITE, 0.75f, false, "Select");
 
-		if (currentMenu != &PauseDef) {
-			M_DrawXInputButton(5, 216, XINPUT_GAMEPAD_START);
-			Draw_Text(22, 220, MENUCOLORWHITE, 1.0f, false,
-				  "Return");
+		if(currentMenu != &PauseDef) {
+            GL_SetOrthoScale(0.75f);
+			M_DrawXInputButton(5, 303, XINPUT_GAMEPAD_START);
+			Draw_Text(22, 308, MENUCOLORWHITE, 0.75f, false, "Return");
 		}
+
+        GL_SetOrthoScale(1);
 	}
 #endif
 
