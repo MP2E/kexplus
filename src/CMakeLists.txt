@@ -4,12 +4,15 @@
 ##
 ##-----------------------------------------------------------------------------
 
-include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext ${FLUIDSYNTH_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIR} ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext
+    ${FLUIDSYNTH_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIR}
+    ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
 if(APPLE)
     set(EXTRA_SOURCES apple/SDLMain.m)
 elseif(WIN32)
-    set(EXTRA_SOURCES win32/i_exception.c win32/i_cpu.c)
+    set(EXTRA_SOURCES win32/i_exception.c win32/i_cpu.c
+        win32/resources/doom64.rc)
 else()
         LIST(APPEND EXTRA_SOURCES unix/i_cpu_posix.c)
 endif()
@@ -105,9 +108,13 @@ add_executable(doom64ex
 )
 
 if(MSVC)
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
+target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
+    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
 elseif(WIN32)
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} iphlpapi ws2_32 winmm dxguid m)
+target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
+    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} iphlpapi
+    ws2_32 winmm dxguid m)
 else()
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY} ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
+target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
+    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
 endif()
