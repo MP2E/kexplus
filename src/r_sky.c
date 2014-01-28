@@ -61,7 +61,8 @@ static word CloudOffsetX = 0;
 static float sky_cloudpan1 = 0;
 static float sky_cloudpan2 = 0;
 
-#define FIRESKYSIZE 64
+#define FIRESKY_WIDTH   64
+#define FIRESKY_HEIGHT  64
 
 CVAR_EXTERNAL(r_texturecombiner);
 CVAR_EXTERNAL(r_skybox);
@@ -584,7 +585,7 @@ static void R_DrawClouds(void)
 //
 
 static void R_SpreadFire(byte * src1, byte * src2, int pixel, int counter,
-			 int *rand, int width)
+			 int *rand)
 {
 	int randIdx = 0;
 	byte *tmpSrc;
@@ -594,10 +595,10 @@ static void R_SpreadFire(byte * src1, byte * src2, int pixel, int counter,
 		*rand = ((*rand + 2) & 0xff);
 
 		tmpSrc =
-		    (src1 + (((counter - (randIdx & 3)) + 1) & (width - 1)));
-		*(byte *) (tmpSrc - width) = (pixel - ((randIdx & 1) << 4));
+		    (src1 + (((counter - (randIdx & 3)) + 1) & (FIRESKY_WIDTH - 1)));
+		*(byte *) (tmpSrc - FIRESKY_WIDTH) = pixel - ((randIdx & 1));
 	} else
-		*(byte *) (src2 - width) = 0;
+		*(byte *) (src2 - FIRESKY_WIDTH) = 0;
 }
 
 //
@@ -610,65 +611,55 @@ static void R_Fire(byte * buffer)
 	int rand = 0;
 	int step = 0;
 	int pixel = 0;
-	int i = 0;
-	const int width = FIRESKYSIZE;
 	byte *src;
 	byte *srcoffset;
-
-	for (i = 0; i < (width * width); i++)
-		buffer[i] <<= 4;
 
 	rand = (M_Random() & 0xff);
 	src = buffer;
 	counter = 0;
-	src += width;
+	src += FIRESKY_WIDTH;
 
-	do			// height
+	do			// width
 	{
 		srcoffset = (src + counter);
 		pixel = *(byte *) srcoffset;
 
 		step = 2;
 
-		R_SpreadFire(src, srcoffset, pixel, counter, &rand, width);
+		R_SpreadFire(src, srcoffset, pixel, counter, &rand);
 
-		src += width;
-		srcoffset += width;
+		src += FIRESKY_WIDTH;
+		srcoffset += FIRESKY_WIDTH;
 
-		do		// width
+		do		// height
 		{
 			pixel = *(byte *) srcoffset;
 			step += 2;
 
-			R_SpreadFire(src, srcoffset, pixel, counter, &rand,
-				     width);
+			R_SpreadFire(src, srcoffset, pixel, counter, &rand);
 
-			pixel = *(byte *) (srcoffset + width);
-			src += width;
-			srcoffset += width;
+			pixel = *(byte *) (srcoffset + FIRESKY_WIDTH);
+			src += FIRESKY_WIDTH;
+			srcoffset += FIRESKY_WIDTH;
 
-			R_SpreadFire(src, srcoffset, pixel, counter, &rand,
-				     width);
+			R_SpreadFire(src, srcoffset, pixel, counter, &rand);
 
-			src += width;
-			srcoffset += width;
+			src += FIRESKY_WIDTH;
+			srcoffset += FIRESKY_WIDTH;
 
-		} while (step != width);
+		} while (step < FIRESKY_HEIGHT);
 
 		counter++;
-		src -= ((width * width) - width);
+		src -= ((FIRESKY_WIDTH * FIRESKY_HEIGHT) - FIRESKY_WIDTH);
 
-	} while (counter != width);
-
-	for (i = 0; i < (width * width); i++)
-		buffer[i] >>= 4;
+	} while (counter < FIRESKY_WIDTH);
 }
 
 //
 // R_InitFire
 //
 
-static rcolor firetexture[FIRESKYSIZE * FIRESKYSIZE];
+static rcolor firetexture[FIRESKY_WIDTH * FIRESKY_HEIGHT];
 
 void R_InitFire(void)
 {
@@ -714,8 +705,8 @@ static void R_DrawFire(void)
 	//
 	// copy fire pixel data to texture data array
 	//
-	dmemset(firetexture, 0, sizeof(int) * FIRESKYSIZE * FIRESKYSIZE);
-	for (i = 0; i < FIRESKYSIZE * FIRESKYSIZE; i++) {
+	dmemset(firetexture, 0, sizeof(int) * FIRESKY_WIDTH * FIRESKY_HEIGHT);
+	for (i = 0; i < FIRESKY_WIDTH * FIRESKY_HEIGHT; i++) {
 		byte rgb[3];
 
 		rgb[0] = firePal16[fireBuffer[i]].r;
@@ -742,8 +733,8 @@ static void R_DrawFire(void)
 		dglTexImage2D(GL_TEXTURE_2D,
 			      0,
 			      GL_RGBA8,
-			      FIRESKYSIZE,
-			      FIRESKYSIZE,
+			      FIRESKY_WIDTH,
+			      FIRESKY_HEIGHT,
 			      0, GL_RGBA, GL_UNSIGNED_BYTE, firetexture);
 	} else {
 		//
@@ -753,8 +744,8 @@ static void R_DrawFire(void)
 				 0,
 				 0,
 				 0,
-				 FIRESKYSIZE,
-				 FIRESKYSIZE,
+				 FIRESKY_WIDTH,
+				 FIRESKY_HEIGHT,
 				 GL_RGBA, GL_UNSIGNED_BYTE, firetexture);
 	}
 
