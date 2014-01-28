@@ -482,11 +482,6 @@ void CON_Draw(void)
 	float x = 0;
 	float inputlen;
 
-	if (oldiwad && !console_enabled) {
-		Draw_ConsoleText(8, 16, RED, CONFONT_SCALE,
-				 "IWAD is out of date. Please use Wadgen to generate a new one");
-	}
-
 	if (!console_linebuffer)
 		return;
 

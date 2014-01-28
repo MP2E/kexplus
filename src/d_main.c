@@ -97,7 +97,6 @@ dboolean nolights = false;
 skill_t startskill;
 int startmap;
 dboolean autostart = false;
-dboolean oldiwad = false;
 FILE *debugfile = NULL;
 //char            wadfile[1024];              // primary wad file
 char mapdir[1024];		// directory of development maps

@@ -91,8 +91,6 @@ typedef struct {
 #pragma pack(pop)
 #endif
 
-void W_IwadChecksum(void);
-
 #define MAX_MEMLUMPS    16
 
 // Location of each lump on disk.
@@ -257,9 +255,6 @@ void W_Init(void)
 	}
 
 	W_HashLumps();
-
-	// 20120302 villsa - check for out of date lumps
-	W_IwadChecksum();
 }
 
 //
@@ -633,34 +628,3 @@ void W_Checksum(md5_digest_t digest)
 	MD5_Final(digest, &md5_context);
 }
 
-//
-// W_IwadChecksum
-//
-
-#define MAXDIGESTS  3
-
-static const md5_digest_t iwad_digests[MAXDIGESTS] = {
-	{0xa6, 0x4e, 0xa8, 0xf0, 0x18, 0xef, 0x09, 0x12, 0xc6, 0x2c, 0xb3, 0xd7, 0xf3, 0xee, 0x93, 0xe6},	// USA1
-	{0xeb, 0xa5, 0x29, 0x66, 0x16, 0xab, 0xc1, 0x1e, 0xf2, 0x5a, 0xbf, 0x8d, 0xe7, 0xb6, 0xf3, 0x9c},	// European
-	{0x06, 0xa0, 0x47, 0x0f, 0x62, 0x4d, 0x06, 0x59, 0x49, 0x7d, 0xfd, 0x79, 0x4d, 0xb7, 0x5a, 0x81}	// Japan
-};
-
-void W_IwadChecksum(void)
-{
-	int i;
-	md5_digest_t checksum;
-	int lump;
-
-	if ((lump = W_CheckNumForName("CHECKSUM")) != -1) {
-		W_ReadLump(lump, checksum);
-
-		for (i = 0; i < MAXDIGESTS; i++) {
-			if (!memcmp
-			    (iwad_digests[i], checksum, sizeof(md5_digest_t)))
-				return;
-
-		}
-	}
-
-	oldiwad = true;
-}
