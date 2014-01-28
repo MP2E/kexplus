@@ -949,8 +949,6 @@ CVAR_EXTERNAL(sv_nomonsters);
 CVAR_EXTERNAL(sv_fastmonsters);
 CVAR_EXTERNAL(sv_respawnitems);
 CVAR_EXTERNAL(sv_respawn);
-CVAR_EXTERNAL(sv_damagescale);
-CVAR_EXTERNAL(sv_healthscale);
 CVAR_EXTERNAL(sv_allowcheats);
 CVAR_EXTERNAL(sv_friendlyfire);
 CVAR_EXTERNAL(sv_keepitems);
@@ -969,8 +967,6 @@ enum {
 	network_fastmonsters,
 	network_respawnmonsters,
 	network_respawnitems,
-	network_damagescale,
-	network_healthscale,
 	network_default,
 	network_return,
 	network_end
@@ -990,8 +986,6 @@ menuitem_t NetworkMenu[] = {
 	{2, "Fast Monsters:", M_NetworkChoice, 'f'},
 	{2, "Respawn Monsters:", M_NetworkChoice, 'r'},
 	{2, "Respawn Items:", M_NetworkChoice, 'i'},
-	{2, "Damage Scale:", M_NetworkChoice, 'd'},
-	{2, "Health Scale:", M_NetworkChoice, 'h'},
 	{-2, "Default", M_DoDefaults, 'd'},
 	{1, "/r Return", M_Return, 0x20}
 };
@@ -1006,8 +1000,6 @@ menudefault_t NetworkDefault[] = {
 	{&sv_fastmonsters, 0},
 	{&sv_respawn, 0},
 	{&sv_respawnitems, 0},
-	{&sv_damagescale, 1},
-	{&sv_healthscale, 1},
 	{NULL, -1}
 };
 
@@ -1025,8 +1017,6 @@ char *NetworkHints[network_end] = {
 	"increased speed for monsters and projectiles",
 	"monsters will respawn after death",
 	"items will respawn after pickup",
-	"set a multiplier for damage dealt by monsters",
-	"set a multiplier for monster health",
 	NULL,
 	NULL
 };
@@ -1063,12 +1053,6 @@ void M_PlayerSetName(int choice)
 void M_NetworkChoice(int choice)
 {
 	switch (itemOn) {
-	case network_damagescale:
-		M_SetOptionValue(choice, 1, 3, 1, &sv_damagescale);
-		break;
-	case network_healthscale:
-		M_SetOptionValue(choice, 1, 3, 1, &sv_healthscale);
-		break;
 	case network_allowcheats:
 		M_SetOptionValue(choice, 0, 1, 1, &sv_allowcheats);
 		break;
@@ -1142,10 +1126,6 @@ void M_DrawNetwork(void)
 	DRAWNETWORKITEM(network_respawnmonsters, sv_respawn.value, msgNames);
 	DRAWNETWORKITEM(network_respawnitems, sv_respawnitems.value,
 			respawnitemstrings);
-	DRAWNETWORKITEM(network_damagescale, sv_damagescale.value - 1,
-			networkscalestrings);
-	DRAWNETWORKITEM(network_healthscale, sv_healthscale.value - 1,
-			networkscalestrings);
 
 #undef DRAWNETWORKITEM
 

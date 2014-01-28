@@ -105,8 +105,6 @@ char basedefault[1024];		// default file
 dboolean rundemo4 = false;	// run demo lump #4?
 int gameflags = 0;
 int compatflags = 0;
-int damagescale = 0;
-int healthscale = 0;
 
 void D_CheckNetGame(void);
 void D_ProcessEvents(void);

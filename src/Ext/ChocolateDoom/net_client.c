@@ -364,8 +364,6 @@ void NET_CL_StartGame(void)
 	settings.fast_monsters = (int)sv_fastmonsters.value;
 	settings.respawn_monsters = (int)sv_respawn.value;
 	settings.respawn_items = (int)sv_respawnitems.value;
-	settings.damagescale = damagescale;
-	settings.healthscale = healthscale;
 	settings.compatflags = compatflags;
 	settings.gameflags = gameflags;
 
@@ -647,8 +645,6 @@ static void NET_CL_ParseGameStart(net_packet_t * packet)
 	respawnitem = settings.respawn_items;
 	compatflags = settings.compatflags;
 	gameflags = settings.gameflags;
-	damagescale = settings.damagescale;
-	healthscale = settings.healthscale;
 	net_cl_new_sync = settings.new_sync != 0;
 
 	if (net_cl_new_sync == false) {

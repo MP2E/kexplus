@@ -976,11 +976,7 @@ void P_DamageMobj(mobj_t * target, mobj_t * inflictor, mobj_t * source,
 		} else
 			target->momy = (16 * FRACUNIT);
 	}
-	// apply damage multiplier
-	if (source) {
-		if (damagescale > 1 && !source->player)
-			damage = damage * damagescale;
-	}
+
 	// player specific
 	if (player) {
 		// ignore damage in GOD mode, or with INVUL power.

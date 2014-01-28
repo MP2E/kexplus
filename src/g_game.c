@@ -93,7 +93,9 @@ player_t players[MAXPLAYERS];
 int consoleplayer;		// player taking events and displaying
 int displayplayer;		// view being displayed
 
-static dboolean savenow = false;
+static dboolean savenow         = false;
+static int      savegameflags   = 0;
+static int      savecompatflags = 0;
 
 // for intermission
 int totalkills, totalitems, totalsecret;
@@ -137,26 +139,6 @@ NETCVAR(sv_respawnitems, 0);
 NETCVAR(sv_respawn, 0);
 NETCVAR(sv_skill, 2);
 
-NETCVAR_CMD(sv_damagescale, 1)
-{
-	if (cvar->value > 3)
-		cvar->value = 3;
-	if (cvar->value < 1)
-		cvar->value = 1;
-
-	damagescale = (int)cvar->value;
-}
-
-NETCVAR_CMD(sv_healthscale, 1)
-{
-	if (cvar->value > 3)
-		cvar->value = 3;
-	if (cvar->value < 1)
-		cvar->value = 1;
-
-	healthscale = (int)cvar->value;
-}
-
 NETCVAR_PARAM(sv_lockmonsters, 0, gameflags, GF_LOCKMONSTERS);
 NETCVAR_PARAM(sv_allowcheats, 0, gameflags, GF_ALLOWCHEATS);
 NETCVAR_PARAM(sv_friendlyfire, 0, gameflags, GF_FRIENDLYFIRE);
@@ -190,8 +172,6 @@ void G_RegisterCvars(void)
 	CON_CvarRegister(&sv_lockmonsters);
 	CON_CvarRegister(&sv_respawn);
 	CON_CvarRegister(&sv_skill);
-	CON_CvarRegister(&sv_damagescale);
-	CON_CvarRegister(&sv_healthscale);
 	CON_CvarRegister(&sv_allowcheats);
 	CON_CvarRegister(&sv_friendlyfire);
 	CON_CvarRegister(&sv_keepitems);
@@ -574,12 +554,23 @@ static CMD(EndDemo)
 }
 
 //
+// G_SaveDefaults
+//
+
+void G_SaveDefaults(void) {
+    savegameflags = gameflags;
+    savecompatflags = compatflags;
+}
+
+//
 // G_ReloadDefaults
 //
 
 void G_ReloadDefaults(void)
 {
 	rngseed += I_GetRandomTimeSeed() + gametic;
+    gameflags = savegameflags;
+    compatflags = savecompatflags;
 }
 
 //
@@ -1379,6 +1370,8 @@ void G_RunTitleMap(void)
 	precache = true;
 	usergame = false;
 	demoplayback = true;
+
+    rngseed = 0;
 
 	G_DoLoadLevel();
 	D_MiniLoop(P_Start, P_Stop, P_Drawer, P_Ticker);

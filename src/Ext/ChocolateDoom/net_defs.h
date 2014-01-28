@@ -126,8 +126,6 @@ typedef struct {
 	int new_sync;
 	int timelimit;
 	int loadgame;
-	int damagescale;
-	int healthscale;
 	int compatflags;
 	int gameflags;
 } net_gamesettings_t;

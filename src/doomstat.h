@@ -74,9 +74,6 @@ extern dboolean netkill;
 extern int gameflags;
 extern int compatflags;
 
-extern int damagescale;
-extern int healthscale;
-
 // Flag: true only if started as net deathmatch.
 // An enum might handle altdeath/cooperative better.
 extern int deathmatch;

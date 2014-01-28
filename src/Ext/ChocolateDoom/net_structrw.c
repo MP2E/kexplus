@@ -45,8 +45,6 @@ void NET_WriteSettings(net_packet_t * packet, net_gamesettings_t * settings)
 	NET_WriteInt8(packet, settings->new_sync);
 	NET_WriteInt32(packet, settings->timelimit);
 	NET_WriteInt8(packet, settings->loadgame);
-	NET_WriteInt8(packet, settings->damagescale);
-	NET_WriteInt8(packet, settings->healthscale);
 	NET_WriteInt32(packet, settings->compatflags);
 	NET_WriteInt32(packet, settings->gameflags);
 }
@@ -67,8 +65,6 @@ dboolean NET_ReadSettings(net_packet_t * packet, net_gamesettings_t * settings)
 	    && NET_ReadInt8(packet, (unsigned int *)&settings->new_sync)
 	    && NET_ReadInt32(packet, (unsigned int *)&settings->timelimit)
 	    && NET_ReadSInt8(packet, (signed int *)&settings->loadgame)
-	    && NET_ReadInt8(packet, (unsigned int *)&settings->damagescale)
-	    && NET_ReadInt8(packet, (unsigned int *)&settings->healthscale)
 	    && NET_ReadInt32(packet, (unsigned int *)&settings->compatflags)
 	    && NET_ReadInt32(packet, (unsigned int *)&settings->gameflags);
 }
