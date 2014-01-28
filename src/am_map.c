@@ -609,13 +609,13 @@ static void AM_DrawMapped(void)
 					for (i = 0; i < subsectors[j].numlines;
 					     i++) {
 						seg =
-						    &segs[subsectors[j].
-							  firstline + i];
+						    &segs[subsectors
+							  [j].firstline + i];
 
 						if (!
-						    (seg->linedef->
-						     flags & ML_SECRET)
-						    && seg->linedef->backsector)
+						    (seg->
+						     linedef->flags & ML_SECRET)
+&& seg->linedef->backsector)
 							continue;
 
 						x1 = seg->linedef->v1->x;

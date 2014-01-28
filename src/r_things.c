@@ -565,8 +565,8 @@ static void AddSpriteDrawlist(drawlist_t * dl, visspritelist_t * vis, int texid)
 	// hack to include info on palette indexes
 	list->texid =
 	    (texid |
-	     ((mobj->player ? mobj->player->palette : mobj->info->
-	       palette) << 24)
+	     ((mobj->player ? mobj->player->palette : mobj->
+	       info->palette) << 24)
 	     | (list->flags << 16));
 }
 
@@ -583,9 +583,8 @@ void R_SetupSprites(void)
 		// Avoid from having the torch poles and fire from z-fighting
 		if (vis->spr->type >= MT_PROP_POLEBASELONG &&
 		    vis->spr->type <= MT_PROP_FIREYELLOW) {
-			angle_t ang =
-			    R_PointToAngle(vis->spr->x - viewx,
-					   vis->spr->y - viewy);
+			angle_t ang = R_PointToAngle(vis->spr->x - viewx,
+						     vis->spr->y - viewy);
 
 			// fire sprites are moved away from view while torches are moved towards view
 			if (vis->spr->type >= MT_PROP_FIREBLUE

@@ -64,7 +64,6 @@ extern angle_t tantoangle[SLOPERANGE + 1];
 
 // Utility function,
 //  called by R_PointToAngle.
-int
- SlopeDiv(unsigned num, unsigned den);
+int SlopeDiv(unsigned num, unsigned den);
 
 #endif

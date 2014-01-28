@@ -159,8 +159,8 @@ void DL_ProcessDrawList(int tag, dboolean(*procfunc) (vtxlist_t *, int *))
 			// setup texture ID
 			if (tag == DLT_SPRITE) {
 				int flags =
-				    ((visspritelist_t *) head->data)->spr->
-				    flags;
+				    ((visspritelist_t *) head->data)->
+				    spr->flags;
 
 				// textid in sprites contains hack that stores palette index data
 				palette = head->texid >> 24;
@@ -190,14 +190,12 @@ void DL_ProcessDrawList(int tag, dboolean(*procfunc) (vtxlist_t *, int *))
 			if (tag == DLT_WALL) {
 				dglTexParameteri(GL_TEXTURE_2D,
 						 GL_TEXTURE_WRAP_S,
-						 head->
-						 flags & DLF_MIRRORS ?
+						 head->flags & DLF_MIRRORS ?
 						 GL_MIRRORED_REPEAT :
 						 GL_REPEAT);
 				dglTexParameteri(GL_TEXTURE_2D,
 						 GL_TEXTURE_WRAP_T,
-						 head->
-						 flags & DLF_MIRRORT ?
+						 head->flags & DLF_MIRRORT ?
 						 GL_MIRRORED_REPEAT :
 						 GL_REPEAT);
 			}

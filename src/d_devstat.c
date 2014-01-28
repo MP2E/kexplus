@@ -264,8 +264,8 @@ dboolean D_DevKeyResponder(event_t * ev)
 
 			case KEY_F2:	// toggle spectator mode
 				if (!
-				    (players[consoleplayer].
-				     cheats & CF_SPECTATOR)) {
+				    (players[consoleplayer].cheats &
+				     CF_SPECTATOR)) {
 					players[consoleplayer].cheats |=
 					    CF_SPECTATOR;
 					players[consoleplayer].message =
@@ -301,11 +301,11 @@ dboolean D_DevKeyResponder(event_t * ev)
 
 			case KEY_F3:	// freeze all mobj thinkers
 				CON_CvarSetValue(sv_lockmonsters.name,
-						 (float)((int)sv_lockmonsters.
-							 value ^ 1));
+						 (float)((int)
+							 sv_lockmonsters.value ^
+							 1));
 				players[consoleplayer].message =
-				    sv_lockmonsters.
-				    value ? "Lock Monsters On" :
+				    sv_lockmonsters.value ? "Lock Monsters On" :
 				    "Lock Monsters Off";
 				return true;
 

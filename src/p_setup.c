@@ -1204,8 +1204,8 @@ static void P_InitMapInfo(void)
 						    == 1)
 							mapdef.oldcollision = 1;
 						else if (datoi
-							 (sc_parser.
-							  getstring()) == 0)
+							 (sc_parser.getstring())
+							 == 0)
 							mapdef.oldcollision = 2;
 
 						ok = true;
@@ -1217,8 +1217,8 @@ static void P_InitMapInfo(void)
 						    == 1)
 							mapdef.allowjump = 1;
 						else if (datoi
-							 (sc_parser.
-							  getstring()) == 0)
+							 (sc_parser.getstring())
+							 == 0)
 							mapdef.allowjump = 2;
 
 						ok = true;
@@ -1231,8 +1231,8 @@ static void P_InitMapInfo(void)
 							mapdef.allowfreelook =
 							    1;
 						else if (datoi
-							 (sc_parser.
-							  getstring()) == 0)
+							 (sc_parser.getstring())
+							 == 0)
 							mapdef.allowfreelook =
 							    2;
 
@@ -1240,8 +1240,8 @@ static void P_InitMapInfo(void)
 					}
 
 					if (!ok)
-						sc_parser.
-						    error("P_InitMapInfo");
+						sc_parser.error
+						    ("P_InitMapInfo");
 				}
 			}
 
@@ -1271,8 +1271,8 @@ static void P_InitMapInfo(void)
 				if (sc_parser.token[0] == '}')	// exit block if closed bracket is found
 					break;
 
-				if (!sc_parser.
-				    setdata(&cluster, clusterdatatable)) {
+				if (!sc_parser.setdata
+				    (&cluster, clusterdatatable)) {
 					char *text;
 
 					//
@@ -1320,8 +1320,8 @@ static void P_InitMapInfo(void)
 						dstrncpy(cluster.text, text,
 							 dstrlen(text));
 					} else
-						sc_parser.
-						    error("P_InitMapInfo");
+						sc_parser.error
+						    ("P_InitMapInfo");
 				}
 			}
 

@@ -761,9 +761,10 @@ void ST_Drawer(void)
 			//Draw Ammo counter
 			if (weaponinfo[plyr->readyweapon].ammo != am_noammo)
 				Draw_Number(160, 215,
-					    plyr->
-					    ammo[weaponinfo[plyr->readyweapon].
-						 ammo], 0, REDALPHA(0x7f));
+					    plyr->ammo[weaponinfo
+						       [plyr->
+							readyweapon].ammo], 0,
+					    REDALPHA(0x7f));
 
 			//Draw Health
 			Draw_Number(49, 215, plyr->health, 0, REDALPHA(0x7f));

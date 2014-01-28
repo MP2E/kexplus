@@ -595,7 +595,8 @@ static void R_SpreadFire(byte * src1, byte * src2, int pixel, int counter,
 		*rand = ((*rand + 2) & 0xff);
 
 		tmpSrc =
-		    (src1 + (((counter - (randIdx & 3)) + 1) & (FIRESKY_WIDTH - 1)));
+		    (src1 +
+		     (((counter - (randIdx & 3)) + 1) & (FIRESKY_WIDTH - 1)));
 		*(byte *) (tmpSrc - FIRESKY_WIDTH) = pixel - ((randIdx & 1));
 	} else
 		*(byte *) (src2 - FIRESKY_WIDTH) = 0;
@@ -824,8 +825,9 @@ void R_DrawSky(void)
 				float base;
 
 				GL_SetTextureUnit(0, true);
-				l = GL_BindGfxTexture(lumpinfo[skybackdropnum].
-						      name, true);
+				l = GL_BindGfxTexture(lumpinfo
+						      [skybackdropnum].name,
+						      true);
 
 				//
 				// handle the case for non-powers of 2 texture

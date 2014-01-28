@@ -4712,9 +4712,8 @@ dboolean M_Responder(event_t * ev)
 
 				currentMenu->lastOn = itemOn;
 				if (currentMenu == &featuresDef) {
-					if (currentMenu->
-					    menuitems[itemOn].routine ==
-					    M_DoFeature
+					if (currentMenu->menuitems[itemOn].
+					    routine == M_DoFeature
 					    && itemOn == features_levels) {
 						gameaction = ga_warplevel;
 						gamemap = nextmap =
@@ -4723,20 +4722,19 @@ dboolean M_Responder(event_t * ev)
 						dmemset(passwordData, 0xff, 16);
 						return true;
 					}
-				} else if (currentMenu->
-					   menuitems[itemOn].status >= 2
-					   || currentMenu->
-					   menuitems[itemOn].status == -2) {
-					currentMenu->
-					    menuitems[itemOn].routine(2);
+				} else if (currentMenu->menuitems[itemOn].
+					   status >= 2
+					   || currentMenu->menuitems[itemOn].
+					   status == -2) {
+					currentMenu->menuitems[itemOn].
+					    routine(2);
 				} else {
 					if (currentMenu == &ControlsDef) {
 						// don't do the fade effect and jump straight to the next screen
 						M_ChangeKeyBinding(itemOn);
 					} else {
-						currentMenu->
-						    menuitems[itemOn].routine
-						    (itemOn);
+						currentMenu->menuitems[itemOn].
+						    routine(itemOn);
 					}
 
 					S_StartSound(NULL, sfx_pistol);
@@ -5054,8 +5052,8 @@ void M_Drawer(void)
 					     currentMenu->menuitems[i].name);
 			} else {
 				int strwidth =
-				    M_StringWidth(currentMenu->
-						  menuitems[i].name);
+				    M_StringWidth(currentMenu->menuitems[i].
+						  name);
 
 				Draw_Text(((int)(160.0f / currentMenu->scale) -
 					   (strwidth / 2)), y, D_RGBA(255, 0, 0,
@@ -5132,7 +5130,8 @@ void M_Drawer(void)
 		else {
 			Draw_BigText(x - 12,
 				     currentMenu->y - 4 + (itemOn -
-							   currentMenu->menupageoffset)
+							   currentMenu->
+							   menupageoffset)
 				     * height, MENUCOLORWHITE, "/l");
 		}
 	}

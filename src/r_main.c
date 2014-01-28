@@ -433,9 +433,8 @@ void R_PrecacheLevel(void)
 				sprframe = &sprdef->spriteframes[k];
 				if (sprframe->rotate) {
 					for (p = 0; p < 8; p++) {
-						GL_BindSpriteTexture(sprframe->
-								     lump[p],
-								     0);
+						GL_BindSpriteTexture
+						    (sprframe->lump[p], 0);
 						num++;
 					}
 				} else {

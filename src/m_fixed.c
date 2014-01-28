@@ -39,7 +39,8 @@
 
 // Fixme. __USE_C_FIXED__ or something.
 
-fixed_t FixedMul(fixed_t a, fixed_t b) {
+fixed_t FixedMul(fixed_t a, fixed_t b)
+{
 #ifdef USE_ASM
 	fixed_t c;
 	_asm {
@@ -55,14 +56,16 @@ fixed_t FixedMul(fixed_t a, fixed_t b) {
 // FixedDiv, C version.
 //
 
-fixed_t FixedDiv(fixed_t a, fixed_t b) {
+fixed_t FixedDiv(fixed_t a, fixed_t b)
+{
 	if ((D_abs(a) >> 14) >= D_abs(b))
 		return (a ^ b) < 0 ? D_MININT : D_MAXINT;
 	return FixedDiv2(a, b);
 
 }
 
-fixed_t FixedDiv2(fixed_t a, fixed_t b) {
+fixed_t FixedDiv2(fixed_t a, fixed_t b)
+{
 	return (fixed_t) ((((int64) a) << FRACBITS) / b);
 }
 

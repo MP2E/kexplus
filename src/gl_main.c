@@ -342,8 +342,9 @@ void GL_SetDefaultCombiner(void)
 // GL_Set2DQuad
 //
 
-void GL_Set2DQuad(vtx_t * v, float x, float y, int width, int height,
-		  float u1, float u2, float v1, float v2, rcolor c)
+void
+GL_Set2DQuad(vtx_t * v, float x, float y, int width, int height,
+	     float u1, float u2, float v1, float v2, rcolor c)
 {
 	float left, right, top, bottom;
 
@@ -394,9 +395,10 @@ void GL_Draw2DQuad(vtx_t * v, dboolean stretch)
 // GL_SetupAndDraw2DQuad
 //
 
-void GL_SetupAndDraw2DQuad(float x, float y, int width, int height,
-			   float u1, float u2, float v1, float v2, rcolor c,
-			   dboolean stretch)
+void
+GL_SetupAndDraw2DQuad(float x, float y, int width, int height,
+		      float u1, float u2, float v1, float v2, rcolor c,
+		      dboolean stretch)
 {
 	vtx_t v[4];
 
@@ -589,8 +591,31 @@ void GL_Init(void)
 	if (!InWindow)
 		flags |= SDL_FULLSCREEN;
 
-	if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags) == NULL)
-		I_Error("GL_Init: Failed to set opengl");
+	if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags) == NULL) {
+		// re-adjust depth size if video can't run it
+		if (v_depthsize.value >= 24) {
+			CON_CvarSetValue(v_depthsize.name, 16);
+		} else if (v_depthsize.value >= 16) {
+			CON_CvarSetValue(v_depthsize.name, 8);
+		}
+
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
+
+		if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags)
+		    == NULL) {
+			// fall back to lower buffer setting
+			CON_CvarSetValue(v_buffersize.name, 16);
+			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
+					    (int)v_buffersize.value);
+
+			if (SDL_SetVideoMode
+			    (video_width, video_height, SDL_BPP,
+			     flags) == NULL) {
+				// give up
+				I_Error("GL_Init: Failed to set opengl");
+			}
+		}
+	}
 
 	gl_vendor = dglGetString(GL_VENDOR);
 	I_Printf("GL_VENDOR: %s\n", gl_vendor);

@@ -172,8 +172,8 @@ int F_Ticker(void)
 
 		if (mobjinfo[castorder[castnum].type].seesound)
 			S_StartSound(NULL,
-				     mobjinfo[castorder[castnum].type].
-				     seesound);
+				     mobjinfo[castorder[castnum].
+					      type].seesound);
 
 		caststate = &states[mobjinfo[castorder[castnum].type].seestate];
 		castframes = 0;
@@ -243,23 +243,25 @@ int F_Ticker(void)
 		castattacking = true;
 		if (castonmelee)
 			caststate =
-			    &states[mobjinfo[castorder[castnum].type].
-				    meleestate];
+			    &states[mobjinfo
+				    [castorder[castnum].type].meleestate];
 		else
 			caststate =
-			    &states[mobjinfo[castorder[castnum].type].
-				    missilestate];
+			    &states[mobjinfo
+				    [castorder[castnum].type].missilestate];
 		castonmelee ^= 1;
 
 		if (caststate == &states[S_000]) {
 			if (castonmelee)
 				caststate =
-				    &states[mobjinfo[castorder[castnum].type].
-					    meleestate];
+				    &states[mobjinfo
+					    [castorder[castnum].
+					     type].meleestate];
 			else
 				caststate =
-				    &states[mobjinfo[castorder[castnum].type].
-					    missilestate];
+				    &states[mobjinfo
+					    [castorder[castnum].
+					     type].missilestate];
 		}
 	}
 

@@ -244,10 +244,12 @@ void P_XYMovement(mobj_t * mo)
 				// explode a missile
 				if (tmhitline) {
 					if ((tmhitline->backsector &&
-					     tmhitline->backsector->
-					     ceilingpic == skyflatnum)
-					    || sides[tmhitline->sidenum[0]].
-					    midtexture == 1) {
+					     tmhitline->
+					     backsector->ceilingpic ==
+					     skyflatnum)
+					    || sides[tmhitline->
+						     sidenum[0]].midtexture ==
+					    1) {
 						// Hack to prevent missiles exploding
 						// against the sky.
 						// Does not handle sky floors.

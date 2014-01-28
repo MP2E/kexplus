@@ -44,7 +44,8 @@
 // Gives an estimation of distance (not exact)
 //
 
-fixed_t P_AproxDistance(fixed_t dx, fixed_t dy) {
+fixed_t P_AproxDistance(fixed_t dx, fixed_t dy)
+{
 	dx = D_abs(dx);
 	dy = D_abs(dy);
 	if (dx < dy)
@@ -114,7 +115,8 @@ int P_BoxOnLineSide(fixed_t * tmbox, line_t * ld)
 // P_PointOnDivlineSide
 // Returns 0 or 1.
 //
-int P_PointOnDivlineSide(fixed_t x, fixed_t y, divline_t * line) {
+int P_PointOnDivlineSide(fixed_t x, fixed_t y, divline_t * line)
+{
 	fixed_t dx;
 	fixed_t dy;
 	fixed_t left;
@@ -154,7 +156,8 @@ int P_PointOnDivlineSide(fixed_t x, fixed_t y, divline_t * line) {
 //
 // P_MakeDivline
 //
-void P_MakeDivline(line_t * li, divline_t * dl) {
+void P_MakeDivline(line_t * li, divline_t * dl)
+{
 	dl->x = li->v1->x;
 	dl->y = li->v1->y;
 	dl->dx = li->dx;
@@ -191,7 +194,8 @@ void P_GetIntersectPoint(fixed_t * s1, fixed_t * s2, fixed_t * x, fixed_t * y)
 // This is only called by the addthings
 // and addlines traversers.
 //
-fixed_t P_InterceptVector(divline_t * v2, divline_t * v1) {
+fixed_t P_InterceptVector(divline_t * v2, divline_t * v1)
+{
 #if 1
 	fixed_t frac;
 	fixed_t num;
@@ -363,7 +367,6 @@ void P_SetThingPosition(mobj_t * thing)
 
 		sec->thinglist = thing;
 	}
-
 	// link into blockmap
 	if (!(thing->flags & MF_NOBLOCKMAP)) {
 		// inert things don't need to be in blockmap
@@ -403,7 +406,8 @@ void P_SetThingPosition(mobj_t * thing)
 // to P_BlockLinesIterator, then make one or more calls
 // to it.
 //
-dboolean P_BlockLinesIterator(int x, int y, dboolean(*func) (line_t *)) {
+dboolean P_BlockLinesIterator(int x, int y, dboolean(*func) (line_t *))
+{
 	int offset;
 	short *list;
 	line_t *ld;
@@ -436,7 +440,8 @@ dboolean P_BlockLinesIterator(int x, int y, dboolean(*func) (line_t *)) {
 //
 // P_BlockThingsIterator
 //
-dboolean P_BlockThingsIterator(int x, int y, dboolean(*func) (mobj_t *)) {
+dboolean P_BlockThingsIterator(int x, int y, dboolean(*func) (mobj_t *))
+{
 	mobj_t *mobj;
 
 	if (x < 0 || y < 0 || x >= bmapwidth || y >= bmapheight) {
@@ -584,7 +589,8 @@ dboolean PIT_AddThingIntercepts(mobj_t * thing)
 // Returns true if the traverser function returns true
 // for all lines.
 //
-dboolean P_TraverseIntercepts(traverser_t func, fixed_t maxfrac) {
+dboolean P_TraverseIntercepts(traverser_t func, fixed_t maxfrac)
+{
 	int count;
 	fixed_t dist;
 	intercept_t *scan;

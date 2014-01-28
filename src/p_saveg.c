@@ -1824,8 +1824,8 @@ void P_UnArchiveSpecials(void)
 				saveg_specials[i].readfunc(thinker);
 
 				((thinker_t *) thinker)->function.acp1 =
-				    (actionf_p1) saveg_specials[i].function.
-				    acp1;
+				    (actionf_p1) saveg_specials[i].
+				    function.acp1;
 				P_AddThinker(thinker);
 
 				// handle special cases
@@ -1833,8 +1833,8 @@ void P_UnArchiveSpecials(void)
 				case tc_ceiling:
 					specialthinker = saveg_read32();
 					if (!specialthinker)
-						((thinker_t *) thinker)->
-						    function.acp1 = NULL;
+						((thinker_t *)
+						 thinker)->function.acp1 = NULL;
 
 					P_AddActiveCeiling(thinker);
 					break;
@@ -1842,16 +1842,15 @@ void P_UnArchiveSpecials(void)
 				case tc_plat:
 					specialthinker = saveg_read32();
 					if (!specialthinker)
-						((thinker_t *) thinker)->
-						    function.acp1 = NULL;
+						((thinker_t *)
+						 thinker)->function.acp1 = NULL;
 
 					P_AddActivePlat(thinker);
 					break;
 
 				case tc_combine:
 					P_CombineLightSpecials(((combine_t *)
-								thinker)->
-							       sector);
+								thinker)->sector);
 					P_RemoveThinker(thinker);
 					break;
 				}

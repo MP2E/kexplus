@@ -275,8 +275,8 @@ side_t *getSide(int currentSector, int line, int side)
 //
 sector_t *getSector(int currentSector, int line, int side)
 {
-	return sides[(sectors[currentSector].lines[line])->sidenum[side]].
-	    sector;
+	return sides[(sectors[currentSector].lines[line])->
+		     sidenum[side]].sector;
 }
 
 //
@@ -554,8 +554,8 @@ static void P_ModifyLine(int tag1, int tag2, int type)
 				if (line1->flags & ML_TWOSIDED
 				    || line1->sidenum[1] != NO_SIDE_INDEX) {
 					sides[line1->sidenum[1]].bottomtexture =
-					    sides[line2->sidenum[1]].
-					    bottomtexture;
+					    sides[line2->
+						  sidenum[1]].bottomtexture;
 					sides[line1->sidenum[1]].midtexture =
 					    sides[line2->sidenum[1]].midtexture;
 					sides[line1->sidenum[1]].toptexture =
@@ -1853,26 +1853,26 @@ void P_UpdateSpecials(void)
 			if (!buttonlist[i].btimer) {
 				switch (buttonlist[i].where) {
 				case top:
-					sides[buttonlist[i].line->sidenum[0]].
-					    toptexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].toptexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case middle:
-					sides[buttonlist[i].line->sidenum[0]].
-					    midtexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].midtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case bottom:
-					sides[buttonlist[i].line->sidenum[0]].
-					    bottomtexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].bottomtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 				}
 
-				S_StartSound((mobj_t *) & buttonlist[i].line->
-					     frontsector->soundorg,
+				S_StartSound((mobj_t *) & buttonlist[i].
+					     line->frontsector->soundorg,
 					     sfx_switch1);
 				dmemset(&buttonlist[i], 0, sizeof(button_t));
 			}

@@ -58,8 +58,8 @@ void T_MoveCeiling(ceiling_t * ceiling)
 
 		if (!ceiling->instant) {
 			if (!(leveltime & 7))
-				S_StartSound((mobj_t *) & ceiling->sector->
-					     soundorg, sfx_secmove);
+				S_StartSound((mobj_t *) & ceiling->
+					     sector->soundorg, sfx_secmove);
 		}
 
 		if (res == pastdest) {
@@ -89,8 +89,8 @@ void T_MoveCeiling(ceiling_t * ceiling)
 
 		if (!ceiling->instant) {
 			if (!(leveltime & 7))
-				S_StartSound((mobj_t *) & ceiling->sector->
-					     soundorg, sfx_secmove);
+				S_StartSound((mobj_t *) & ceiling->
+					     sector->soundorg, sfx_secmove);
 		}
 
 		if (res == pastdest) {

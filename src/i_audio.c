@@ -1238,21 +1238,20 @@ void I_InitSequencer(void)
 	// 20120111 bkw: look in the same places as doom64.wad. Someday this needs
 	// to be a config file setting and not hard-coded.
 	// 20120203 villsa - done :)
-    // 20140118 MP2E: refactor code to use an array char iterate through array
-    // dynamically at compile time. Also, this function is now case-insensitive
+	// 20140118 MP2E: refactor code to use an array char iterate through array
+	// dynamically at compile time. Also, this function is now case-insensitive
 	{
 		char *sfpath = NULL;
-		char *sfdirs[] =
-		    { ".", "/usr/local/share/games/doom",
-	       "/usr/share/games/doom", "/usr/local/share/doom" };
+		char *sfdirs[] = { ".", "/usr/local/share/games/doom",
+			"/usr/share/games/doom", "/usr/local/share/doom"
+		};
 		int ndirs;
 
 		for (ndirs = 0; ndirs < earrlen(sfdirs); ndirs++) {
 			if (!sfpath)
 				sfpath =
 				    W_SearchDirectoryForFile(sfdirs[ndirs],
-							     s_soundfont.
-							     string);
+							     s_soundfont.string);
 		}
 
 		I_Printf("Found SoundFont %s\n", sfpath);

@@ -221,8 +221,11 @@ int pvsnprintf(char *str, size_t nmax, const char *format, va_list ap)
 
 		case STATE_OPERATOR:
 			switch (*(info.fmt)) {
-			CHECK_FLAG CHECK_WIDTH CHECK_PRECISION CHECK_PREFIX CHECK_TYPE default:
-				PUTCHAR(*info.fmt)	/* Unknown format, just print it (e.g. "%%") */
+				CHECK_FLAG CHECK_WIDTH CHECK_PRECISION
+				    CHECK_PREFIX CHECK_TYPE
+				    default:PUTCHAR(*info.
+						    fmt)
+				    /* Unknown format, just print it (e.g. "%%") */
 				    state = STATE_NONE;
 			}
 			break;
@@ -242,8 +245,7 @@ int pvsnprintf(char *str, size_t nmax, const char *format, va_list ap)
 				break;
 			}
 			switch (*info.fmt) {
-			CHECK_PRECISION CHECK_PREFIX CHECK_TYPE}
-			break;
+			CHECK_PRECISION CHECK_PREFIX CHECK_TYPE} break;
 
 		case STATE_BEFORE_PRECISION:
 			if (*info.fmt >= '0' && *info.fmt <= '9') {
@@ -254,8 +256,7 @@ int pvsnprintf(char *str, size_t nmax, const char *format, va_list ap)
 				state = STATE_PRECISION;
 			}
 			switch (*info.fmt) {
-			CHECK_PREFIX CHECK_TYPE}
-			break;
+			CHECK_PREFIX CHECK_TYPE} break;
 
 		case STATE_PRECISION:
 			if (*info.fmt >= '0' && *info.fmt <= '9'
@@ -265,8 +266,7 @@ int pvsnprintf(char *str, size_t nmax, const char *format, va_list ap)
 				break;
 			}
 			switch (*info.fmt) {
-			CHECK_PREFIX CHECK_TYPE}
-			break;
+			CHECK_PREFIX CHECK_TYPE} break;
 
 		case STATE_PREFIX:
 			switch (*info.fmt) {

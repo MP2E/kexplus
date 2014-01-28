@@ -54,8 +54,8 @@ void T_PlatRaise(plat_t * plat)
 		if (plat->type == raiseAndChange
 		    || plat->type == raiseToNearestAndChange) {
 			if (!(leveltime & 7))
-				S_StartSound((mobj_t *) & plat->sector->
-					     soundorg, sfx_secmove);
+				S_StartSound((mobj_t *) & plat->
+					     sector->soundorg, sfx_secmove);
 		}
 		//
 		// [d64] crushed and plat->crush is no longer used.
@@ -70,8 +70,8 @@ void T_PlatRaise(plat_t * plat)
 			if (res == pastdest) {
 				plat->count = plat->wait;
 				plat->status = waiting;
-				S_StartSound((mobj_t *) & plat->sector->
-					     soundorg, sfx_pstop);
+				S_StartSound((mobj_t *) & plat->
+					     sector->soundorg, sfx_pstop);
 
 				switch (plat->type) {
 				case blazeDWUS:
@@ -134,7 +134,8 @@ void T_PlatRaise(plat_t * plat)
 // Do Platforms
 //  "amount" is only used for SOME platforms.
 //
-int EV_DoPlat(line_t * line, plattype_e type, int amount) {
+int EV_DoPlat(line_t * line, plattype_e type, int amount)
+{
 	plat_t *plat;
 	int secnum;
 	int rtn;

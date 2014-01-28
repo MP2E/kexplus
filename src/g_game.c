@@ -93,9 +93,9 @@ player_t players[MAXPLAYERS];
 int consoleplayer;		// player taking events and displaying
 int displayplayer;		// view being displayed
 
-static dboolean savenow         = false;
-static int      savegameflags   = 0;
-static int      savecompatflags = 0;
+static dboolean savenow = false;
+static int savegameflags = 0;
+static int savecompatflags = 0;
 
 // for intermission
 int totalkills, totalitems, totalsecret;
@@ -557,9 +557,10 @@ static CMD(EndDemo)
 // G_SaveDefaults
 //
 
-void G_SaveDefaults(void) {
-    savegameflags = gameflags;
-    savecompatflags = compatflags;
+void G_SaveDefaults(void)
+{
+	savegameflags = gameflags;
+	savecompatflags = compatflags;
 }
 
 //
@@ -569,8 +570,8 @@ void G_SaveDefaults(void) {
 void G_ReloadDefaults(void)
 {
 	rngseed += I_GetRandomTimeSeed() + gametic;
-    gameflags = savegameflags;
-    compatflags = savecompatflags;
+	gameflags = savegameflags;
+	compatflags = savecompatflags;
 }
 
 //
@@ -1039,8 +1040,8 @@ void G_Ticker(void)
 						dstrcpy(savedescription,
 							"NET GAME");
 					savegameslot =
-					    (players[i].
-					     cmd.buttons & BTS_SAVEMASK) >>
+					    (players[i].cmd.
+					     buttons & BTS_SAVEMASK) >>
 					    BTS_SAVESHIFT;
 					savenow = true;
 				}
@@ -1371,7 +1372,7 @@ void G_RunTitleMap(void)
 	usergame = false;
 	demoplayback = true;
 
-    rngseed = 0;
+	rngseed = 0;
 
 	G_DoLoadLevel();
 	D_MiniLoop(P_Start, P_Stop, P_Drawer, P_Ticker);

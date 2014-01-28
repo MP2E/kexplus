@@ -397,8 +397,8 @@ dboolean CON_Responder(event_t * ev)
 					    console_buffer[c]->len;
 					dmemcpy(console_inputbuffer,
 						console_buffer[console_prevcmds
-							       [console_nextcmd]]->
-						line, console_inputlength);
+							       [console_nextcmd]]->line,
+						console_inputlength);
 				}
 				break;
 

@@ -465,8 +465,8 @@ void AM_DrawSprite(mobj_t * thing, float scale)
 		c = D_RGBA(255, 255, 255, alpha);
 	else
 		c = R_GetSectorLight(alpha,
-				     thing->subsector->sector->
-				     colors[LIGHT_THING]);
+				     thing->subsector->
+				     sector->colors[LIGHT_THING]);
 
 	dglSetVertexColor(vtx, c, 4);
 
