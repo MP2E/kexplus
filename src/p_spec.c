@@ -275,8 +275,8 @@ side_t *getSide(int currentSector, int line, int side)
 //
 sector_t *getSector(int currentSector, int line, int side)
 {
-	return sides[(sectors[currentSector].lines[line])->
-		     sidenum[side]].sector;
+	return sides[(sectors[currentSector].lines[line])->sidenum[side]].
+	    sector;
 }
 
 //
@@ -554,8 +554,8 @@ static void P_ModifyLine(int tag1, int tag2, int type)
 				if (line1->flags & ML_TWOSIDED
 				    || line1->sidenum[1] != NO_SIDE_INDEX) {
 					sides[line1->sidenum[1]].bottomtexture =
-					    sides[line2->
-						  sidenum[1]].bottomtexture;
+					    sides[line2->sidenum[1]].
+					    bottomtexture;
 					sides[line1->sidenum[1]].midtexture =
 					    sides[line2->sidenum[1]].midtexture;
 					sides[line1->sidenum[1]].toptexture =
@@ -1730,7 +1730,7 @@ void P_PlayerInSpecialSector(player_t * player)
 
 	if (sector->flags & MS_SECRET) {
 		player->secretcount++;
-		player->message = FOUNDSECRET;	//villsa
+		player->message = FOUNDSECRET;
 		player->messagepic = 40;
 		sector->flags &= ~MS_SECRET;
 	}
@@ -1755,17 +1755,21 @@ void P_PlayerInSpecialSector(player_t * player)
 		}
 	}
 	if (sector->flags & MS_SCROLLFLOOR) {
-		angle_t angle = 0;
+		fixed_t speed;
 
-		if (sector->flags & MS_SCROLLUP)
-			angle += ANG90;
-		if (sector->flags & MS_SCROLLDOWN)
-			angle += ANG270;
+		if (sector->flags & MS_SCROLLFAST)
+			speed = 0x3000;
+		else
+			speed = 0x1000;
+
 		if (sector->flags & MS_SCROLLLEFT)
-			angle += ANG180;
-
-		P_Thrust(player, angle,
-			 sector->flags & MS_SCROLLFAST ? 0x3000 : 0x1000);
+			P_Thrust(player, ANG180, speed);
+		if (sector->flags & MS_SCROLLRIGHT)
+			P_Thrust(player, 0, speed);
+		if (sector->flags & MS_SCROLLUP)
+			P_Thrust(player, ANG90, speed);
+		if (sector->flags & MS_SCROLLDOWN)
+			P_Thrust(player, ANG270, speed);
 	}
 }
 
@@ -1815,29 +1819,24 @@ void P_UpdateSpecials(void)
 		sector = &sectors[i];
 
 		if (sector->flags & (MS_SCROLLFLOOR | MS_SCROLLCEILING)) {
+			fixed_t speed;
+
+			if (sector->flags & MS_SCROLLFAST)
+				speed = 3 * FRACUNIT;
+			else
+				speed = FRACUNIT;
+
 			if (sector->flags & MS_SCROLLLEFT)
-				sector->xoffset +=
-				    sector->flags & MS_SCROLLFAST ? (3 *
-								     FRACUNIT) :
-				    FRACUNIT;
+				sector->xoffset += speed;
 
 			if (sector->flags & MS_SCROLLRIGHT)
-				sector->xoffset -=
-				    sector->flags & MS_SCROLLFAST ? (3 *
-								     FRACUNIT) :
-				    FRACUNIT;
+				sector->xoffset -= speed;
 
 			if (sector->flags & MS_SCROLLUP)
-				sector->yoffset +=
-				    sector->flags & MS_SCROLLFAST ? (3 *
-								     FRACUNIT) :
-				    FRACUNIT;
+				sector->yoffset += speed;
 
 			if (sector->flags & MS_SCROLLDOWN)
-				sector->yoffset -=
-				    sector->flags & MS_SCROLLFAST ? (3 *
-								     FRACUNIT) :
-				    FRACUNIT;
+				sector->yoffset -= speed;
 		}
 
 	}
@@ -1853,26 +1852,26 @@ void P_UpdateSpecials(void)
 			if (!buttonlist[i].btimer) {
 				switch (buttonlist[i].where) {
 				case top:
-					sides[buttonlist[i].line->
-					      sidenum[0]].toptexture =
+					sides[buttonlist[i].line->sidenum[0]].
+					    toptexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case middle:
-					sides[buttonlist[i].line->
-					      sidenum[0]].midtexture =
+					sides[buttonlist[i].line->sidenum[0]].
+					    midtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case bottom:
-					sides[buttonlist[i].line->
-					      sidenum[0]].bottomtexture =
+					sides[buttonlist[i].line->sidenum[0]].
+					    bottomtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 				}
 
-				S_StartSound((mobj_t *) & buttonlist[i].
-					     line->frontsector->soundorg,
+				S_StartSound((mobj_t *) & buttonlist[i].line->
+					     frontsector->soundorg,
 					     sfx_switch1);
 				dmemset(&buttonlist[i], 0, sizeof(button_t));
 			}
