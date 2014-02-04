@@ -22,6 +22,8 @@ if(MSVC)
 endif()
 
 add_executable(doom64ex
+    WIN32
+    MACOSX_BUNDLE
     ${EXTRA_SOURCES}
     am_draw.c
     am_map.c
