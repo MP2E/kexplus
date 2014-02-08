@@ -275,8 +275,8 @@ side_t *getSide(int currentSector, int line, int side)
 //
 sector_t *getSector(int currentSector, int line, int side)
 {
-	return sides[(sectors[currentSector].lines[line])->sidenum[side]].
-	    sector;
+	return sides[(sectors[currentSector].lines[line])->
+		     sidenum[side]].sector;
 }
 
 //
@@ -524,11 +524,19 @@ typedef enum {
 	modl_data
 } modifyline_t;
 
-static void P_ModifyLine(int tag1, int tag2, int type)
+static int P_ModifyLine(int tag1, int tag2, int type)
 {
 	int i = 0;
 	line_t *line1;
-	line_t *line2 = &lines[P_FindLinedefFromTag(tag2)];
+	line_t *line2;
+	int linenum;
+
+	linenum = P_FindLinedefFromTag(tag2);
+	if (linenum == -1) {
+		return 0;
+	}
+
+	line2 = &lines[linenum];
 
 	for (i = 0; i < numlines; i++) {
 		line1 = &lines[i];
@@ -554,8 +562,8 @@ static void P_ModifyLine(int tag1, int tag2, int type)
 				if (line1->flags & ML_TWOSIDED
 				    || line1->sidenum[1] != NO_SIDE_INDEX) {
 					sides[line1->sidenum[1]].bottomtexture =
-					    sides[line2->sidenum[1]].
-					    bottomtexture;
+					    sides[line2->
+						  sidenum[1]].bottomtexture;
 					sides[line1->sidenum[1]].midtexture =
 					    sides[line2->sidenum[1]].midtexture;
 					sides[line1->sidenum[1]].toptexture =
@@ -590,6 +598,8 @@ static void P_ModifyLine(int tag1, int tag2, int type)
 			}
 		}
 	}
+
+	return 1;
 }
 
 //
@@ -603,37 +613,51 @@ typedef enum {
 	mods_flags,
 } modifysector_t;
 
-static void P_ModifySector(int tag1, int tag2, int type)
+static int P_ModifySector(line_t * line, int tag, int type)
 {
-	int i = 0;
 	int j = 0;
 	sector_t *sec1;
-	sector_t *sec2 = &sectors[P_FindSectorFromTag(tag2)];
+	sector_t *sec2;
+	int secnum;
+	int rtn;
 
-	for (i = 0; i < numsectors; i++) {
-		sec1 = &sectors[i];
-		if (sec1->tag == tag1) {
-			switch (type) {
-			case mods_lights:
-				for (j = 0; j < 5; j++)
-					sec1->colors[j] = sec2->colors[j];
-				break;
-			case mods_flats:
-				sec1->ceilingpic = sec2->ceilingpic;
-				sec1->floorpic = sec2->floorpic;
-				break;
-			case mods_special:
-				sec1->special = sec2->special;
-				P_AddSectorSpecial(sec1);
-				break;
-			case mods_flags:
-				sec1->flags = sec2->flags;
-				break;
-			default:
-				break;
-			}
+	secnum = P_FindSectorFromTag(tag);
+
+	if (secnum == -1) {
+		return 0;
+	}
+
+	sec2 = &sectors[secnum];
+
+	secnum = -1;
+	rtn = 0;
+
+	while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0) {
+		sec1 = &sectors[secnum];
+		rtn = 1;
+
+		switch (type) {
+		case mods_lights:
+			for (j = 0; j < 5; j++)
+				sec1->colors[j] = sec2->colors[j];
+			break;
+		case mods_flats:
+			sec1->ceilingpic = sec2->ceilingpic;
+			sec1->floorpic = sec2->floorpic;
+			break;
+		case mods_special:
+			sec1->special = sec2->special;
+			P_AddSectorSpecial(sec1);
+			break;
+		case mods_flags:
+			sec1->flags = sec2->flags;
+			break;
+		default:
+			break;
 		}
 	}
+
+	return rtn;
 }
 
 //
@@ -643,13 +667,18 @@ static void P_ModifySector(int tag1, int tag2, int type)
 // This doesn't appear to be used at all
 //
 
-void P_ModifySectorColor(line_t * line, int index, int type)
+int P_ModifySectorColor(line_t * line, int index, int type)
 {
-	int secnum = 0;
+	int secnum;
+	int rtn;
 	sector_t *sec;
+
+	secnum = -1;
+	rtn = 0;
 
 	while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0) {
 		sec = &sectors[secnum];
+		rtn = 1;
 
 		switch (type) {
 		case LIGHT_FLOOR:
@@ -669,6 +698,8 @@ void P_ModifySectorColor(line_t * line, int index, int type)
 			break;
 		}
 	}
+
+	return rtn;
 }
 
 //
@@ -1358,32 +1389,27 @@ int P_DoSpecialLine(mobj_t * thing, line_t * line, int side)
 
 	case 205:
 		// Modify sector color
-		P_ModifySectorColor(line, globalint, 0);
-		ok = 1;
+		ok = P_ModifySectorColor(line, globalint, 0);
 		break;
 
 	case 206:
 		// Modify sector color
-		P_ModifySectorColor(line, globalint, 1);
-		ok = 1;
+		ok = P_ModifySectorColor(line, globalint, 1);
 		break;
 
 	case 207:
 		// Modify sector color
-		P_ModifySectorColor(line, globalint, 2);
-		ok = 1;
+		ok = P_ModifySectorColor(line, globalint, 2);
 		break;
 
 	case 208:
 		// Modify sector color
-		P_ModifySectorColor(line, globalint, 3);
-		ok = 1;
+		ok = P_ModifySectorColor(line, globalint, 3);
 		break;
 
 	case 209:
 		// Modify sector color
-		P_ModifySectorColor(line, globalint, 4);
-		ok = 1;
+		ok = P_ModifySectorColor(line, globalint, 4);
 		break;
 
 	case 210:
@@ -1401,38 +1427,32 @@ int P_DoSpecialLine(mobj_t * thing, line_t * line, int side)
 
 	case 218:
 		//Modify Line Flags
-		P_ModifyLine(line->tag, globalint, modl_flags);
-		ok = 1;
+		ok = P_ModifyLine(line->tag, globalint, modl_flags);
 		break;
 
 	case 219:
 		//Modify Line Texture
-		P_ModifyLine(line->tag, globalint, modl_texture);
-		ok = 1;
+		ok = P_ModifyLine(line->tag, globalint, modl_texture);
 		break;
 
 	case 220:
 		// Modify Sector Flags
-		P_ModifySector(line->tag, globalint, mods_flags);
-		ok = 1;
+		ok = P_ModifySector(line->tag, globalint, mods_flags);
 		break;
 
 	case 221:
 		// Modify Sector Specials
-		P_ModifySector(line->tag, globalint, mods_special);
-		ok = 1;
+		ok = P_ModifySector(line->tag, globalint, mods_special);
 		break;
 
 	case 222:
 		// Modify Sector Lights
-		P_ModifySector(line->tag, globalint, mods_lights);
-		ok = 1;
+		ok = P_ModifySector(line->tag, globalint, mods_lights);
 		break;
 
 	case 223:
 		// Modify Sector Flats
-		P_ModifySector(line->tag, globalint, mods_flats);
-		ok = 1;
+		ok = P_ModifySector(line->tag, globalint, mods_flats);
 		break;
 
 	case 224:
@@ -1464,8 +1484,7 @@ int P_DoSpecialLine(mobj_t * thing, line_t * line, int side)
 
 	case 230:
 		// Modify Line Special
-		P_ModifyLine(line->tag, globalint, modl_data);
-		ok = 1;
+		ok = P_ModifyLine(line->tag, globalint, modl_data);
 		break;
 
 	case 231:
@@ -1492,8 +1511,7 @@ int P_DoSpecialLine(mobj_t * thing, line_t * line, int side)
 
 	case 235:
 		// Modify Light Data
-		P_DoSectorLightChange(line, globalint);
-		ok = 1;
+		ok = P_DoSectorLightChange(line, globalint);
 		break;
 
 	case 236:
@@ -1852,26 +1870,26 @@ void P_UpdateSpecials(void)
 			if (!buttonlist[i].btimer) {
 				switch (buttonlist[i].where) {
 				case top:
-					sides[buttonlist[i].line->sidenum[0]].
-					    toptexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].toptexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case middle:
-					sides[buttonlist[i].line->sidenum[0]].
-					    midtexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].midtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case bottom:
-					sides[buttonlist[i].line->sidenum[0]].
-					    bottomtexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].bottomtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 				}
 
-				S_StartSound((mobj_t *) & buttonlist[i].line->
-					     frontsector->soundorg,
+				S_StartSound((mobj_t *) & buttonlist[i].
+					     line->frontsector->soundorg,
 					     sfx_switch1);
 				dmemset(&buttonlist[i], 0, sizeof(button_t));
 			}

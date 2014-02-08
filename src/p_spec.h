@@ -168,7 +168,7 @@ void P_SpawnSequenceLight(sector_t * sector, dboolean first);
 void P_CombineLightSpecials(sector_t * sector);
 void T_Combine(combine_t * combine);
 dboolean P_ChangeLightByTag(int tag1, int tag2);
-void P_DoSectorLightChange(line_t * line, short tag);
+int P_DoSectorLightChange(line_t * line, short tag);
 void P_FadeInBrightness(void);
 
 typedef enum {

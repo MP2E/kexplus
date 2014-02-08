@@ -572,26 +572,38 @@ void P_UpdateLightThinker(light_t * destlight, light_t * srclight)
 // P_DoSectorLightChange
 //
 
-void P_DoSectorLightChange(line_t * line, short tag)
+int P_DoSectorLightChange(line_t * line, short tag)
 {
-	int i = 0;
 	int j = 0;
 	int ptr1 = 0;
 	int ptr2 = 0;
 	sector_t *sec1;
-	sector_t *sec2 = &sectors[P_FindSectorFromTag(tag)];
+	sector_t *sec2;
+	int secnum;
+	int rtn;
 
-	for (i = 0; i < numsectors; i++) {
-		sec1 = &sectors[i];
-		if (sec1->tag == line->tag) {
-			for (j = 0; j < 5; j++) {
-				ptr1 = (sec1->colors[j]);
-				ptr2 = (sec2->colors[j]);
-				P_UpdateLightThinker(&lights[ptr1],
-						     &lights[ptr2]);
-			}
+	secnum = P_FindSectorFromTag(tag);
+
+	if (secnum == -1)
+		return 0;
+
+	sec2 = &sectors[secnum];
+
+	secnum = -1;
+	rtn = 0;
+
+	while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0) {
+		sec1 = &sectors[secnum];
+		rtn = 1;
+
+		for (j = 0; j < 5; j++) {
+			ptr1 = (sec1->colors[j]);
+			ptr2 = (sec2->colors[j]);
+			P_UpdateLightThinker(&lights[ptr1], &lights[ptr2]);
 		}
 	}
+
+	return 1;
 }
 
 //
