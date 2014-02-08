@@ -214,6 +214,7 @@ SET(DIRS ${FLUIDSYNTH_LIBRARY_DIRS} ${SDL_LIBRARY_DIRS} ${SDL_NET_LIBRARY_DIRS}
 INSTALL(CODE "
     file(GLOB_RECURSE QTPLUGINS
       \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+    set(BU_CHMOD_BUNDLE_ITEMS ON)
     include(BundleUtilities)
     fixup_bundle(\"${APPS}\" \"\${FLUIDSYNTH_LIBRARY}\"
         \"\${SDL_LIBRARY}\" \"\${SDL_NET_LIBRARY}\"
