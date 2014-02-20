@@ -288,6 +288,7 @@ enum {
 	COMPATF_COLLISION = (1 << 0),	// don't use maxradius for mobj position checks
 	COMPATF_MOBJPASS = (1 << 1),	// allow mobjs to stand on top one another
 	COMPATF_LIMITPAIN = (1 << 2),	// pain elemental limited to 17 lost souls?
+    COMPATF_REACHITEMS  = (1 << 3)      // able to grab high items by bumping
 };
 
 extern dboolean windowpause;

@@ -1167,6 +1167,7 @@ CVAR_EXTERNAL(p_usecontext);
 CVAR_EXTERNAL(compat_collision);
 CVAR_EXTERNAL(compat_limitpain);
 CVAR_EXTERNAL(compat_mobjpass);
+CVAR_EXTERNAL(compat_grabitems);
 CVAR_EXTERNAL(r_wipe);
 CVAR_EXTERNAL(r_rendersprites);
 CVAR_EXTERNAL(r_texturecombiner);
@@ -1198,6 +1199,7 @@ enum {
 	misc_comp_collision,
 	misc_comp_pain,
 	misc_comp_pass,
+    misc_comp_grab,
 	misc_default,
 	misc_return,
 	misc_end
@@ -1230,6 +1232,7 @@ menuitem_t MiscMenu[] = {
 	{2, "Collision:", M_MiscChoice, 'c'},
 	{2, "Limit Lost Souls:", M_MiscChoice, 'l'},
 	{2, "Tall Actors:", M_MiscChoice, 'i'},
+    {2, "Grab High Items:", M_MiscChoice, 'g'},
 	{-2, "Default", M_DoDefaults, 'd'},
 	{1, "/r Return", M_Return, 0x20}
 };
@@ -1261,6 +1264,7 @@ char *MiscHints[misc_end] = {
 	"surrounding blockmaps are not checked for an object",
 	"limit max amount of lost souls spawned by pain elemental to 17",
 	"emulate infinite height bug for all solid actors",
+    "be able to grab high items by bumping into the sector it sits on",
 	NULL,
 	NULL
 };
@@ -1285,6 +1289,7 @@ menudefault_t MiscDefault[] = {
 	{&compat_collision, 1},
 	{&compat_limitpain, 1},
 	{&compat_mobjpass, 1},
+	{&compat_grabitems, 0},
 	{NULL, -1}
 };
 
@@ -1419,6 +1424,10 @@ void M_MiscChoice(int choice)
 	case misc_comp_pass:
 		M_SetOptionValue(choice, 0, 1, 1, &compat_mobjpass);
 		break;
+
+    case misc_comp_grab:
+        M_SetOptionValue(choice, 0, 1, 1, &compat_grabitems);
+        break;
 	}
 }
 
@@ -1471,6 +1480,7 @@ void M_DrawMisc(void)
 	DRAWMISCITEM(misc_comp_collision, compat_collision.value, msgNames);
 	DRAWMISCITEM(misc_comp_pain, compat_limitpain.value, msgNames);
 	DRAWMISCITEM(misc_comp_pass, !compat_mobjpass.value, msgNames);
+    DRAWMISCITEM(misc_comp_grab, compat_grabitems.value, msgNames);
 
 #undef DRAWMISCITEM
 

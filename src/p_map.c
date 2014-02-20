@@ -80,8 +80,7 @@ d_inline static dboolean P_CheckThingCollision(mobj_t * thing)
 
 	if (netgame && (tmthing->type == MT_PLAYER && thing->type == MT_PLAYER))
 		return true;	// 20120122 villsa - allow players to go through each other
-	else
-		blockdist = thing->radius + tmthing->radius;
+	blockdist = thing->radius + tmthing->radius;
 
 	if (D_abs(thing->x - tmx) >= blockdist ||
 	    D_abs(thing->y - tmy) >= blockdist) {
@@ -307,20 +306,24 @@ dboolean PIT_CheckThing(mobj_t * thing)
 		// don't traverse any more
 		return false;
 	}
+
+    solid = thing->flags & MF_SOLID;
+
 	// check for special pickup
 	if (thing->flags & MF_SPECIAL) {
-		solid = thing->flags & MF_SOLID;
 		if (tmflags & MF_PICKUP) {
-			if (thing->z <= (tmthing->z + (tmthing->height >> 1)) ||
-			    thing->flags & MF_NOSECTOR) {
-				// can remove thing
-				P_TouchSpecialThing(thing, tmthing);
+            // [kex] compatibility flags added for item grab bug fix
+            if(compatflags & COMPATF_REACHITEMS ||
+                    (thing->z <= (tmthing->z + (tmthing->height>>1))
+                     || thing ->flags & MF_NOSECTOR)) {
+                // [d64] store off special thing and return true
+                tmthing->extradata = (mobj_t*)thing;
+                return true;
 			}
 		}
-		return !solid;
 	}
 
-	return !(thing->flags & MF_SOLID);
+	return !solid;
 }
 
 //
