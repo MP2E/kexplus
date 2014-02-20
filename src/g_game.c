@@ -1391,6 +1391,7 @@ void G_RunTitleMap(void)
 	precache = true;
 	usergame = false;
 	demoplayback = true;
+    iwadDemo = true;
 
 	rngseed = 0;
 
@@ -1407,8 +1408,10 @@ void G_RunGame(void)
 {
 	int next = 0;
 
-	G_ReloadDefaults();
-	G_InitNew(startskill, startmap);
+    if(!demorecording && !demoplayback) {
+	    G_ReloadDefaults();
+	    G_InitNew(startskill, startmap);
+    }
 
 	while (gameaction != ga_title) {
 		if (gameaction == ga_loadgame)

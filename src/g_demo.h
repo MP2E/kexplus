@@ -33,15 +33,15 @@ void G_PlayDemo(const char *name);
 void G_ReadDemoTiccmd(ticcmd_t * cmd);
 void G_WriteDemoTiccmd(ticcmd_t * cmd);
 
-extern char demoname[256];
-extern dboolean demorecording;
-extern dboolean demoplayback;
+extern char demoname[256]; // name of demo lump
+extern dboolean demorecording; // currently recording a demo
+extern dboolean demoplayback; // currently playing a demo
 extern dboolean netdemo;
 extern byte *demobuffer;
 extern byte *demo_p;
 extern byte *demoend;
 extern dboolean singledemo;
-extern dboolean endDemo;
-extern dboolean iwadDemo;
+extern dboolean endDemo; // signal recorder to stop on next tic
+extern dboolean iwadDemo; //hide hud, end playback after 1 level
 
 #endif
