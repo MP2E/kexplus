@@ -40,6 +40,7 @@
 #include "m_misc.h"
 #include "i_video.h"
 #include "d_net.h"
+#include "g_demo.h"
 #include "g_game.h"
 #include "d_main.h"
 #include "con_console.h"
@@ -524,8 +525,10 @@ void I_Error(char *string, ...)
 
 void I_Quit(void)
 {
-	if (demorecording)
+	if (demorecording) {
+        endDemo = true;
 		G_CheckDemoStatus();
+    }
 
 	M_SaveDefaults();
 

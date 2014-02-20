@@ -27,6 +27,7 @@
 
 #include "doomdef.h"
 #include "doomstat.h"
+#include "g_demo.h"
 #include "g_game.h"
 #include "i_system.h"
 #include "m_misc.h"
@@ -198,6 +199,7 @@ static void NET_CL_PlayerQuitGame(player_t * player)
 	// TODO: check if it is sensible to do this:
 
 	if (demorecording) {
+        endDemo = true;
 		G_CheckDemoStatus();
 	}
 }
