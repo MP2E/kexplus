@@ -1437,22 +1437,22 @@ int P_DoSpecialLine(mobj_t * thing, line_t * line, int side)
 
 	case 220:
 		// Modify Sector Flags
-		ok = P_ModifySector(line->tag, globalint, mods_flags);
+		ok = P_ModifySector(line, globalint, mods_flags);
 		break;
 
 	case 221:
 		// Modify Sector Specials
-		ok = P_ModifySector(line->tag, globalint, mods_special);
+		ok = P_ModifySector(line, globalint, mods_special);
 		break;
 
 	case 222:
 		// Modify Sector Lights
-		ok = P_ModifySector(line->tag, globalint, mods_lights);
+		ok = P_ModifySector(line, globalint, mods_lights);
 		break;
 
 	case 223:
 		// Modify Sector Flats
-		ok = P_ModifySector(line->tag, globalint, mods_flats);
+		ok = P_ModifySector(line, globalint, mods_flats);
 		break;
 
 	case 224:
