@@ -826,6 +826,26 @@ void G_ClearInput(void)
 }
 
 //
+// G_SetGameFlags
+//
+
+static void G_SetGameFlags(void) {
+    gameflags = 0;
+    compatflags = 0;
+
+    if(sv_lockmonsters.value > 0)  gameflags |= GF_LOCKMONSTERS;
+    if(sv_allowcheats.value > 0)   gameflags |= GF_ALLOWCHEATS;
+    if(sv_friendlyfire.value > 0)  gameflags |= GF_FRIENDLYFIRE;
+    if(sv_keepitems.value > 0)     gameflags |= GF_KEEPITEMS;
+    if(p_allowjump.value > 0)      gameflags |= GF_ALLOWJUMP;
+    if(p_autoaim.value > 0)        gameflags |= GF_ALLOWAUTOAIM;
+
+    if(compat_collision.value > 0) compatflags |= COMPATF_COLLISION;
+    if(compat_mobjpass.value > 0)  compatflags |= COMPATF_MOBJPASS;
+    if(compat_limitpain.value > 0) compatflags |= COMPATF_LIMITPAIN;
+}
+
+//
 // G_DoLoadLevel
 //
 
@@ -857,6 +877,10 @@ void G_DoLoadLevel(void)
 	forcecollision = map->oldcollision;
 	forcejump = map->allowjump;
 	forcefreelook = map->allowfreelook;
+
+    if(!demoplayback) {
+        G_SetGameFlags();
+    }
 
 	// This was quite messy with SPECIAL and commented parts.
 	// Supposedly hacks to make the latest edition work.
