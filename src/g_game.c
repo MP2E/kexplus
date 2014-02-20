@@ -878,10 +878,6 @@ void G_DoLoadLevel(void)
 	forcejump = map->allowjump;
 	forcefreelook = map->allowfreelook;
 
-    if(!demoplayback) {
-        G_SetGameFlags();
-    }
-
 	// This was quite messy with SPECIAL and commented parts.
 	// Supposedly hacks to make the latest edition work.
 	// It might not work properly.
@@ -1580,6 +1576,7 @@ void G_Init(void)
 	G_AddCommand("trigger", CMD_TriggerSpecial, 0);
 	G_AddCommand("setcamerastatic", CMD_PlayerCamera, 0);
 	G_AddCommand("setcamerachase", CMD_PlayerCamera, 1);
+    G_AddCommand("enddemo", CMD_EndDemo, 0);
 }
 
 //
@@ -1646,6 +1643,8 @@ void G_InitNew(skill_t skill, int map)
 	automapactive = false;
 	gamemap = map;
 	gameskill = skill;
+
+    G_SetGameFlags();
 
 	// [d64] For some reason this is added here
 	M_ClearRandom();
