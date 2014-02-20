@@ -42,5 +42,6 @@ extern byte *demo_p;
 extern byte *demoend;
 extern dboolean singledemo;
 extern dboolean endDemo;
+extern dboolean iwadDemo;
 
 #endif

@@ -50,6 +50,7 @@
 #include "z_zone.h"
 #include "p_setup.h"
 #include "gl_draw.h"
+#include "g_demo.h"
 
 #ifdef _WIN32
 #include "i_xinput.h"
@@ -743,7 +744,7 @@ void ST_Drawer(void)
 				  st_flash_a);
 	}
 
-	if (demoplayback)
+	if (iwadDemo)
 		return;
 
 	checkautomap = (!automapactive || am_overlay.value);

@@ -57,6 +57,7 @@ byte *demo_p;
 byte *demoend;
 dboolean singledemo = false;	// quit after playing a demo from cmdline
 dboolean endDemo;
+dboolean iwadDemo = false;
 
 extern int starttime;
 
@@ -285,6 +286,8 @@ void G_PlayDemo(const char *name)
 
 	G_DoLoadLevel();
 	D_MiniLoop(P_Start, P_Stop, P_Drawer, P_Ticker);
+
+    iwadDemo = false;
 }
 
 //

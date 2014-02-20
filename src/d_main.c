@@ -50,6 +50,7 @@
 #include "m_misc.h"
 #include "m_menu.h"
 #include "i_system.h"
+#include "g_demo.h"
 #include "g_game.h"
 #include "wi_stuff.h"
 #include "st_stuff.h"
@@ -711,19 +712,23 @@ void D_DoomLoop(void)
 			if (gameaction == ga_title)
 				continue;
 
-			G_PlayDemo("DEMO1LMP");
+			iwadDemo = true;
+            G_PlayDemo("DEMO1LMP");
 			if (gameaction != ga_exitdemo)
 				continue;
 
+			iwadDemo = true;
 			G_PlayDemo("DEMO2LMP");
 			if (gameaction != ga_exitdemo)
 				continue;
 
+			iwadDemo = true;
 			G_PlayDemo("DEMO3LMP");
 			if (gameaction != ga_exitdemo)
 				continue;
 
 			if (rundemo4) {
+			    iwadDemo = true;
 				G_PlayDemo("DEMO4LMP");
 				if (gameaction != ga_exitdemo)
 					continue;
