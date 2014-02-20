@@ -127,9 +127,25 @@ void G_RecordDemo(const char *name)
 	if (access(demoname, F_OK)) {
 		demofp = fopen(demoname, "wb");
 	} else {
-		I_Error("G_RecordDemo: file %s already exists", demoname);
-		return;
-	}
+        int demonum = 0;
+
+        while(demonum < 10000) {
+            sprintf(demoname, "%s%i.lmp", name, demonum);
+            if(access(demoname, F_OK)) {
+                demofp = fopen(demoname, "wb");
+                break;
+            }
+            demonum++;
+	    }
+
+        // [kex]: so yeah... dunno how to properly handle this...
+        if(demonum >= 10000) {
+            I_Error("G_RecordDemo: file %s already exists", demoname);
+            return;
+        }
+    }
+
+
 
 	CON_DPrintf("--------Recording %s--------\n", demoname);
 
