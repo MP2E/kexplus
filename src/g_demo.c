@@ -71,6 +71,8 @@ extern int starttime;
 
 void G_ReadDemoTiccmd(ticcmd_t * cmd)
 {
+    unsigned int lowbyte;
+
 	if (*demo_p == DEMOMARKER) {
 		// end of demo data stream
 		G_CheckDemoStatus();
@@ -79,8 +81,10 @@ void G_ReadDemoTiccmd(ticcmd_t * cmd)
 
 	cmd->forwardmove = ((signed char)*demo_p++);
 	cmd->sidemove = ((signed char)*demo_p++);
-	cmd->angleturn = ((unsigned char)*demo_p++) << 8;
-	cmd->pitch = ((unsigned char)*demo_p++) << 8;
+    lowbyte = (unsigned char)(*demo_p++);
+	cmd->angleturn = (((unsigned int)(*demo_p++)) << 8) + lowbyte;
+    lowbyte = (unsigned char)(*demo_p++);
+	cmd->pitch = (((unsigned int)(*demo_p++)) << 8) + lowbyte;
 	cmd->buttons = (unsigned char)*demo_p++;
 	cmd->buttons2 = (unsigned char)*demo_p++;
 }
@@ -91,13 +95,20 @@ void G_ReadDemoTiccmd(ticcmd_t * cmd)
 
 void G_WriteDemoTiccmd(ticcmd_t * cmd)
 {
-	char buf[6];
+	char buf[8];
+    signed short angleturn;
+    signed short pitch;
 	char *p = buf;
+
+    angleturn = cmd->angleturn;
+    pitch = cmd->pitch;
 
 	*p++ = cmd->forwardmove;
 	*p++ = cmd->sidemove;
-	*p++ = (cmd->angleturn + 128) >> 8;
-	*p++ = (cmd->pitch + 128) >> 8;
+    *p++ = angleturn & 0xff;
+    *p++ = (angleturn >> 8) & 0xff;
+    *p++ = pitch & 0xff;
+    *p++ = (pitch >> 8) & 0xff;
 	*p++ = cmd->buttons;
 	*p++ = cmd->buttons2;
 
@@ -314,7 +325,7 @@ void G_PlayDemo(const char *name)
 
 dboolean G_CheckDemoStatus(void)
 {
-	if (demorecording) {
+	if (endDemo) {
 		demorecording = false;
 		fputc(DEMOMARKER, demofp);
 		CON_Printf(WHITE, "G_CheckDemoStatus: Demo recorded\n");
