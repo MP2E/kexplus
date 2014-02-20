@@ -2015,10 +2015,11 @@ static const int Resolution4_3[MAX_RES4_3][2] = {
 	{1600, 1200}
 };
 
-#define MAX_RES16_9  11
+#define MAX_RES16_9  12
 static const int Resolution16_9[MAX_RES16_9][2] = {
     {640, 360},
 	{854, 480},
+    {1024, 576},
     {1024, 600},
 	{1280, 720},
 	{1366, 768},
