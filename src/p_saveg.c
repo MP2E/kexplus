@@ -231,7 +231,7 @@ static void saveg_setup_mobjread(void)
 	// read and add mobjs
 	for (i = 0; i < savegmobjnum; i++) {
 		savegmobj[i].index = i + 1;
-		savegmobj[i].mobj = Z_Malloc(sizeof(mobj_t), PU_LEVEL, NULL);
+		savegmobj[i].mobj = Z_Calloc(sizeof(mobj_t), PU_LEVEL, NULL);
 	}
 }
 
