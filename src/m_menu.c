@@ -2015,22 +2015,30 @@ static const int Resolution4_3[MAX_RES4_3][2] = {
 	{1600, 1200}
 };
 
-#define MAX_RES16_9  5
+#define MAX_RES16_9  11
 static const int Resolution16_9[MAX_RES16_9][2] = {
+    {640, 360},
 	{854, 480},
+    {1024, 600},
 	{1280, 720},
 	{1366, 768},
 	{1600, 900},
-	{1920, 1080}
+	{1920, 1080},
+    {2048, 1152},
+    {2560, 1440},
+    {2880, 1620},
+    {3840, 2160}
 };
 
-#define MAX_RES16_10  5
+#define MAX_RES16_10  7
 static const int Resolution16_10[MAX_RES16_10][2] = {
 	{320, 200},
+    {1024, 640},
 	{1280, 800},
 	{1440, 900},
 	{1680, 1050},
-	{1920, 1200}
+	{1920, 1200},
+    {2560, 1600}
 };
 
 static const float ratioVal[3] = {
