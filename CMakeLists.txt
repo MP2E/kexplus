@@ -52,11 +52,23 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
    TRY_C_COMPILER_FLAG(/Wall    FLAG_C_Wall   )
 endif()
 
+# Run cmake with the argument "-DUSE_SDL2=true" to enable SDL2
+if(USE_SDL2)
+   find_package(SDL2 REQUIRED)
+   find_package(SDL2_net REQUIRED)
+
+   set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
+   set(SDL_LIBRARY ${SDL2_LIBRARY})
+   set(SDL_NET_INCLUDE_DIR ${SDL2_NET_INCLUDE_DIR})
+   set(SDLNET_LIBRARY ${SDL2_NET_LIBRARY})
+else()
+   find_package(SDL REQUIRED)
+   find_package(SDL_net REQUIRED)
+endif() 
+
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
-find_package(SDL REQUIRED)
 find_package(FluidSynth REQUIRED)
-find_package(SDL_net REQUIRED)
 find_package(OpenGL REQUIRED)
 
 ##----------------------------------------------------------------------------|

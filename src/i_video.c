@@ -45,6 +45,21 @@
 #include "i_xinput.h"
 #endif
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+#define SDL_keysym	SDL_Keysym
+#define SDLK_KP0	SDLK_KP_0
+#define SDLK_KP1	SDLK_KP_1
+#define SDLK_KP2	SDLK_KP_2
+#define SDLK_KP3	SDLK_KP_3
+#define SDLK_KP4	SDLK_KP_4
+#define SDLK_KP5	SDLK_KP_5
+#define SDLK_KP6	SDLK_KP_6
+#define SDLK_KP7	SDLK_KP_7
+#define SDLK_KP8	SDLK_KP_8
+#define SDLK_KP9	SDLK_KP_9
+#define SDLK_
+#endif
+
 CVAR(v_msensitivityx, 5);
 CVAR(v_msensitivityy, 5);
 CVAR(v_macceleration, 0);
@@ -69,7 +84,13 @@ void I_UpdateGrab(void);
 // Video
 //================================================================================
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+SDL_Window *window = NULL;
+SDL_GLContext *glcontext = NULL;
+#else
 SDL_Surface *screen;
+#endif
+
 int video_width;
 int video_height;
 float video_ratio;
@@ -169,6 +190,8 @@ void I_ShutdownVideo(void)
 
 void I_NetWaitScreen(void)
 {
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
+	// TODO: paint the screen black using GL (or something)
 	uint32 flags = 0;
 
 	I_InitScreen();
@@ -180,6 +203,7 @@ void I_NetWaitScreen(void)
 	}
 
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+#endif
 }
 
 //
@@ -188,23 +212,20 @@ void I_NetWaitScreen(void)
 
 void I_InitVideo(void)
 {
-	char title[256];
-
 	uint32 f = SDL_INIT_VIDEO;
 
 #ifdef _DEBUG
 	f |= SDL_INIT_NOPARACHUTE;
 #endif
 
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 	putenv("SDL_VIDEO_CENTERED=1");
+#endif
 
 	if (SDL_Init(f) < 0) {
 		printf("ERROR - Failed to initialize SDL");
 		exit(1);
 	}
-
-	sprintf(title, "Doom64 - Version Date: %s", version_date);
-	SDL_WM_SetCaption(title, "Doom64");
 
 	I_InitInputs();
 }
@@ -406,10 +427,12 @@ static int I_TranslateKey(SDL_keysym * key)
 	case SDLK_RCTRL:
 		rc = KEY_RCTRL;
 		break;
-	case SDLK_LALT:
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDLK_LMETA:
-	case SDLK_RALT:
 	case SDLK_RMETA:
+#endif
+	case SDLK_LALT:
+	case SDLK_RALT:
 		rc = KEY_RALT;
 		break;
 	case SDLK_CAPSLOCK:
@@ -439,6 +462,7 @@ static int I_SDLtoDoomMouseState(Uint8 buttonstate)
 // I_UpdateFocus
 //
 
+#if !SDL_VERSION_ATLEAST(2, 0 ,0)
 static void I_UpdateFocus(void)
 {
 	Uint8 state;
@@ -448,6 +472,7 @@ static void I_UpdateFocus(void)
 	// (not minimised)
 	window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
 }
+#endif
 
 // I_CenterMouse
 // Warp the mouse back to the middle of the screen
@@ -456,8 +481,14 @@ static void I_UpdateFocus(void)
 void I_CenterMouse(void)
 {
 	// Warp the the screen center
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_WarpMouseInWindow(window,
+			(unsigned short)(video_width / 2),
+			(unsigned short)(video_height / 2));
+#else
 	SDL_WarpMouse((unsigned short)(video_width / 2),
 		      (unsigned short)(video_height / 2));
+#endif
 
 	// Clear any relative movement caused by warping
 	SDL_PumpEvents();
@@ -553,7 +584,11 @@ int I_MouseAccel(int val)
 static void I_ActivateMouse(void)
 {
 	SDL_SetCursor(cursors[1]);
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_SetRelativeMouseMode(1);
+#else
 	SDL_WM_GrabInput(SDL_GRAB_ON);
+#endif
 	SDL_ShowCursor(1);
 }
 
@@ -564,7 +599,11 @@ static void I_ActivateMouse(void)
 static void I_DeactivateMouse(void)
 {
 	SDL_SetCursor(cursors[0]);
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_SetRelativeMouseMode(0);
+#else
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
+#endif
 	SDL_ShowCursor(m_menumouse.value < 1);
 }
 
@@ -601,6 +640,10 @@ static void I_GetEvent(SDL_Event * Event)
 
 	switch (Event->type) {
 	case SDL_KEYDOWN:
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		// TODO: 'repeat' shouldn't be ignored when console is open.
+		if(Event->key.repeat) break;
+#endif
 		event.type = ev_keydown;
 		event.data1 = I_TranslateKey(&Event->key.keysym);
 		D_PostEvent(&event);
@@ -612,6 +655,49 @@ static void I_GetEvent(SDL_Event * Event)
 		D_PostEvent(&event);
 		break;
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		if (!window_focused)
+			break;
+
+		event.type = Event->type == SDL_MOUSEBUTTONUP ? ev_mouseup : ev_mousedown;
+		event.data1 = I_SDLtoDoomMouseState(SDL_GetMouseState (NULL, NULL));
+		event.data2 = event.data3 = 0;
+
+		D_PostEvent(&event);
+		break;
+
+	case SDL_MOUSEWHEEL:
+		if (Event->wheel.y > 0) {
+			event.type = ev_keydown;
+			event.data1 = KEY_MWHEELUP;
+			mwheeluptic = tic;
+		} else if (Event->wheel.y < 0) {
+			event.type = ev_keydown;
+			event.data1 = KEY_MWHEELDOWN;
+			mwheeldowntic = tic;
+		} else break;
+
+		event.data2 = event.data3 = 0;
+		D_PostEvent(&event);
+		break;
+
+	case SDL_WINDOWEVENT:
+		switch(Event->window.event) {
+		case SDL_WINDOWEVENT_FOCUS_GAINED:
+			window_focused = 1;
+			break;
+
+		case SDL_WINDOWEVENT_FOCUS_LOST:
+			window_focused = 0;
+			break;
+
+		default:
+			break;
+		}
+		break;
+#else
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
 		if (!window_focused)
@@ -641,6 +727,7 @@ static void I_GetEvent(SDL_Event * Event)
 	case SDL_VIDEOEXPOSE:
 		I_UpdateFocus();
 		break;
+#endif
 
 	case SDL_QUIT:
 		I_Quit();
