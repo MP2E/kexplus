@@ -1189,7 +1189,12 @@ void I_InitSequencer(void)
 	// will reduce the chances of it happening
 	SDL_GetTicks();
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	doomseq.thread = SDL_CreateThread(Thread_PlayerHandler, "PlayerHandler", &doomseq);
+#else
 	doomseq.thread = SDL_CreateThread(Thread_PlayerHandler, &doomseq);
+#endif
+
 	if (doomseq.thread == NULL) {
 		CON_Warnf("I_InitSequencer: failed to create audio thread");
 		return;

@@ -29,6 +29,11 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+#define SDL_OPENGL SDL_WINDOW_OPENGL
+#define SDL_FULLSCREEN SDL_WINDOW_FULLSCREEN
+#endif
+
 #include "doomdef.h"
 #include "doomstat.h"
 #include "i_video.h"
@@ -249,7 +254,11 @@ float GL_GetOrthoScale(void)
 void GL_SwapBuffers(void)
 {
 	dglFinish();
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_GL_SwapWindow(window);
+#else
 	SDL_GL_SwapBuffers();
+#endif
 }
 
 //
@@ -563,6 +572,35 @@ static int GetVersionInt(const unsigned char *version)
 }
 
 //
+// GL_SetVideoMode
+//
+
+static char title[256];
+
+static dboolean GL_SetVideoMode(int width, int height, int bpp, uint32 flags)
+{
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	if(window) {
+		if(glcontext) {
+			SDL_GL_DeleteContext(glcontext);
+		}
+		SDL_DestroyWindow(window);
+	}
+
+	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		width, height, flags);
+
+	if(window) {
+		glcontext = SDL_GL_CreateContext(window);
+	}
+
+	return window && glcontext;
+#else
+	return SDL_SetVideoMode(width, height, bpp, flags);
+#endif
+}
+
+//
 // GL_Init
 //
 
@@ -584,14 +622,25 @@ void GL_Init(void)
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, (int)v_buffersize.value);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_GL_SetSwapInterval((int)v_vsync.value);
+#else
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, (int)v_vsync.value);
+#endif
 
 	flags |= SDL_OPENGL;
 
 	if (!InWindow)
 		flags |= SDL_FULLSCREEN;
 
-	if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags) == NULL) {
+	sprintf(title, "Doom64 - Version Date: %s", version_date);
+
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_WM_SetCaption(title, "Doom64");
+#endif
+
+	if (GL_SetVideoMode(video_width, video_height, SDL_BPP, flags) == NULL) {
 		// re-adjust depth size if video can't run it
 		if (v_depthsize.value >= 24) {
 			CON_CvarSetValue(v_depthsize.name, 16);
@@ -601,14 +650,14 @@ void GL_Init(void)
 
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
 
-		if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags)
+		if (GL_SetVideoMode(video_width, video_height, SDL_BPP, flags)
 		    == NULL) {
 			// fall back to lower buffer setting
 			CON_CvarSetValue(v_buffersize.name, 16);
 			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
 					    (int)v_buffersize.value);
 
-			if (SDL_SetVideoMode
+			if (GL_SetVideoMode
 			    (video_width, video_height, SDL_BPP,
 			     flags) == NULL) {
 				// give up

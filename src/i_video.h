@@ -32,7 +32,12 @@
 
 ////////////Video///////////////
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+extern SDL_Window *window;
+extern SDL_GLContext *glcontext;
+#else
 extern SDL_Surface *screen;
+#endif
 
 void I_InitVideo(void);
 void I_InitScreen(void);
