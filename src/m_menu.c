@@ -2401,9 +2401,9 @@ void M_DrawPassword(void)
 #endif
 	{
 		Draw_BigText(-1, 240 - 48, MENUCOLORWHITE,
-			     "Press Backspace To Change");
+			     "Press Delete To Change");
 		Draw_BigText(-1, 240 - 32, MENUCOLORWHITE,
-			     "Press Escape To Return");
+			     "Press Backspace To Return");
 	}
 
 	if (passInvalid) {
