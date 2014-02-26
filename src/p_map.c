@@ -82,11 +82,37 @@ d_inline static dboolean P_CheckThingCollision(mobj_t * thing)
 		return true;	// 20120122 villsa - allow players to go through each other
 	blockdist = thing->radius + tmthing->radius;
 
-	if (D_abs(thing->x - tmx) >= blockdist ||
-	    D_abs(thing->y - tmy) >= blockdist) {
-		// didn't hit it
-		return true;
+    // [d64]: mimic logic from original version
+    if(compatflags & (COMPATF_COLLISION|COMPATF_REACHITEMS)) {
+        fixed_t x, y;
+        fixed_t rx, ry;
+
+        x = D_abs(thing->x - tmx);
+        y = D_abs(thing->y - tmy);
+
+        rx = blockdist - x;
+        ry = blockdist - x;
+
+        if(!(x < y)) {
+            if(((rx - y) + (y >> 1)) <= 0) {
+                //didn't hit it
+                return true;
+            }
+        }
+        else {
+            if(((ry - y) + (x >> 1)) <= 0) {
+                // didn't hit it
+                return true;
+            }
+        }
 	}
+    else {
+        if(D_abs(thing->x - tmx) >= blockdist ||
+                D_abs(thing->y - tmy) >= blockdist) {
+                // didn't hit it
+                return true;
+        }
+    }
 
 	return false;
 }
@@ -317,7 +343,7 @@ dboolean PIT_CheckThing(mobj_t * thing)
                     (thing->z <= (tmthing->z + (tmthing->height>>1))
                      || thing ->flags & MF_NOSECTOR)) {
                 // [d64] store off special thing and return true
-                tmthing->extradata = (mobj_t*)thing;
+                blockthing = thing;
                 return true;
 			}
 		}
@@ -409,6 +435,7 @@ dboolean P_CheckPosition(mobj_t * thing, fixed_t x, fixed_t y)
 
 //
 // P_TryMove
+//
 // Attempt to move to a new position,
 // crossing special lines unless MF_TELEPORT is set.
 //
@@ -471,6 +498,37 @@ dboolean P_TryMove(mobj_t * thing, fixed_t x, fixed_t y)
 	}
 
 	return true;
+}
+
+//
+// P_PlayerMove
+//
+// Alternate P_TryMove function for players which
+// handles pickups. Needed in order to mimic
+// item grabbing behavior
+//
+
+dboolean P_PlayerMove(mobj_t* thing, fixed_t x, fixed_t y) {
+    dboolean moveok;
+
+    moveok = P_TryMove(thing, x, y);
+
+    //
+    // [d64] seems more like a console optimization but now the player
+    // is no longer able to pick up items during the block things iteration.
+    // this means that only one item can be picked up per tic.
+    //
+    if(thing->flags & MF_PICKUP && blockthing) {
+        mobj_t *touchThing = blockthing;
+
+        if(touchThing->flags & MF_SPECIAL) {
+            // can remove thing
+            P_TouchSpecialThing(touchThing, thing);
+            blockthing = NULL;
+        }
+    }
+
+    return moveok;
 }
 
 //
@@ -776,8 +834,8 @@ void P_SlideMove(mobj_t * mo)
 	if (bestslidefrac == FRACUNIT + 1) {
 		// the move most have hit the middle, so stairstep
  stairstep:
-		if (!P_TryMove(mo, mo->x, mo->y + mo->momy)) {
-			if (!P_TryMove(mo, mo->x + mo->momx, mo->y)) {
+		if (!P_PlayerMove(mo, mo->x, mo->y + mo->momy)) {
+			if (!P_PlayerMove(mo, mo->x + mo->momx, mo->y)) {
 				// [d64] set momx and momy to 0
 				mo->momx = 0;
 				mo->momy = 0;
@@ -792,7 +850,7 @@ void P_SlideMove(mobj_t * mo)
 		newx = FixedMul(mo->momx, bestslidefrac);
 		newy = FixedMul(mo->momy, bestslidefrac);
 
-		if (!P_TryMove(mo, mo->x + newx, mo->y + newy)) {
+		if (!P_PlayerMove(mo, mo->x + newx, mo->y + newy)) {
 			bestslidefrac = FRACUNIT;
 
 			// [d64] jump to hitslideline instead of stairstep
@@ -848,7 +906,7 @@ void P_SlideMove(mobj_t * mo)
 	mo->momx = FixedMul(newx + newy, an1);
 	mo->momy = FixedMul(newx + newy, an2);
 
-	if (!P_TryMove(mo, mo->x + mo->momx, mo->y + mo->momy))
+	if (!P_PlayerMove(mo, mo->x + mo->momx, mo->y + mo->momy))
 		goto retry;
 }
 
@@ -1020,6 +1078,14 @@ dboolean PTR_ShootTraverse(intercept_t * in)
 		li = in->d.line;
 
 		lineside = P_PointOnLineSide(shootthing->x, shootthing->y, li);
+
+        // [d64] villsa 02252014: moved here
+        if(in->d.thing && in->d.thing->player) {
+            if(li->special & MLU_SHOOT) {
+                P_UseSpecialLine(shootthing, li, lineside);
+            }
+        }
+
 		sidesector = lineside ? li->backsector : li->frontsector;
 		dist = FixedMul(attackrange, in->frac);
 		hitz = shootz + FixedMul(dcos(shootthing->pitch - ANG90), dist);
@@ -1090,9 +1156,6 @@ dboolean PTR_ShootTraverse(intercept_t * in)
 			z = shootz + FixedMul(aimslope,
 					      FixedMul(frac, attackrange));
 		}
-
-		if (!hitplane && li->special & MLU_SHOOT)
-			P_UseSpecialLine(shootthing, li, lineside);
 
 		//don't shoot blank textures
 		if (sides[li->sidenum[0]].midtexture == 1

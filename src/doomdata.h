@@ -125,31 +125,31 @@ typedef struct {
 #define ML_DONTPEGBOTTOM        16	// lower texture unpegged
 #define ML_SECRET               32	// In AutoMap: don't map as two sided: IT'S A SECRET!
 #define ML_SOUNDBLOCK           64	// Sound rendering: don't let sound cross two of these.
-#define ML_DONTDRAW             128	// Don't draw on the automap at all.
-#define ML_MAPPED               256	// Set if already seen, thus drawn in automap.
-#define ML_DRAWMIDTEXTURE       0x200	// Draw middle texture on sidedef
-#define ML_DONTOCCLUDE          0x400	// Don't add to occlusion buffer
-#define ML_DONTPEGMID           0x800	// middle texture unpegged
-#define ML_THINGTRIGGER         0x1000	// Line is triggered by dead thing (flagged as ondeathtrigger)
-#define ML_SWITCHX02            0x2000	// Switch flag 1
-#define ML_SWITCHX04            0x4000	// Switch flag 2
-#define ML_SWITCHX08            0x8000	// Switch flag 3
-#define ML_CHECKFLOORHEIGHT     0x10000	// if true then check the switch's floor height, else use the ceiling height
-#define ML_SCROLLRIGHT          0x20000	// scroll texture to the right
-#define ML_SCROLLLEFT           0x40000	// scroll texture to the left
-#define ML_SCROLLUP             0x80000	// scroll texture up
+#define ML_DONTDRAW             128             // Don't draw on the automap at all.
+#define ML_MAPPED               256             // Set if already seen, thus drawn in automap.
+#define ML_DRAWMIDTEXTURE       0x200           // Draw middle texture on sidedef
+#define ML_DONTOCCLUDE          0x400           // Don't add to occlusion buffer
+#define ML_DONTPEGMID           0x800           // middle texture unpegged
+#define ML_THINGTRIGGER         0x1000          // Line is triggered by dead thing (flagged as ondeathtrigger)
+#define ML_SWITCHX02            0x2000          // Switch flag 1
+#define ML_SWITCHX04            0x4000          // Switch flag 2
+#define ML_SWITCHX08            0x8000          // Switch flag 3
+#define ML_CHECKFLOORHEIGHT     0x10000         // if true then check the switch's floor height, else use the ceiling height
+#define ML_SCROLLRIGHT          0x20000         // scroll texture to the right
+#define ML_SCROLLLEFT           0x40000         // scroll texture to the left
+#define ML_SCROLLUP             0x80000         // scroll texture up
 #define ML_SCROLLDOWN           0x100000	// scroll texture down
 #define ML_BLENDFULLTOP         0x200000	// do not extend blending for top texture
 #define ML_BLENDFULLBOTTOM      0x400000	// do not extend blending for bottom texture
 #define ML_BLENDING             0x800000	// use sector color blending (top/lower, ceiling, floor colors).
-#define ML_TRIGGERFRONT         0x1000000	// can only trigger from the front of the line
-#define ML_UNKNOWN2000000       0x2000000	// reserved
-#define ML_INVERSEBLEND         0x4000000	// reverse the blending of the sector colors
-#define ML_UNKNOWN8000000       0x8000000	// reserved
-#define ML_UNKNOWN10000000      0x10000000	// reserved
-#define ML_UNKNOWN20000000      0x20000000	// reserved
-#define ML_HMIRROR              0x40000000	// horizontal mirror the texture
-#define ML_VMIRROR              0x80000000	// vertical mirror the texture
+#define ML_TRIGGERFRONT         0x1000000       // can only trigger from the front of the line
+#define ML_NOMONSTERTRIGGER     0x2000000       // can't be triggered by monsters
+#define ML_INVERSEBLEND         0x4000000       // reverse the blending of the sector colors
+#define ML_UNKNOWN8000000       0x8000000       // reserved
+#define ML_UNKNOWN10000000      0x10000000      // reserved
+#define ML_UNKNOWN20000000      0x20000000      // reserved
+#define ML_HMIRROR              0x40000000      // horizontal mirror the texture
+#define ML_VMIRROR              0x80000000      // vertical mirror the texture
 
 //
 // Special attributes.

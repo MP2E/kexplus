@@ -428,23 +428,8 @@ void P_PlayerXYMovment(mobj_t * mo)
 		return;
 
 	// try to slide along a blocked move
-	if (!P_TryMove(mo, x, y))
+	if (!P_PlayerMove(mo, x, y))
 		P_SlideMove(mo);
-
-    //
-    // [d64] seems more like a console optimization but now the player
-    // is no longer able to pick up items during the block things iteration.
-    // this means that only one item can be picked up per tic.
-    //
-    if(mo->flags & MF_PICKUP && mo->extradata) {
-        mobj_t *touchThing = (mobj_t*)mo->extradata;
-
-        if(touchThing->flags & MF_SPECIAL) {
-            // can remove thing
-            P_TouchSpecialThing(touchThing, mo);
-            mo->extradata = NULL;
-        }
-    }
 
 	if (mo->z > mo->floorz && (!(mo->blockflag & BF_MOBJSTAND)))
 		return;		// no friction when airborne

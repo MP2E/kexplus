@@ -233,6 +233,7 @@ extern line_t *tmhitline;
 
 dboolean P_CheckPosition(mobj_t * thing, fixed_t x, fixed_t y);
 dboolean P_TryMove(mobj_t * thing, fixed_t x, fixed_t y);
+dboolean P_PlayerMove(mobj_t * thing, fixed_t x, fixed_t y);
 dboolean P_TeleportMove(mobj_t * thing, fixed_t x, fixed_t y);
 void P_SlideMove(mobj_t * mo);
 dboolean P_CheckSight(mobj_t * t1, mobj_t * t2);
