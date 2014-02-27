@@ -5485,10 +5485,10 @@ d_inline static void glGetBufferPointervARB_DEBUG(GLenum target, GLenum pname,
 extern dboolean has_GL_ARB_texture_non_power_of_two;
 
 #define GL_ARB_texture_non_power_of_two_Define() \
-dboolean has_GL_ARB_texture_non_power_of_two = false;
+dboolean has_GL_ARB_texture_non_power_of_two = false
 
 #define GL_ARB_texture_non_power_of_two_Init() \
-has_GL_ARB_texture_non_power_of_two = GL_CheckExtension("GL_ARB_texture_non_power_of_two");
+has_GL_ARB_texture_non_power_of_two = GL_CheckExtension("GL_ARB_texture_non_power_of_two")
 
 //
 // GL_ARB_texture_env_combine
@@ -5496,10 +5496,10 @@ has_GL_ARB_texture_non_power_of_two = GL_CheckExtension("GL_ARB_texture_non_powe
 extern dboolean has_GL_ARB_texture_env_combine;
 
 #define GL_ARB_texture_env_combine_Define() \
-dboolean has_GL_ARB_texture_env_combine = false;
+dboolean has_GL_ARB_texture_env_combine = false
 
 #define GL_ARB_texture_env_combine_Init() \
-has_GL_ARB_texture_env_combine = GL_CheckExtension("GL_ARB_texture_env_combine");
+has_GL_ARB_texture_env_combine = GL_CheckExtension("GL_ARB_texture_env_combine")
 
 //
 // GL_EXT_texture_env_combine
@@ -5507,10 +5507,10 @@ has_GL_ARB_texture_env_combine = GL_CheckExtension("GL_ARB_texture_env_combine")
 extern dboolean has_GL_EXT_texture_env_combine;
 
 #define GL_EXT_texture_env_combine_Define() \
-dboolean has_GL_EXT_texture_env_combine = false;
+dboolean has_GL_EXT_texture_env_combine = false
 
 #define GL_EXT_texture_env_combine_Init() \
-has_GL_EXT_texture_env_combine = GL_CheckExtension("GL_EXT_texture_env_combine");
+has_GL_EXT_texture_env_combine = GL_CheckExtension("GL_EXT_texture_env_combine")
 
 //
 // GL_EXT_texture_filter_anisotropic
@@ -5518,9 +5518,9 @@ has_GL_EXT_texture_env_combine = GL_CheckExtension("GL_EXT_texture_env_combine")
 extern dboolean has_GL_EXT_texture_filter_anisotropic;
 
 #define GL_EXT_texture_filter_anisotropic_Define() \
-dboolean has_GL_EXT_texture_filter_anisotropic = false;
+dboolean has_GL_EXT_texture_filter_anisotropic = false
 
 #define GL_EXT_texture_filter_anisotropic_Init() \
-has_GL_EXT_texture_filter_anisotropic = GL_CheckExtension("GL_EXT_texture_filter_anisotropic");
+has_GL_EXT_texture_filter_anisotropic = GL_CheckExtension("GL_EXT_texture_filter_anisotropic")
 
 #endif				// __DGL_H__
