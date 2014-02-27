@@ -39,31 +39,32 @@
 
 #include "doomdef.h"
 #include "doomstat.h"
-#include "i_video.h"
-#include "d_englsh.h"
 #include "sounds.h"
-#include "m_shift.h"
-#include "z_zone.h"
-#include "w_wad.h"
-#include "s_sound.h"
-#include "f_finale.h"
-#include "m_misc.h"
-#include "m_menu.h"
-#include "i_system.h"
-#include "g_demo.h"
-#include "g_game.h"
-#include "wi_stuff.h"
-#include "st_stuff.h"
 #include "am_map.h"
-#include "p_setup.h"
-#include "d_main.h"
 #include "con_console.h"
 #include "d_devstat.h"
+#include "d_englsh.h"
+#include "d_main.h"
+#include "f_finale.h"
+#include "g_controls.h"
+#include "g_demo.h"
+#include "g_game.h"
+#include "gl_draw.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "m_menu.h"
+#include "m_misc.h"
+#include "m_shift.h"
+#include "p_saveg.h"
+#include "p_setup.h"
 #include "r_local.h"
 #include "r_wipe.h"
-#include "g_controls.h"
-#include "p_saveg.h"
-#include "gl_draw.h"
+#include "s_sound.h"
+#include "st_stuff.h"
+#include "w_wad.h"
+#include "wi_stuff.h"
+#include "v_main.h"
+#include "z_zone.h"
 
 #include "Ext/ChocolateDoom/net_client.h"
 
@@ -974,6 +975,9 @@ void D_DoomMain(void)
 
 	I_Printf("ST_Init: Init status bar.\n");
 	ST_Init();
+
+	I_Printf("V_Init: Init Video\n");
+	V_Init();
 
 	I_Printf("GL_Init: Init OpenGL\n");
 	GL_Init();

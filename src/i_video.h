@@ -28,21 +28,9 @@
 #include "SDL.h"
 #include "d_event.h"
 
-#define SDL_BPP        32
-
 ////////////Video///////////////
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-extern SDL_Window *window;
-extern SDL_GLContext *glcontext;
-#else
-extern SDL_Surface *screen;
-#endif
-
-void I_InitVideo(void);
-void I_InitScreen(void);
 void I_NetWaitScreen(void);
-void I_ShutdownVideo(void);
 //
 // Called by D_DoomLoop,
 // called before processing each tic in a frame.
@@ -62,7 +50,5 @@ extern int mouse_y;
 
 int I_MouseAccel(int val);
 void I_MouseAccelChange(void);
-
-void V_RegisterCvars(void);
 
 #endif
