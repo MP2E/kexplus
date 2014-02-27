@@ -80,26 +80,26 @@ void V_ClearVidInfo(void);
 
 void V_RegisterCvars(void);
 
-inline int V_NumDisplays(void)
+d_inline int V_NumDisplays(void)
 {
 	return vidinfo.num_displays;
 }
 
-inline int V_NumModes(int display)
+d_inline int V_NumModes(int display)
 {
 	if(display < 0 || display >= vidinfo.num_displays)
 		return 0;
 	return vidinfo.displays[display].num_modes;
 }
 
-inline const viddisp_t * V_GetDisplay(int display)
+d_inline const viddisp_t * V_GetDisplay(int display)
 {
 	if(display < 0 || display >= vidinfo.num_displays)
 		return NULL;
 	return &vidinfo.displays[display];
 }
 
-inline const vidmode_t * V_GetMode(int display, int mode)
+d_inline const vidmode_t * V_GetMode(int display, int mode)
 {
 	if(display < 0 || display >= vidinfo.num_displays)
 		return NULL;
