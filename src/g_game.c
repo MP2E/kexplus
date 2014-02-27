@@ -1412,7 +1412,7 @@ void G_RunGame(void)
 {
 	int next = 0;
 
-    if(!demorecording && !demoplayback && !passwordgame) {
+    if(!demorecording && !demoplayback) {
 	    G_ReloadDefaults();
 	    G_InitNew(startskill, startmap);
     }
@@ -1641,9 +1641,15 @@ void G_InitNew(skill_t skill, int map)
 		skill = sk_nightmare;
 
 	// force players to be initialized upon first level load
-	for (i = 0; i < MAXPLAYERS; i++)
-		players[i].playerstate = PST_REBORN;
+    for (i = 0; i < MAXPLAYERS; i++)
+        players[i].playerstate = PST_REBORN;
 
+    // MP2E : if loading from a password, make sure the player's
+    // health and armor are not reset
+    if (passwordgame)
+        players[consoleplayer].playerstate = PST_LIVE;
+
+    passwordgame = false;
 	usergame = true;	// will be set false if a demo
 	paused = false;
 	demoplayback = false;
