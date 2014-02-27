@@ -1670,11 +1670,6 @@ dboolean P_UseSpecialLine(mobj_t * thing, line_t * line, int side)
 				return P_InitSpecialLine(thing, line, side);
 		}
 
-        // [d64] don't let monsters trigger this line
-        if(line->flags & ML_NOMONSTERTRIGGER) {
-            return false;
-        }
-
 		// never open secret doors
 		if (line->flags & ML_SECRET)
 			return false;

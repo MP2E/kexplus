@@ -784,7 +784,7 @@ void AM_DrawWalls(void)
 			//
 			// handle special line
 			//
-			else if (l->special && !(l->flags & ML_NOMONSTERTRIGGER)) {
+			else if (l->special && !(l->flags & ML_HIDEAUTOMAPTRIGGER)) {
 				//
 				// draw colored doors based on key requirement
 				//

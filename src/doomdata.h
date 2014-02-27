@@ -143,7 +143,7 @@ typedef struct {
 #define ML_BLENDFULLBOTTOM      0x400000	// do not extend blending for bottom texture
 #define ML_BLENDING             0x800000	// use sector color blending (top/lower, ceiling, floor colors).
 #define ML_TRIGGERFRONT         0x1000000       // can only trigger from the front of the line
-#define ML_NOMONSTERTRIGGER     0x2000000       // can't be triggered by monsters
+#define ML_HIDEAUTOMAPTRIGGER   0x2000000       // don't display as yellow line special in automap
 #define ML_INVERSEBLEND         0x4000000       // reverse the blending of the sector colors
 #define ML_UNKNOWN8000000       0x8000000       // reserved
 #define ML_UNKNOWN10000000      0x10000000      // reserved

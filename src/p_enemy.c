@@ -388,12 +388,11 @@ dboolean P_Move(mobj_t * actor)
 		good = false;
 		while (numspechit--) {
 			ld = spechit[numspechit];
-			// if the special is not a door
-			// that can be opened,
+			// if the special is not a door that can be opened
 			// return false
-			if (P_UseSpecialLine(actor, ld, 0)
-			    && ld->special & MLU_USE)
-				good = true;
+			if (ld->special & MLU_USE)
+                if(P_UseSpecialLine(actor, ld, 0))
+                    good = true;
 		}
 		return good;
 	}
