@@ -32,6 +32,9 @@
 
 #ifdef __GNUG__
 #pragma interface
+#define attr_printf(a,b) __attribute__((format (printf, a, b)))
+#else
+#define attr_printf(a,b)
 #endif
 
 // Called by DoomMain.
@@ -76,8 +79,8 @@ ticcmd_t *I_BaseTiccmd(void);
 void I_Quit(void);
 
 void I_BeginRead(void);
-void I_Error(char *error, ...);
-void I_Printf(char *msg, ...);
+void I_Error(char *error, ...) attr_printf(1, 2);
+void I_Printf(char *msg, ...) attr_printf(1, 2);
 char *I_DoomExeDir(void);
 
 void I_RegisterCvars(void);

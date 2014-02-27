@@ -35,19 +35,21 @@
 #endif
 
 #include <stdarg.h>
+
 #include "doomstat.h"
 #include "doomdef.h"
-#include "m_misc.h"
-#include "i_video.h"
-#include "d_net.h"
+#include "con_console.h"
 #include "g_demo.h"
 #include "g_game.h"
 #include "d_main.h"
-#include "con_console.h"
-#include "z_zone.h"
-#include "i_system.h"
-#include "i_audio.h"
+#include "d_net.h"
 #include "gl_draw.h"
+#include "i_audio.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "m_misc.h"
+#include "v_main.h"
+#include "z_zone.h"
 
 #ifdef _WIN32
 #include "i_xinput.h"
@@ -499,7 +501,7 @@ void I_Error(char *string, ...)
 			I_Sleep(1);
 		}
 	} else
-		I_ShutdownVideo();
+		V_Shutdown();
 
 #ifdef USESYSCONSOLE
 	{
@@ -535,9 +537,6 @@ void I_Quit(void)
 #ifdef USESYSCONSOLE
 	I_DestroySysConsole();
 #endif
-
-	I_ShutdownSound();
-	I_ShutdownVideo();
 
 	exit(0);
 }

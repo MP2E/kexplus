@@ -91,6 +91,7 @@ add_executable(doom64ex
     sc_main.c
     st_stuff.c
     tables.c
+    v_main.c
     w_file.c
     w_merge.c
     w_wad.c

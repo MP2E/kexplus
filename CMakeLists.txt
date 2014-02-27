@@ -45,9 +45,8 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
    TRY_C_COMPILER_FLAG(-Wextra  FLAG_C_Wextra )
    TRY_C_COMPILER_FLAG(-Wshadow FLAG_C_Wshadow)
    TRY_C_COMPILER_FLAG(-std=c11 FLAG_C_C11)
-
    # 2014/02/27 dotfloat: Ignore all warnings about unused parameters
-   add_definitions(-Wno-unused-parameter)
+   TRY_C_COMPILER_FLAG(-Wno-unused-parameter FLAG_NO_UNUSED_PARAMS)
 
    if(WIN32) # MinGW should build D64EX as a GUI program
        TRY_C_COMPILER_FLAG(-mwindows FLAG_GUI_WINDOWS)

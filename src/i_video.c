@@ -33,13 +33,14 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
-#include "m_misc.h"
 #include "doomdef.h"
 #include "doomstat.h"
-#include "i_system.h"
-#include "i_video.h"
 #include "d_main.h"
 #include "gl_main.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "m_misc.h"
+#include "v_main.h"
 
 #ifdef _WIN32
 #include "i_xinput.h"
@@ -60,20 +61,19 @@
 #define SDLK_
 #endif
 
-CVAR(v_msensitivityx, 5);
-CVAR(v_msensitivityy, 5);
-CVAR(v_macceleration, 0);
-CVAR(v_mlook, 0);
-CVAR(v_mlookinvert, 0);
-CVAR(v_yaxismove, 0);
-CVAR(v_width, 640);
-CVAR(v_height, 480);
-CVAR(v_windowed, 1);
-CVAR(v_vsync, 1);
-CVAR(v_depthsize, 24);
-CVAR(v_buffersize, 32);
-
 CVAR_EXTERNAL(m_menumouse);
+CVAR_EXTERNAL(v_msensitivityx);
+CVAR_EXTERNAL(v_msensitivityy);
+CVAR_EXTERNAL(v_macceleration);
+CVAR_EXTERNAL(v_mlook);
+CVAR_EXTERNAL(v_mlookinvert);
+CVAR_EXTERNAL(v_yaxismove);
+CVAR_EXTERNAL(v_vsync);
+CVAR_EXTERNAL(v_depthsize);
+CVAR_EXTERNAL(v_buffersize);
+CVAR_EXTERNAL(v_width);
+CVAR_EXTERNAL(v_height);
+CVAR_EXTERNAL(v_windowed);
 
 static void I_GetEvent(SDL_Event * Event);
 static void I_ReadMouse(void);
@@ -84,71 +84,10 @@ void I_UpdateGrab(void);
 // Video
 //================================================================================
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-SDL_Window *window = NULL;
-SDL_GLContext *glcontext = NULL;
-#else
-SDL_Surface *screen;
-#endif
-
-int video_width;
-int video_height;
-float video_ratio;
 dboolean window_focused;
 
 int mouse_x = 0;
 int mouse_y = 0;
-
-//
-// I_InitScreen
-//
-
-void I_InitScreen(void)
-{
-	int newwidth;
-	int newheight;
-	int p;
-
-	InWindow = (int)v_windowed.value;
-	video_width = (int)v_width.value;
-	video_height = (int)v_height.value;
-	video_ratio = (float)video_width / (float)video_height;
-
-	if (M_CheckParm("-window"))
-		InWindow = true;
-	if (M_CheckParm("-fullscreen"))
-		InWindow = false;
-
-	newwidth = newheight = 0;
-
-	p = M_CheckParm("-width");
-	if (p && p < myargc - 1)
-		newwidth = datoi(myargv[p + 1]);
-
-	p = M_CheckParm("-height");
-	if (p && p < myargc - 1)
-		newheight = datoi(myargv[p + 1]);
-
-	if (newwidth && newheight) {
-		video_width = newwidth;
-		video_height = newheight;
-		CON_CvarSetValue(v_width.name, (float)video_width);
-		CON_CvarSetValue(v_height.name, (float)video_height);
-	}
-
-	if (v_depthsize.value != 8 &&
-	    v_depthsize.value != 16 && v_depthsize.value != 24) {
-		CON_CvarSetValue(v_depthsize.name, 24);
-	}
-
-	if (v_buffersize.value != 8 &&
-	    v_buffersize.value != 16 &&
-	    v_buffersize.value != 24 && v_buffersize.value != 32) {
-		CON_CvarSetValue(v_buffersize.name, 32);
-	}
-
-	usingGL = false;
-}
 
 //
 // I_ShutdownWait
@@ -161,8 +100,7 @@ int I_ShutdownWait(void)
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT ||
 		    (event.type == SDL_KEYDOWN
-		     && event.key.keysym.sym == SDLK_ESCAPE)) {
-			I_ShutdownVideo();
+			 && event.key.keysym.sym == SDLK_ESCAPE)) {
 #ifndef USESYSCONSOLE
 			exit(0);
 #else
@@ -175,35 +113,13 @@ int I_ShutdownWait(void)
 }
 
 //
-// I_ShutdownVideo
-//
-
-void I_ShutdownVideo(void)
-{
-	SDL_Quit();
-}
-
-//
 // I_NetWaitScreen
 // Blank screen display while waiting for players to join
 //
 
 void I_NetWaitScreen(void)
 {
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-	// TODO: paint the screen black using GL (or something)
-	uint32 flags = 0;
-
-	I_InitScreen();
-	flags |= SDL_SWSURFACE;
-
-	if (!(screen = SDL_SetVideoMode(320, 240, 0, flags))) {
-		I_ShutdownVideo();
-		exit(1);
-	}
-
-	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-#endif
+	I_Printf("STUB: I_NetWaitScreen\n");
 }
 
 //
@@ -775,24 +691,4 @@ static void I_InitInputs(void)
 #ifdef _USE_XINPUT
 	I_XInputInit();
 #endif
-}
-
-//
-// V_RegisterCvars
-//
-
-void V_RegisterCvars(void)
-{
-	CON_CvarRegister(&v_msensitivityx);
-	CON_CvarRegister(&v_msensitivityy);
-	CON_CvarRegister(&v_macceleration);
-	CON_CvarRegister(&v_mlook);
-	CON_CvarRegister(&v_mlookinvert);
-	CON_CvarRegister(&v_yaxismove);
-	CON_CvarRegister(&v_width);
-	CON_CvarRegister(&v_height);
-	CON_CvarRegister(&v_windowed);
-	CON_CvarRegister(&v_vsync);
-	CON_CvarRegister(&v_depthsize);
-	CON_CvarRegister(&v_buffersize);
 }

@@ -36,15 +36,20 @@
 
 #include "doomdef.h"
 #include "doomstat.h"
-#include "i_video.h"
-#include "gl_main.h"
-#include "i_system.h"
-#include "z_zone.h"
-#include "r_main.h"
-#include "gl_texture.h"
 #include "con_console.h"
-#include "m_misc.h"
 #include "g_actions.h"
+#include "gl_main.h"
+#include "gl_texture.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "m_misc.h"
+#include "r_main.h"
+#include "v_main.h"
+#include "z_zone.h"
+
+int video_width;
+int video_height;
+float video_ratio;
 
 int ViewWindowX = 0;
 int ViewWindowY = 0;
@@ -572,32 +577,18 @@ static int GetVersionInt(const unsigned char *version)
 }
 
 //
-// GL_SetVideoMode
+// GL_SetLogicalResolution
 //
 
-static char title[256];
-
-static dboolean GL_SetVideoMode(int width, int height, int bpp, uint32 flags)
+void GL_SetLogicalResolution(int width, int height)
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	if(window) {
-		if(glcontext) {
-			SDL_GL_DeleteContext(glcontext);
-		}
-		SDL_DestroyWindow(window);
-	}
+	video_width = width;
+	video_height = height;
+	video_ratio = (float)width / (float)height;
 
-	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		width, height, flags);
+	CalcViewSize();
 
-	if(window) {
-		glcontext = SDL_GL_CreateContext(window);
-	}
-
-	return window && glcontext;
-#else
-	return SDL_SetVideoMode(width, height, bpp, flags);
-#endif
+	dglViewport(0, 0, video_width, video_height);
 }
 
 //
@@ -606,10 +597,6 @@ static dboolean GL_SetVideoMode(int width, int height, int bpp, uint32 flags)
 
 void GL_Init(void)
 {
-	uint32 flags = 0;
-
-	I_InitScreen();
-
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 0);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 0);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 0);
@@ -629,18 +616,7 @@ void GL_Init(void)
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, (int)v_vsync.value);
 #endif
 
-	flags |= SDL_OPENGL;
-
-	if (!InWindow)
-		flags |= SDL_FULLSCREEN;
-
-	sprintf(title, "Doom64 - Version Date: %s", version_date);
-
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_WM_SetCaption(title, "Doom64");
-#endif
-
-	if (GL_SetVideoMode(video_width, video_height, SDL_BPP, flags) == NULL) {
+	if (!V_SetMode(NULL)) {
 		// re-adjust depth size if video can't run it
 		if (v_depthsize.value >= 24) {
 			CON_CvarSetValue(v_depthsize.name, 16);
@@ -650,18 +626,15 @@ void GL_Init(void)
 
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
 
-		if (GL_SetVideoMode(video_width, video_height, SDL_BPP, flags)
-		    == NULL) {
+		if (!V_SetMode(NULL)) {
 			// fall back to lower buffer setting
 			CON_CvarSetValue(v_buffersize.name, 16);
 			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
 					    (int)v_buffersize.value);
 
-			if (GL_SetVideoMode
-			    (video_width, video_height, SDL_BPP,
-			     flags) == NULL) {
+			if (!V_SetMode(V_Mode(0, 640, 480, -1, -1, V_WINDOWED_ON))) {
 				// give up
-				I_Error("GL_Init: Failed to set opengl");
+				I_Error("GL_Init: Failed to create window.");
 			}
 		}
 	}
@@ -680,9 +653,6 @@ void GL_Init(void)
 	if (gl_max_texture_units <= 2)
 		CON_Warnf("Not enough texture units supported...\n");
 
-	CalcViewSize();
-
-	dglViewport(0, 0, video_width, video_height);
 	dglClearDepth(1.0f);
 	dglDisable(GL_TEXTURE_2D);
 	dglEnable(GL_CULL_FACE);
