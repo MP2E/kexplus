@@ -495,8 +495,10 @@ alist_t *ParseActions(char *actions)
 		while (param <= MAX_ACTIONPARAM)
 			al->param[param++] = NULL;
 
-		while (*p == ';')
-			p = SkipWhitespace(&p[1]);
+		while (*p == ';') {
+			*(p++) = 0;
+			p = SkipWhitespace(p);
+		}
 
 		dstrlwr(al->cmd);
 
