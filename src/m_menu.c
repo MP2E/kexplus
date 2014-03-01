@@ -1933,8 +1933,8 @@ void M_ChangeVSync(int choice);
 void M_ChangeDepthSize(int choice);
 void M_ChangeBufferSize(int choice);
 void M_ChangeAnisotropic(int choice);
-//void M_ReturnVideo(int choice);
 void M_DrawVideo(void);
+void M_SetVideo(void);
 
 CVAR_EXTERNAL(v_width);
 CVAR_EXTERNAL(v_height);
@@ -2149,6 +2149,18 @@ void M_DrawVideo(void)
 	GL_SetOrthoScale(VideoDef.scale);
 }
 
+void M_SetVideo(void)
+{
+	const vidmode_t * vm;
+	vm = V_Mode((int)v_display.value,
+			(int)v_width.value, (int)v_height.value,
+			-1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
+
+	if (!V_ModeEquals(vm, vidmode)) {
+		V_SetMode(NULL);
+	}
+}
+
 void M_ChangeGammaLevel(int choice)
 {
 	float slope = 20.0f / 100.0f;
@@ -2263,25 +2275,6 @@ void M_ChangeBufferSize(int choice)
 {
 	M_SetOptionValue(choice, 8, 32, 8, &v_buffersize);
 }
-
-#if 0
-// 2014/03/01 dotfloat:
-// I couldn't figure out how to do a custom return
-// without it being a horrible hack.
-void M_ReturnVideo(int choice)
-{
-	const vidmode_t * vm;
-	vm = V_Mode((int)v_display.value,
-			(int)v_width.value, (int)v_height.value,
-			-1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
-
-	if (!V_ModeEquals(vm, vidmode)) {
-		V_SetMode(NULL);
-	}
-
-	M_Return(0);
-}
-#endif
 
 //------------------------------------------------------------------------
 //
@@ -3694,6 +3687,10 @@ void M_ReturnToOptions(int choice)
 
 static void M_Return(int choice)
 {
+	if(currentMenu == &VideoDef) {
+		M_SetVideo();
+	}
+
 	currentMenu->lastOn = itemOn;
 	if (currentMenu->prevMenu) {
 		menufadefunc = M_MenuFadeOut;
@@ -3708,6 +3705,10 @@ static void M_Return(int choice)
 
 static void M_ReturnInstant(void)
 {
+	if(currentMenu == &VideoDef) {
+		M_SetVideo();
+	}
+
 	if (currentMenu->prevMenu) {
 		currentMenu = currentMenu->prevMenu;
 		itemOn = currentMenu->lastOn;

@@ -132,9 +132,9 @@ void V_Init(void)
 
 	newwidth = newheight = 0;
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		I_Error("Couldn't initialize SDL");
-	}
+	atexit(V_Shutdown);
 
 	V_UpdateVidInfo();
 
