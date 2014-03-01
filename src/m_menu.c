@@ -2093,10 +2093,33 @@ void M_DrawVideo(void)
 
 	// TODO: Only show this option when the user has two or more displays connected
 	if (disp) {
+		char str[16];
 		if(disp->disp_name) {
-			DRAWVIDEOITEM(video_display, disp->disp_name);
+			char *a, *b;
+
+			a = str;
+			b = disp->disp_name;
+			// 2014/03/01 dotfloat:
+			// Doom64's big font contains very few symbols,
+			// so filter /[0-9a-zA-Z -%!.?:]/
+			while (a != (str + 14) && *b) {
+				if (isdigit(*b) ||
+					islower(*b) ||
+					isupper(*b) ||
+					(*b == ' ') ||
+					(*b == '-') ||
+					(*b == '%') ||
+					(*b == '!') ||
+					(*b == '.') ||
+					(*b == '?') ||
+					(*b == ':') )
+					*(a++) = *b;
+				b++;
+			}
+			*a = 0;
+
+			DRAWVIDEOITEM(video_display, str);
 		} else {
-			char str[16];
 			sprintf(str, "%d", disp->disp_id);
 			DRAWVIDEOITEM(video_display, str);
 		}
