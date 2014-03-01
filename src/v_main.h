@@ -1,8 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2014 Samuel Villarreal
+// Copyright(C) 2014 Zohar Malamant
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,6 +19,9 @@
 // 02111-1307, USA.
 //
 //-----------------------------------------------------------------------------
+
+#ifndef __V_MAIN__
+#define __V_MAIN__
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 struct SDL_Window;
@@ -71,6 +73,9 @@ extern const vidmode_t *vidmode;
 extern vidinfo_t vidinfo;
 
 void V_Init(void);
+void V_Shutdown(void);
+void V_RegisterCvars(void);
+
 dboolean V_SetMode(const vidmode_t * vm);
 dboolean V_RevertMode(void);
 vidmode_t *V_Mode(int display, int width, int height, int x, int h, int flags);
@@ -78,28 +83,26 @@ vidmode_t *V_Mode(int display, int width, int height, int x, int h, int flags);
 void V_UpdateVidInfo(void);
 void V_ClearVidInfo(void);
 
-void V_RegisterCvars(void);
-
-d_inline int V_NumDisplays(void)
+static d_inline int V_NumDisplays(void)
 {
 	return vidinfo.num_displays;
 }
 
-d_inline int V_NumModes(int display)
+static d_inline int V_NumModes(int display)
 {
 	if (display < 0 || display >= vidinfo.num_displays)
 		return 0;
 	return vidinfo.displays[display].num_modes;
 }
 
-d_inline const viddisp_t *V_GetDisplay(int display)
+static d_inline const viddisp_t *V_GetDisplay(int display)
 {
 	if (display < 0 || display >= vidinfo.num_displays)
 		return NULL;
 	return &vidinfo.displays[display];
 }
 
-d_inline const vidmode_t *V_GetMode(int display, int mode)
+static d_inline const vidmode_t *V_GetMode(int display, int mode)
 {
 	if (display < 0 || display >= vidinfo.num_displays)
 		return NULL;
@@ -109,3 +112,26 @@ d_inline const vidmode_t *V_GetMode(int display, int mode)
 		return NULL;
 	return &disp->modes[mode];
 }
+
+static d_inline dboolean V_ModeEquals(const vidmode_t * a, const vidmode_t * b)
+{
+	return (a->w == b->w) && (a->h == b->h) &&
+			(a->disp_id == b->disp_id) &&
+			(a->flags == b->flags);
+}
+
+static d_inline int V_GetClosestMode(const vidmode_t * vm)
+{
+	int i, j;
+	for (i = 0; i < vidinfo.num_displays; i++) {
+		const viddisp_t * disp = &vidinfo.displays[i];
+		for (j = 0; j < disp->num_modes; j++) {
+			const vidmode_t * mode = &disp->modes[j];
+			if(mode->w == vm->w && mode->h == vm->h)
+				return mode->id;
+		}
+	}
+	return -1;
+}
+
+#endif /* __V_MAIN__ */

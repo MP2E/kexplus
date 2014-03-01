@@ -1,9 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2014 Samuel Villarreal
+// Copyright(C) 2014 Zohar Malamant
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -60,7 +58,7 @@ SDL_Surface *screen = NULL;
 
 #define SDL_BPP        0
 
-static vidmode_t vidmodes[2] = { 0 };	// vidmodes[0]: current, vidmodes[1]: previous
+static vidmode_t vidmodes[2] = { {0} };	// vidmodes[0]: current, vidmodes[1]: previous
 
 static int num_vidmodes = 0;
 
@@ -134,9 +132,9 @@ void V_Init(void)
 
 	newwidth = newheight = 0;
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		I_Error("Couldn't initialize SDL");
-	}
+	atexit(V_Shutdown);
 
 	V_UpdateVidInfo();
 
@@ -185,9 +183,9 @@ void V_Init(void)
 		 compiled.minor, compiled.patch);
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	sprintf(title, "Doom64 - Version Date %d - SDL2", version_date);
+	sprintf(title, "Doom64 - Version Date %s - SDL2", version_date);
 #else
-	sprintf(title, "Doom64 - Version Date %d", version_date);
+	sprintf(title, "Doom64 - Version Date %s", version_date);
 	SDL_WM_SetCaption(title, "Doom64");
 #endif
 
@@ -241,15 +239,32 @@ const vidmode_t *V_TrySetMode(const vidmode_t * vm)
 
 	if (window) {		// resize and move window
 		assert(glcontext);
+		assert(num_vidmodes);
 
+		int windowed = vm->flags & V_WINDOWED_MASK;
+
+		SDL_SetWindowFullscreen(window, 0);
+		SDL_SetWindowBordered(window, SDL_TRUE);
 		SDL_SetWindowSize(window, vm->w, vm->h);
+
+		if (windowed == V_WINDOWED_OFF)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		else if(windowed == V_WINDOWED_NOBORDER)
+			SDL_SetWindowBordered(window, SDL_FALSE);
+
+		SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
+
+		if (vm->x < 0)
+			x = display_bounds.x + (display_bounds.w - vm->w) / 2;
+		else
+			x = display_bounds.x + vm->x;
+
+		if (vm->y < 0)
+			y = display_bounds.y + (display_bounds.h - vm->h) / 2;
+		else
+			y = display_bounds.y + vm->y;
+
 		SDL_SetWindowPosition(window, x, y);
-		SDL_SetWindowFullscreen(window,
-					(vm->flags & V_WINDOWED_MASK) ==
-					V_WINDOWED_OFF);
-		SDL_SetWindowBordered(window,
-				      !((vm->flags & V_WINDOWED_MASK) ==
-					V_WINDOWED_NOBORDER));
 
 		GL_SetLogicalResolution(vm->w, vm->h);
 		return vm;
@@ -300,14 +315,21 @@ const vidmode_t *V_TrySetMode(const vidmode_t * vm)
 dboolean V_SetMode(const vidmode_t * vm)
 {
 	if ((vm = V_TrySetMode(vm))) {
-		v_width.value = (float)vm->w;
-		v_height.value = (float)vm->h;
-		v_display.value = (float)vm->disp_id;
-		v_windowed.value = (float)(vm->flags & V_WINDOWED_MASK);
+		// Don't add the new vidmode to history if it equals the
+		// previous one, but try to set it anyway in case
+		// it failed last time.
+		if (!V_ModeEquals(vm, &vidmodes[0])) {
+			v_width.value = (float)vm->w;
+			v_height.value = (float)vm->h;
+			v_display.value = (float)vm->disp_id;
+			v_windowed.value = (float)(vm->flags & V_WINDOWED_MASK);
 
-		if (num_vidmodes++)
-			dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
-		dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+			if (num_vidmodes++) {
+				dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
+			}
+			dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+			vidmodes[0].id = V_GetClosestMode(vm);
+		}
 	}
 
 	return (vm ? true : false);
@@ -361,8 +383,11 @@ vidmode_t *V_Mode(int display, int w, int h, int x, int y, int flags)
 // __compar_vidmode
 //
 
-static int __compar_vidmode(const vidmode_t * a, const vidmode_t * b)
+static int __compar_vidmode(const void * _a, const void * _b)
 {
+	const vidmode_t * a = (const void *) _a;
+	const vidmode_t * b = (const void *) _b;
+
 	if (a->w < b->w)
 		return -1;
 	if (a->w > b->w)
@@ -452,7 +477,7 @@ void V_UpdateVidInfo(void)
 	disp->disp_name = NULL;
 
 	modes = SDL_ListModes(NULL, SDL_FULLSCREEN | SDL_HWSURFACE);
-	if (modes == (SDL_Rect **) - 1 || modes == (SDL_Rect **) 0) {
+	if (modes == (SDL_Rect **) -1 || modes == (SDL_Rect **) 0) {
 		disp->num_modes = 0;
 		disp->modes = NULL;
 		return;
