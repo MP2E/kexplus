@@ -2175,7 +2175,7 @@ void M_DrawVideo(void)
 #undef DRAWVIDEOITEM2
 
 	Draw_Text(145, 308, MENUCOLORWHITE, VideoDef.scale, false,
-		  "Changes will take effect\nafter restarting the game..");
+		  "Changes will take effect\nafter exiting the menu.");
 
 	GL_SetOrthoScale(VideoDef.scale);
 }
