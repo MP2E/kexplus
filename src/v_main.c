@@ -58,7 +58,7 @@ SDL_Surface *screen = NULL;
 
 #define SDL_BPP        0
 
-static vidmode_t vidmodes[2] = { 0 };	// vidmodes[0]: current, vidmodes[1]: previous
+static vidmode_t vidmodes[2] = { {0} };	// vidmodes[0]: current, vidmodes[1]: previous
 
 static int num_vidmodes = 0;
 
@@ -298,14 +298,20 @@ const vidmode_t *V_TrySetMode(const vidmode_t * vm)
 dboolean V_SetMode(const vidmode_t * vm)
 {
 	if ((vm = V_TrySetMode(vm))) {
-		v_width.value = (float)vm->w;
-		v_height.value = (float)vm->h;
-		v_display.value = (float)vm->disp_id;
-		v_windowed.value = (float)(vm->flags & V_WINDOWED_MASK);
+		// Don't add the new vidmode to history if it equals the
+		// previous one, but try to set it anyway in case
+		// it failed last time.
+		if (!V_ModeEquals(vm, &vidmodes[0])) {
+			v_width.value = (float)vm->w;
+			v_height.value = (float)vm->h;
+			v_display.value = (float)vm->disp_id;
+			v_windowed.value = (float)(vm->flags & V_WINDOWED_MASK);
 
-		if (num_vidmodes++)
-			dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
-		dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+			if (num_vidmodes++) {
+				dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
+			}
+			dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+		}
 	}
 
 	return (vm ? true : false);
@@ -359,8 +365,11 @@ vidmode_t *V_Mode(int display, int w, int h, int x, int y, int flags)
 // __compar_vidmode
 //
 
-static int __compar_vidmode(const vidmode_t * a, const vidmode_t * b)
+static int __compar_vidmode(const void * _a, const void * _b)
 {
+	const vidmode_t * a = (const void *) _a;
+	const vidmode_t * b = (const void *) _b;
+
 	if (a->w < b->w)
 		return -1;
 	if (a->w > b->w)

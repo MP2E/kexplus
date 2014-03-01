@@ -73,6 +73,9 @@ extern const vidmode_t *vidmode;
 extern vidinfo_t vidinfo;
 
 void V_Init(void);
+void V_Shutdown(void);
+void V_RegisterCvars(void);
+
 dboolean V_SetMode(const vidmode_t * vm);
 dboolean V_RevertMode(void);
 vidmode_t *V_Mode(int display, int width, int height, int x, int h, int flags);
@@ -80,28 +83,26 @@ vidmode_t *V_Mode(int display, int width, int height, int x, int h, int flags);
 void V_UpdateVidInfo(void);
 void V_ClearVidInfo(void);
 
-void V_RegisterCvars(void);
-
-d_inline int V_NumDisplays(void)
+static d_inline int V_NumDisplays(void)
 {
 	return vidinfo.num_displays;
 }
 
-d_inline int V_NumModes(int display)
+static d_inline int V_NumModes(int display)
 {
 	if (display < 0 || display >= vidinfo.num_displays)
 		return 0;
 	return vidinfo.displays[display].num_modes;
 }
 
-d_inline const viddisp_t *V_GetDisplay(int display)
+static d_inline const viddisp_t *V_GetDisplay(int display)
 {
 	if (display < 0 || display >= vidinfo.num_displays)
 		return NULL;
 	return &vidinfo.displays[display];
 }
 
-d_inline const vidmode_t *V_GetMode(int display, int mode)
+static d_inline const vidmode_t *V_GetMode(int display, int mode)
 {
 	if (display < 0 || display >= vidinfo.num_displays)
 		return NULL;
@@ -110,6 +111,13 @@ d_inline const vidmode_t *V_GetMode(int display, int mode)
 	if (mode < 0 || mode >= disp->num_modes)
 		return NULL;
 	return &disp->modes[mode];
+}
+
+static d_inline dboolean V_ModeEquals(const vidmode_t * a, const vidmode_t * b)
+{
+	return (a->w == b->w) && (a->h == b->h) &&
+			(a->disp_id == b->disp_id) &&
+			(a->flags == b->flags);
 }
 
 #endif /* __V_MAIN__ */
