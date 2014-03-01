@@ -2121,7 +2121,6 @@ void M_DrawVideo(void)
 		else
 			bitValue = "Invalid";
 
-		I_Printf(">> %s\n", bitValue);
 		y++;
 		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
 				 MENUCOLORRED, bitValue);
