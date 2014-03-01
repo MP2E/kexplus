@@ -620,7 +620,7 @@ void P_PlayerThink(player_t * player)
 			    && newweapon != player->readyweapon) {
 				player->pendingweapon = newweapon;
 			}
-		} else		// 20140211 villsa - new weapon cycle logic
+		} else		// 20120211 villsa - new weapon cycle logic
 		{
 			dboolean direction;
 			int weapon;

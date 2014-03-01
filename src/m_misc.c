@@ -334,7 +334,7 @@ int M_CacheThumbNail(byte ** data)
 	int width;
 	const float ratio = (4.0f / 3.0f);
 
-	// 20140313 villsa - fix for widescreen resolutions
+	// 20120313 villsa - fix for widescreen resolutions
 	if (!dfcmp(((float)ViewWidth / (float)ViewHeight), ratio)) {
 		float fitwidth = ViewHeight * ratio;
 		float fitx = (ViewWidth - fitwidth) / 2.0f;

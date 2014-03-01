@@ -819,7 +819,7 @@ static void P_AlertTaggedMobj(player_t * player, int tid)
 		if (!mo->info->seestate)
 			continue;
 
-		// 20140610 villsa - check for killable things only
+		// 20120610 villsa - check for killable things only
 		if (!(mo->flags & MF_COUNTKILL))
 			continue;
 
@@ -896,7 +896,7 @@ int P_SetAimCamera(player_t * player, line_t * line, dboolean aim)
 		if (player->cameratarget->tid == line->tag)
 			continue;
 
-		// 20140304 villsa - handle certain case for co-op
+		// 20120304 villsa - handle certain case for co-op
 		if (netgame && mo->type == MT_PLAYER)
 			player->cameratarget = player->mo;
 		else

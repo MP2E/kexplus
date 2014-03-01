@@ -852,7 +852,7 @@ void P_KillMobj(mobj_t * source, mobj_t * target)
 			// switch view prior to dying
 			AM_Stop();
 		}
-		// 20140123 villsa - obituaries!
+		// 20120123 villsa - obituaries!
 		if (netgame)
 			P_Obituary(source, target);
 

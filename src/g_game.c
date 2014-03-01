@@ -1021,7 +1021,7 @@ void G_Ticker(void)
 					sizeof(ticcmd_t));
 
 				//
-				// 20140404 villsa - make sure gameaction isn't set to anything before
+				// 20120404 villsa - make sure gameaction isn't set to anything before
 				// reading a demo lump
 				//
 				if (demoplayback && gameaction == ga_nothing)
@@ -1232,7 +1232,7 @@ dboolean G_CheckSpot(int playernum, mapthing_t * mthing)
 	// spawn a teleport fog
 	ss = R_PointInSubsector(x, y);
 
-	// 20140402 villsa - force angle_t typecast to avoid issues on 64-bit machines
+	// 20120402 villsa - force angle_t typecast to avoid issues on 64-bit machines
 	an = ANG45 * (angle_t) (mthing->angle / 45);
 
 	mo = P_SpawnMobj(x + 20 * dcos(an),

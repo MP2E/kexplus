@@ -758,7 +758,7 @@ void AM_DrawWalls(void)
 		y2 = l->v2->y;
 
 		//
-		// 20140208 villsa - re-ordered flag checks to match original game
+		// 20120208 villsa - re-ordered flag checks to match original game
 		//
 
 		if (l->flags & ML_DONTDRAW)

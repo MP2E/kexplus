@@ -283,7 +283,7 @@ byte *GL_GetScreenBuffer(int x, int y, int width, int height)
 	buffer = (byte *) Z_Calloc(col, PU_STATIC, 0);
 
 	//
-	// 20140313 villsa - force pack alignment to 1
+	// 20120313 villsa - force pack alignment to 1
 	//
 	dglGetIntegerv(GL_PACK_ALIGNMENT, &pack);
 	dglPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -293,7 +293,7 @@ byte *GL_GetScreenBuffer(int x, int y, int width, int height)
 
 	//
 	// Need to vertically flip the image
-	// 20140313 villsa - better method to flip image. uses one buffer instead of two
+	// 20120313 villsa - better method to flip image. uses one buffer instead of two
 	//
 	for (i = 0; i < height / 2; i++) {
 		dmemcpy(buffer, &data[i * col], col);

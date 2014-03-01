@@ -269,7 +269,7 @@ typedef enum {
 
 } powerduration_t;
 
-// 20140209 villsa - game flags
+// 20120209 villsa - game flags
 enum {
 	GF_NOMONSTERS = (1 << 0),
 	GF_FASTMONSTERS = (1 << 1),
@@ -283,7 +283,7 @@ enum {
 	GF_KEEPITEMS = (1 << 9),
 };
 
-// 20140209 villsa - compatibility flags
+// 20120209 villsa - compatibility flags
 enum {
 	COMPATF_COLLISION = (1 << 0),	// don't use maxradius for mobj position checks
 	COMPATF_MOBJPASS = (1 << 1),	// allow mobjs to stand on top one another

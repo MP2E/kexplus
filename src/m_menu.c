@@ -93,7 +93,7 @@ dboolean menuactive = false;
 dboolean mainmenuactive = false;
 dboolean allowclearmenu = true;	// can user hit escape to clear menu?
 
-static dboolean newmenu = false;	// 20140323 villsa
+static dboolean newmenu = false;	// 20120323 villsa
 static char *messageBindCommand;
 static int quickSaveSlot;	// -1 = no quicksave slot picked!
 static int saveSlot;		// which slot to save in
@@ -841,7 +841,7 @@ void M_RegionChoice(int choice)
 	switch (itemOn) {
 	case region_mode:
 		//
-		// 20140304 villsa
+		// 20120304 villsa
 		//
 		if (RegionMenu[region_mode].status == 1)
 			return;
@@ -851,7 +851,7 @@ void M_RegionChoice(int choice)
 
 	case region_lang:
 		//
-		// 20140304 villsa
+		// 20120304 villsa
 		//
 		if (RegionMenu[region_lang].status == 1)
 			return;
@@ -861,7 +861,7 @@ void M_RegionChoice(int choice)
 
 	case region_blood:
 		//
-		// 20140304 villsa
+		// 20120304 villsa
 		//
 		if (RegionMenu[region_blood].status == 1)
 			return;
@@ -4281,7 +4281,7 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 	dglEnable(GL_TEXTURE_2D);
 
 	//
-	// 20140404 villsa - reset active textures just to make sure
+	// 20120404 villsa - reset active textures just to make sure
 	// we don't end up seeing that thumbnail texture on a wall or something
 	//
 	GL_ResetTextures();

@@ -153,7 +153,7 @@ void D_ProcessEvents(void)
 	     eventtail = (++eventtail) & (MAXEVENTS - 1)) {
 		ev = &events[eventtail];
 
-		// 20140404 villsa - don't do console inputs for demo playbacks
+		// 20120404 villsa - don't do console inputs for demo playbacks
 		if (!demoplayback) {
 			if (CON_Responder(ev))
 				continue;	// console ate the event
@@ -890,7 +890,7 @@ static void D_Init(void)
 	if (p && p < myargc - 1) {
 		// sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 		G_LoadGame(P_GetSaveGameName(myargv[p + 1][0] - '0'));
-		autostart = true;	// 20140105 bkw: this was missing
+		autostart = true;	// 20120105 bkw: this was missing
 	}
 
 	if (M_CheckParm("-nogun")) {

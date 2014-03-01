@@ -1516,7 +1516,7 @@ void A_PainShootSkull(mobj_t * actor, angle_t angle)
 	//
 	// if there are all ready 17 skulls on the level,
 	// don't spit another one
-	// 20140212 villsa - new compatibility flag to disable limit
+	// 20120212 villsa - new compatibility flag to disable limit
 	//
 	if (compatflags & COMPATF_LIMITPAIN && count > 0x11)
 		return;

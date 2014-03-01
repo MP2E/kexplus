@@ -399,7 +399,7 @@ void P_NightmareRespawn(mobj_t * mobj)
 	if (!P_CheckPosition(mobj, x, y))
 		return;		// no respawn
 
-	// 20140301 villsa - don't respawn in insta-kill sector
+	// 20120301 villsa - don't respawn in insta-kill sector
 	if (R_PointInSubsector(x, y)->sector->special == 666) {
 		mobj->flags &= ~MF_COUNTKILL;	// don't bother checking for respawns again
 		return;
@@ -420,7 +420,7 @@ void P_NightmareRespawn(mobj_t * mobj)
 	mo->spawnpoint = mobj->spawnpoint;
 	mo->angle = ANG45 * (mthing->angle / 45);
 
-	// 20140212 villsa - fix for respawning spectures
+	// 20120212 villsa - fix for respawning spectures
 	if (mo->type != MT_DEMON2) {
 		mo->alpha = 0;
 		P_CreateFadeThinker(mo, &junk);

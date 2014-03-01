@@ -67,7 +67,7 @@ char *P_GetSaveGameName(int num)
 #ifdef _WIN32
 	sprintf(name, SAVEGAMENAME "%d.dsg", num);
 #else
-	// 20140105 bkw: UNIX-friendly savegame location
+	// 20120105 bkw: UNIX-friendly savegame location
 	sprintf(name, "%s/.doom64ex/" SAVEGAMENAME "%d.dsg", getenv("HOME"),
 		num);
 #endif

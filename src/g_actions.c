@@ -356,7 +356,7 @@ void G_ActionTicker(void)
 	if (OptimizeTree) {
 		G_DoOptimizeActionTree();
 
-		// 20140310 villsa - do we really need to optimize this every tick?
+		// 20120310 villsa - do we really need to optimize this every tick?
 		// set back to false when we're done
 		OptimizeTree = false;
 	}

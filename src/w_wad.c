@@ -242,7 +242,7 @@ void W_Init(void)
 			W_MergeFile(filename);
 		}
 	}
-	// 20140724 villsa - find drag & drop wad files
+	// 20120724 villsa - find drag & drop wad files
 	else {
 		for (i = 1; i < myargc; i++) {
 			if (dstrstr(myargv[i], ".wad") ||

@@ -1078,7 +1078,7 @@ dboolean PTR_ShootTraverse(intercept_t * in)
 
 		lineside = P_PointOnLineSide(shootthing->x, shootthing->y, li);
 
-		// [d64] villsa 02252014: moved here
+		// [d64] villsa 02252012: moved here
 		if (in->d.thing && in->d.thing->player) {
 			if (li->special & MLU_SHOOT) {
 				P_UseSpecialLine(shootthing, li, lineside);

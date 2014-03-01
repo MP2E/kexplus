@@ -96,7 +96,7 @@ void dglSetVertex(vtx_t * vtx)
 	I_Printf("dglSetVertex(vtx=0x%p)\n", vtx);
 #endif
 
-	// 20140623 villsa - avoid redundant calls by checking for
+	// 20120623 villsa - avoid redundant calls by checking for
 	// the previous pointer that was set
 	if (dgl_prevptr == vtx)
 		return;

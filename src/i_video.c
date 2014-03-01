@@ -418,7 +418,7 @@ void I_CenterMouse(void)
 static dboolean I_MouseShouldBeGrabbed()
 {
 #ifndef _WIN32
-	// 20140105 bkw: Always grab the mouse in fullscreen mode
+	// 20120105 bkw: Always grab the mouse in fullscreen mode
 	if (!InWindow)
 		return true;
 #endif

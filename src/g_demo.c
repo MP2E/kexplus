@@ -225,7 +225,7 @@ void G_PlayDemo(const char *name)
 
 	p = M_CheckParm("-playdemo");
 	if (p && p < myargc - 1) {
-		// 20140107 bkw: add .lmp extension if missing.
+		// 20120107 bkw: add .lmp extension if missing.
 		if (dstrrchr(myargv[p + 1], '.'))
 			dstrcpy(filename, myargv[p + 1]);
 		else

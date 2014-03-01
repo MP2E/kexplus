@@ -565,7 +565,7 @@ void P_LoadThings(int lump)
 		if (SHORT(mt[i].options) & MTF_SPAWN)
 			j++;
 
-		// 20140122 villsa - check if co-op starts exist
+		// 20120122 villsa - check if co-op starts exist
 		if (SHORT(mt[i].type) == 2)
 			p2start = true;
 
@@ -590,7 +590,7 @@ void P_LoadThings(int lump)
 		P_SpawnMapThing(mt);
 
 		// [kex] Hack to force-spawn co-op player starts on top of player 1
-		// 20140122 villsa - updated to spawn co-op players away from
+		// 20120122 villsa - updated to spawn co-op players away from
 		// player 1 by radius
 		if (netgame && mt->type == 1) {
 			short x = mt->x;

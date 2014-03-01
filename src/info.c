@@ -2339,7 +2339,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =	//0x51E38
 	 },
 
 	{			/*MT_ITEM_BONUSHEALTH */
-	 2014,			//doomednum
+	 2012,			//doomednum
 	 S_521,			//spawnstate
 	 1000,			//spawnhealth
 	 S_000,			//seestate

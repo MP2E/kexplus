@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #ifndef _WIN32
-// 20140105 bkw: G_GetConfigFileName() needs these, better safe than sorry
+// 20120105 bkw: G_GetConfigFileName() needs these, better safe than sorry
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -65,7 +65,7 @@ char *G_GetConfigFileName(void)
 	CON_DPrintf("Loading config: %s\\%s\n", I_DoomExeDir(), ConfigFileName);
 	return ConfigFileName;
 #else
-	// 20140105 bkw: Be UNIX-friendly and use ~/.doom64ex/config.cfg
+	// 20120105 bkw: Be UNIX-friendly and use ~/.doom64ex/config.cfg
 	if (ConfigFileName == NULL) {
 		char confdir[PATH_MAX];
 		static char conffile[PATH_MAX];
