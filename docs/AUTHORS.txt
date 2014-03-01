@@ -10,8 +10,23 @@ others to work on improving the game.
 In October 1999, id Software re-released the Doom source code under the
 GNU General Public License.
 
+Team Kex:
+
 Samuel 'Kaiser' Villarreal <svkaiser@gmail.com>
 Doom64 EX Author
+
+Cray 'MP2E' Elliott <MP2E@archlinux.us>
+Doom64 EX Linux/OS X Maintainer and Contributor
+
+Zohar 'dotfloat' Malamant <dotfloat@gmail.com>
+Doom64 EX Contributor
+Ported to SDL2 and implemented dynamic resolution/fullscreen
+
+David 'DavidPH' Hill <DavidPH55@gmail.com>
+Doom64 EX Contributor
+Various warning fixes and undefined behaviour fixes, CMake template
+
+Various Other Contributions:
 
 Paul Brook
 Author of the Doom3D source port in which Doom64 EX was originally based off of.
