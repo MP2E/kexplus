@@ -239,15 +239,32 @@ const vidmode_t *V_TrySetMode(const vidmode_t * vm)
 
 	if (window) {		// resize and move window
 		assert(glcontext);
+		assert(num_vidmodes);
 
+		int windowed = vm->flags & V_WINDOWED_MASK;
+
+		SDL_SetWindowFullscreen(window, 0);
+		SDL_SetWindowBordered(window, SDL_TRUE);
 		SDL_SetWindowSize(window, vm->w, vm->h);
+
+		if (windowed == V_WINDOWED_OFF)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		else if(windowed == V_WINDOWED_NOBORDER)
+			SDL_SetWindowBordered(window, SDL_FALSE);
+
+		SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
+
+		if (vm->x < 0)
+			x = display_bounds.x + (display_bounds.w - vm->w) / 2;
+		else
+			x = display_bounds.x + vm->x;
+
+		if (vm->y < 0)
+			y = display_bounds.y + (display_bounds.h - vm->h) / 2;
+		else
+			y = display_bounds.y + vm->y;
+
 		SDL_SetWindowPosition(window, x, y);
-		SDL_SetWindowFullscreen(window,
-					(vm->flags & V_WINDOWED_MASK) ==
-					V_WINDOWED_OFF);
-		SDL_SetWindowBordered(window,
-				      !((vm->flags & V_WINDOWED_MASK) ==
-					V_WINDOWED_NOBORDER));
 
 		GL_SetLogicalResolution(vm->w, vm->h);
 		return vm;
