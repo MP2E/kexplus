@@ -1,9 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2014 Samuel Villarreal
+// Copyright(C) 2014 Zohar Malamant
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -185,9 +183,9 @@ void V_Init(void)
 		 compiled.minor, compiled.patch);
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	sprintf(title, "Doom64 - Version Date %d - SDL2", version_date);
+	sprintf(title, "Doom64 - Version Date %s - SDL2", version_date);
 #else
-	sprintf(title, "Doom64 - Version Date %d", version_date);
+	sprintf(title, "Doom64 - Version Date %s", version_date);
 	SDL_WM_SetCaption(title, "Doom64");
 #endif
 
@@ -452,7 +450,7 @@ void V_UpdateVidInfo(void)
 	disp->disp_name = NULL;
 
 	modes = SDL_ListModes(NULL, SDL_FULLSCREEN | SDL_HWSURFACE);
-	if (modes == (SDL_Rect **) - 1 || modes == (SDL_Rect **) 0) {
+	if (modes == (SDL_Rect **) -1 || modes == (SDL_Rect **) 0) {
 		disp->num_modes = 0;
 		disp->modes = NULL;
 		return;

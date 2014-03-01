@@ -1,8 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2014 Samuel Villarreal
+// Copyright(C) 2014 Zohar Malamant
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,6 +19,9 @@
 // 02111-1307, USA.
 //
 //-----------------------------------------------------------------------------
+
+#ifndef __V_MAIN__
+#define __V_MAIN__
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 struct SDL_Window;
@@ -109,3 +111,5 @@ d_inline const vidmode_t *V_GetMode(int display, int mode)
 		return NULL;
 	return &disp->modes[mode];
 }
+
+#endif /* __V_MAIN__ */
