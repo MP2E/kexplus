@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -528,9 +528,9 @@ void I_Error(char *string, ...)
 void I_Quit(void)
 {
 	if (demorecording) {
-        endDemo = true;
+		endDemo = true;
 		G_CheckDemoStatus();
-    }
+	}
 
 	M_SaveDefaults();
 

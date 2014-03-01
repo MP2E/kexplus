@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -52,18 +52,19 @@ CVAR(v_windowed, 1);
 CVAR(v_display, 0);
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-SDL_Window * window = NULL;
-SDL_GLContext * glcontext = NULL;
+SDL_Window *window = NULL;
+SDL_GLContext *glcontext = NULL;
 #else
-SDL_Surface * screen = NULL;
+SDL_Surface *screen = NULL;
 #endif
 
 #define SDL_BPP        0
 
-static vidmode_t vidmodes[2] = { 0 }; // vidmodes[0]: current, vidmodes[1]: previous
+static vidmode_t vidmodes[2] = { 0 };	// vidmodes[0]: current, vidmodes[1]: previous
+
 static int num_vidmodes = 0;
 
-const vidmode_t * vidmode = &vidmodes[0];
+const vidmode_t *vidmode = &vidmodes[0];
 vidinfo_t vidinfo = { 0 };
 
 static char title[256];
@@ -76,14 +77,17 @@ static CMD(ListVidModes)
 {
 	int i, j;
 
-	for(i = 0; i < vidinfo.num_displays; i++) {
-		viddisp_t * disp = &vidinfo.displays[i];
+	for (i = 0; i < vidinfo.num_displays; i++) {
+		viddisp_t *disp = &vidinfo.displays[i];
 
-		if(disp->disp_name) I_Printf("Display %d (%s):\n", disp->disp_id, disp->disp_name);
-		else I_Printf("Display %d:\n", disp->disp_id);
+		if (disp->disp_name)
+			I_Printf("Display %d (%s):\n", disp->disp_id,
+				 disp->disp_name);
+		else
+			I_Printf("Display %d:\n", disp->disp_id);
 
-		for(j = 0; j < disp->num_modes; j++) {
-			vidmode_t * vm = &disp->modes[j];
+		for (j = 0; j < disp->num_modes; j++) {
+			vidmode_t *vm = &disp->modes[j];
 
 			I_Printf("  %d: %dx%d\n", vm->id, vm->w, vm->h);
 		}
@@ -96,7 +100,7 @@ static CMD(ListVidModes)
 
 static CMD(VidSet)
 {
-	if(V_SetMode(NULL)) {
+	if (V_SetMode(NULL)) {
 		I_Printf("Video mode set successfully.\n");
 	} else {
 		I_Printf("Video mode wasn't set.\n");
@@ -109,7 +113,7 @@ static CMD(VidSet)
 
 static CMD(VidRevert)
 {
-	if(V_RevertMode()) {
+	if (V_RevertMode()) {
 		I_Printf("Video mode reverted successfully.\n");
 	} else {
 		I_Printf("Video mode wasn't reverted.\n");
@@ -161,23 +165,24 @@ void V_Init(void)
 	}
 
 	if (v_depthsize.value != 8 &&
-		v_depthsize.value != 16 && v_depthsize.value != 24) {
+	    v_depthsize.value != 16 && v_depthsize.value != 24) {
 		CON_CvarSetValue(v_depthsize.name, 24);
 	}
 
 	if (v_buffersize.value != 8 &&
-		v_buffersize.value != 16 &&
-		v_buffersize.value != 24 && v_buffersize.value != 32) {
+	    v_buffersize.value != 16 &&
+	    v_buffersize.value != 24 && v_buffersize.value != 32) {
 		CON_CvarSetValue(v_buffersize.name, 32);
 	}
-
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_GetVersion(&linked);
-	I_Printf("Linked against SDL v%d.%d.%d\n", linked.major, linked.minor, linked.patch);
+	I_Printf("Linked against SDL v%d.%d.%d\n", linked.major, linked.minor,
+		 linked.patch);
 #endif
 
 	SDL_VERSION(&compiled);
-	I_Printf("Compiled against SDL v%d.%d.%d\n", compiled.major, compiled.minor, compiled.patch);
+	I_Printf("Compiled against SDL v%d.%d.%d\n", compiled.major,
+		 compiled.minor, compiled.patch);
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sprintf(title, "Doom64 - Version Date %d - SDL2", version_date);
@@ -209,15 +214,14 @@ void V_Shutdown(void)
 // V_TrySetMode
 //
 
-const vidmode_t * V_TrySetMode(const vidmode_t *vm)
+const vidmode_t *V_TrySetMode(const vidmode_t * vm)
 {
 	int flags;
 
-	if(!vm)
+	if (!vm)
 		vm = V_Mode((int)v_display.value,
-					(int)v_width.value, (int)v_height.value,
-					-1, -1,
-					((int)v_windowed.value) & V_WINDOWED_MASK);
+			    (int)v_width.value, (int)v_height.value,
+			    -1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	int16 x, y;
@@ -225,51 +229,63 @@ const vidmode_t * V_TrySetMode(const vidmode_t *vm)
 
 	SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
 
-	if(vm->x < 0) x = display_bounds.x + (display_bounds.w - vm->w)/2;
-	else x = display_bounds.x + vm->x;
+	if (vm->x < 0)
+		x = display_bounds.x + (display_bounds.w - vm->w) / 2;
+	else
+		x = display_bounds.x + vm->x;
 
-	if(vm->y < 0) y = display_bounds.y + (display_bounds.h - vm->h)/2;
-	else y = display_bounds.y + vm->y;
+	if (vm->y < 0)
+		y = display_bounds.y + (display_bounds.h - vm->h) / 2;
+	else
+		y = display_bounds.y + vm->y;
 
-	if(window) { // resize and move window
+	if (window) {		// resize and move window
 		assert(glcontext);
 
 		SDL_SetWindowSize(window, vm->w, vm->h);
 		SDL_SetWindowPosition(window, x, y);
-		SDL_SetWindowFullscreen(window, (vm->flags & V_WINDOWED_MASK) == V_WINDOWED_OFF);
-		SDL_SetWindowBordered(window, !((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_NOBORDER));
+		SDL_SetWindowFullscreen(window,
+					(vm->flags & V_WINDOWED_MASK) ==
+					V_WINDOWED_OFF);
+		SDL_SetWindowBordered(window,
+				      !((vm->flags & V_WINDOWED_MASK) ==
+					V_WINDOWED_NOBORDER));
 
 		GL_SetLogicalResolution(vm->w, vm->h);
 		return vm;
 	}
 
 	flags = SDL_WINDOW_OPENGL;
-	if((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_OFF) flags |= SDL_WINDOW_FULLSCREEN;
-	if((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_NOBORDER) flags |= SDL_WINDOW_BORDERLESS;
+	if ((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_OFF)
+		flags |= SDL_WINDOW_FULLSCREEN;
+	if ((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_NOBORDER)
+		flags |= SDL_WINDOW_BORDERLESS;
 
 	window = SDL_CreateWindow(title, x, y, vm->w, vm->h, flags);
 
-	if(window) {
+	if (window) {
 		glcontext = SDL_GL_CreateContext(window);
-		if(!glcontext) {
-			I_Printf("Couldn't create OpenGL context for window.\n");
+		if (!glcontext) {
+			I_Printf
+			    ("Couldn't create OpenGL context for window.\n");
 			SDL_DestroyWindow(window);
 		}
 	}
 
-	if(window && glcontext) {
+	if (window && glcontext) {
 		GL_SetLogicalResolution(vm->w, vm->h);
 		return vm;
 	}
 #else
 	flags = SDL_OPENGL;
 
-	if((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_OFF) flags |= SDL_FULLSCREEN;
-//	if((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_NOBORDER) flags |= SDL_NOFRAME;
+	if ((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_OFF)
+		flags |= SDL_FULLSCREEN;
+//      if((vm->flags & V_WINDOWED_MASK) == V_WINDOWED_NOBORDER) flags |= SDL_NOFRAME;
 
 	screen = SDL_SetVideoMode(vm->w, vm->h, SDL_BPP, flags);
 
-	if(screen) {
+	if (screen) {
 		GL_SetLogicalResolution(vm->w, vm->h);
 		return vm;
 	}
@@ -281,15 +297,15 @@ const vidmode_t * V_TrySetMode(const vidmode_t *vm)
 // V_SetMode
 //
 
-dboolean V_SetMode(const vidmode_t *vm)
+dboolean V_SetMode(const vidmode_t * vm)
 {
-	if((vm = V_TrySetMode(vm))) {
+	if ((vm = V_TrySetMode(vm))) {
 		v_width.value = (float)vm->w;
 		v_height.value = (float)vm->h;
 		v_display.value = (float)vm->disp_id;
 		v_windowed.value = (float)(vm->flags & V_WINDOWED_MASK);
 
-		if(num_vidmodes++)
+		if (num_vidmodes++)
 			dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
 		dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
 	}
@@ -304,10 +320,10 @@ dboolean V_SetMode(const vidmode_t *vm)
 dboolean V_RevertMode(void)
 {
 	const vidmode_t *vm;
-	if(num_vidmodes < 2)
-		return false; // no mode to revert to
+	if (num_vidmodes < 2)
+		return false;	// no mode to revert to
 
-	if((vm = V_TrySetMode(&vidmodes[1]))) {
+	if ((vm = V_TrySetMode(&vidmodes[1]))) {
 		v_width.value = (float)vm->w;
 		v_height.value = (float)vm->h;
 		v_display.value = (float)vm->disp_id;
@@ -326,7 +342,7 @@ dboolean V_RevertMode(void)
 // V_Mode
 //
 
-vidmode_t * V_Mode(int display, int w, int h, int x, int y, int flags)
+vidmode_t *V_Mode(int display, int w, int h, int x, int y, int flags)
 {
 	static vidmode_t vm = { 0 };
 
@@ -345,13 +361,17 @@ vidmode_t * V_Mode(int display, int w, int h, int x, int y, int flags)
 // __compar_vidmode
 //
 
-static int __compar_vidmode(const vidmode_t *a, const vidmode_t *b)
+static int __compar_vidmode(const vidmode_t * a, const vidmode_t * b)
 {
-	if(a->w < b->w) return -1;
-	if(a->w > b->w) return 1;
+	if (a->w < b->w)
+		return -1;
+	if (a->w > b->w)
+		return 1;
 	// a->w == b->w
-	if(a->h < b->h) return -1;
-	if(a->h > b->h) return 1;
+	if (a->h < b->h)
+		return -1;
+	if (a->h > b->h)
+		return 1;
 	// a->h == b->h
 	return 0;
 }
@@ -365,36 +385,40 @@ void V_UpdateVidInfo(void)
 	V_ClearVidInfo();
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	int i, j, cm; // cm: current mode
+	int i, j, cm;		// cm: current mode
 	SDL_DisplayMode mode;
 
 	vidinfo.num_displays = SDL_GetNumVideoDisplays();
-	vidinfo.displays = Z_Malloc(sizeof(viddisp_t) * vidinfo.num_displays, PU_STATIC, NULL);
+	vidinfo.displays =
+	    Z_Malloc(sizeof(viddisp_t) * vidinfo.num_displays, PU_STATIC, NULL);
 
-	for(i = 0; i < vidinfo.num_displays; i++) {
+	for (i = 0; i < vidinfo.num_displays; i++) {
 		viddisp_t *disp = &vidinfo.displays[i];
 		const char *disp_name;
 		size_t disp_name_size;
 
 		disp_name = SDL_GetDisplayName(i);
-		if(!disp_name) {
+		if (!disp_name) {
 			disp->disp_name = NULL;
 		} else {
 			disp_name_size = dstrlen(disp_name) + 1;
-			disp->disp_name = Z_Malloc(disp_name_size, PU_STATIC, NULL);
+			disp->disp_name =
+			    Z_Malloc(disp_name_size, PU_STATIC, NULL);
 			dstrncpy(disp->disp_name, disp_name, disp_name_size);
 		}
 
 		disp->disp_id = i;
 		disp->num_modes = SDL_GetNumDisplayModes(i);
-		disp->modes = Z_Calloc(sizeof(vidmode_t) * disp->num_modes, PU_STATIC, NULL);
+		disp->modes =
+		    Z_Calloc(sizeof(vidmode_t) * disp->num_modes, PU_STATIC,
+			     NULL);
 
-		for(j = cm = 0; j < disp->num_modes; j++) {
-			vidmode_t * vm = &disp->modes[j];
+		for (j = cm = 0; j < disp->num_modes; j++) {
+			vidmode_t *vm = &disp->modes[j];
 
 			SDL_GetDisplayMode(i, j, &mode);
 
-			if(vm->w == mode.w && vm->h == mode.h)
+			if (vm->w == mode.w && vm->h == mode.h)
 				continue;
 
 			vm->disp_id = i;
@@ -408,8 +432,9 @@ void V_UpdateVidInfo(void)
 		}
 		disp->num_modes = cm;
 
-		qsort(disp->modes, disp->num_modes, sizeof(vidmode_t), __compar_vidmode);
-		for(j = 0; j < disp->num_modes; j++)
+		qsort(disp->modes, disp->num_modes, sizeof(vidmode_t),
+		      __compar_vidmode);
+		for (j = 0; j < disp->num_modes; j++)
 			disp->modes[j].id = j;
 	}
 #else
@@ -421,24 +446,25 @@ void V_UpdateVidInfo(void)
 	vidinfo.num_displays = 1;
 	vidinfo.displays = Z_Malloc(sizeof(viddisp_t), PU_STATIC, NULL);
 
-	viddisp_t * disp = vidinfo.displays;
+	viddisp_t *disp = vidinfo.displays;
 
 	disp->disp_id = 0;
 	disp->disp_name = NULL;
 
-	modes = SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
-	if(modes == (SDL_Rect**)-1 || modes == (SDL_Rect**)0) {
+	modes = SDL_ListModes(NULL, SDL_FULLSCREEN | SDL_HWSURFACE);
+	if (modes == (SDL_Rect **) - 1 || modes == (SDL_Rect **) 0) {
 		disp->num_modes = 0;
 		disp->modes = NULL;
 		return;
 	}
 
-	for(i = 0; modes[i]; i++); // count number of modes
+	for (i = 0; modes[i]; i++) ;	// count number of modes
 	disp->num_modes = i;
-	disp->modes = Z_Malloc(sizeof(vidmode_t) * disp->num_modes, PU_STATIC, NULL);
+	disp->modes =
+	    Z_Malloc(sizeof(vidmode_t) * disp->num_modes, PU_STATIC, NULL);
 
-	for(i = 0; modes[i]; i++) {
-		vidmode_t * vm = &disp->modes[i];
+	for (i = 0; modes[i]; i++) {
+		vidmode_t *vm = &disp->modes[i];
 
 		vm->disp_id = 0;
 		vm->flags = 0;
@@ -448,8 +474,9 @@ void V_UpdateVidInfo(void)
 		vm->y = -1;
 	}
 
-	qsort(disp->modes, disp->num_modes, sizeof(vidmode_t), __compar_vidmode);
-	for(i = 0; i < disp->num_modes; i++)
+	qsort(disp->modes, disp->num_modes, sizeof(vidmode_t),
+	      __compar_vidmode);
+	for (i = 0; i < disp->num_modes; i++)
 		disp->modes[i].id = i;
 #endif
 }
@@ -461,12 +488,14 @@ void V_UpdateVidInfo(void)
 void V_ClearVidInfo(void)
 {
 	int i;
-	if(vidinfo.displays) {
-		for(i = 0; i < vidinfo.num_displays; i++) {
+	if (vidinfo.displays) {
+		for (i = 0; i < vidinfo.num_displays; i++) {
 			viddisp_t *disp = vidinfo.displays + i;
 
-			if(disp->disp_name) Z_Free(disp->disp_name);
-			if(disp->modes) Z_Free(disp->modes);
+			if (disp->disp_name)
+				Z_Free(disp->disp_name);
+			if (disp->modes)
+				Z_Free(disp->modes);
 		}
 		Z_Free(vidinfo.displays);
 		dmemset(&vidinfo, 0, sizeof(vidinfo));

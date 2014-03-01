@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -275,8 +275,8 @@ side_t *getSide(int currentSector, int line, int side)
 //
 sector_t *getSector(int currentSector, int line, int side)
 {
-	return sides[(sectors[currentSector].lines[line])->
-		     sidenum[side]].sector;
+	return sides[(sectors[currentSector].lines[line])->sidenum[side]].
+	    sector;
 }
 
 //
@@ -562,8 +562,8 @@ static int P_ModifyLine(int tag1, int tag2, int type)
 				if (line1->flags & ML_TWOSIDED
 				    || line1->sidenum[1] != NO_SIDE_INDEX) {
 					sides[line1->sidenum[1]].bottomtexture =
-					    sides[line2->
-						  sidenum[1]].bottomtexture;
+					    sides[line2->sidenum[1]].
+					    bottomtexture;
 					sides[line1->sidenum[1]].midtexture =
 					    sides[line2->sidenum[1]].midtexture;
 					sides[line1->sidenum[1]].toptexture =
@@ -819,7 +819,7 @@ static void P_AlertTaggedMobj(player_t * player, int tid)
 		if (!mo->info->seestate)
 			continue;
 
-		// 20120610 villsa - check for killable things only
+		// 20140610 villsa - check for killable things only
 		if (!(mo->flags & MF_COUNTKILL))
 			continue;
 
@@ -896,7 +896,7 @@ int P_SetAimCamera(player_t * player, line_t * line, dboolean aim)
 		if (player->cameratarget->tid == line->tag)
 			continue;
 
-		// 20120304 villsa - handle certain case for co-op
+		// 20140304 villsa - handle certain case for co-op
 		if (netgame && mo->type == MT_PLAYER)
 			player->cameratarget = player->mo;
 		else
@@ -1659,23 +1659,24 @@ dboolean P_UseSpecialLine(mobj_t * thing, line_t * line, int side)
 	// Switches that other things can activate. MT_FAKEITEM has full player privilages.
 	if (!thing->player && thing->type != MT_FAKEITEM) {
 		if (thing->tid == line->tag) {
-            // triggered pickups can activate line specials
+			// triggered pickups can activate line specials
 			if (thing->flags & MF_SPECIAL
 			    && thing->flags & MF_TRIGTOUCH)
 				return P_InitSpecialLine(thing, line, side);
 
 			// triggered dead things can activate lin specials
-            if (line->flags & ML_THINGTRIGGER
+			if (line->flags & ML_THINGTRIGGER
 			    && thing->flags & MF_TRIGDEATH)
 				return P_InitSpecialLine(thing, line, side);
 		}
-
 		// never open secret doors
 		if (line->flags & ML_SECRET)
 			return false;
 
 		// never allow a non-player mobj to use lines with these useflags
-        if(line->special & (MLU_BLUE|MLU_YELLOW|MLU_RED|MLU_SHOOT|MLU_MACRO))
+		if (line->
+		    special & (MLU_BLUE | MLU_YELLOW | MLU_RED | MLU_SHOOT |
+			       MLU_MACRO))
 			return false;
 
 		// Missiles should NOT trigger specials...
@@ -1871,26 +1872,26 @@ void P_UpdateSpecials(void)
 			if (!buttonlist[i].btimer) {
 				switch (buttonlist[i].where) {
 				case top:
-					sides[buttonlist[i].line->
-					      sidenum[0]].toptexture =
+					sides[buttonlist[i].line->sidenum[0]].
+					    toptexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case middle:
-					sides[buttonlist[i].line->
-					      sidenum[0]].midtexture =
+					sides[buttonlist[i].line->sidenum[0]].
+					    midtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case bottom:
-					sides[buttonlist[i].line->
-					      sidenum[0]].bottomtexture =
+					sides[buttonlist[i].line->sidenum[0]].
+					    bottomtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 				}
 
-				S_StartSound((mobj_t *) & buttonlist[i].
-					     line->frontsector->soundorg,
+				S_StartSound((mobj_t *) & buttonlist[i].line->
+					     frontsector->soundorg,
 					     sfx_switch1);
 				dmemset(&buttonlist[i], 0, sizeof(button_t));
 			}

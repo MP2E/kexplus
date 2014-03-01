@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -172,8 +172,8 @@ int F_Ticker(void)
 
 		if (mobjinfo[castorder[castnum].type].seesound)
 			S_StartSound(NULL,
-				     mobjinfo[castorder[castnum].
-					      type].seesound);
+				     mobjinfo[castorder[castnum].type].
+				     seesound);
 
 		caststate = &states[mobjinfo[castorder[castnum].type].seestate];
 		castframes = 0;
@@ -255,13 +255,13 @@ int F_Ticker(void)
 			if (castonmelee)
 				caststate =
 				    &states[mobjinfo
-					    [castorder[castnum].
-					     type].meleestate];
+					    [castorder[castnum].type].
+					    meleestate];
 			else
 				caststate =
 				    &states[mobjinfo
-					    [castorder[castnum].
-					     type].missilestate];
+					    [castorder[castnum].type].
+					    missilestate];
 		}
 	}
 

@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -620,7 +620,7 @@ void P_PlayerThink(player_t * player)
 			    && newweapon != player->readyweapon) {
 				player->pendingweapon = newweapon;
 			}
-		} else		// 20120211 villsa - new weapon cycle logic
+		} else		// 20140211 villsa - new weapon cycle logic
 		{
 			dboolean direction;
 			int weapon;

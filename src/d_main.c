@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -153,7 +153,7 @@ void D_ProcessEvents(void)
 	     eventtail = (++eventtail) & (MAXEVENTS - 1)) {
 		ev = &events[eventtail];
 
-		// 20120404 villsa - don't do console inputs for demo playbacks
+		// 20140404 villsa - don't do console inputs for demo playbacks
 		if (!demoplayback) {
 			if (CON_Responder(ev))
 				continue;	// console ate the event
@@ -714,7 +714,7 @@ void D_DoomLoop(void)
 				continue;
 
 			iwadDemo = true;
-            G_PlayDemo("DEMO1LMP");
+			G_PlayDemo("DEMO1LMP");
 			if (gameaction != ga_exitdemo)
 				continue;
 
@@ -729,7 +729,7 @@ void D_DoomLoop(void)
 				continue;
 
 			if (rundemo4) {
-			    iwadDemo = true;
+				iwadDemo = true;
 				G_PlayDemo("DEMO4LMP");
 				if (gameaction != ga_exitdemo)
 					continue;
@@ -890,7 +890,7 @@ static void D_Init(void)
 	if (p && p < myargc - 1) {
 		// sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 		G_LoadGame(P_GetSaveGameName(myargv[p + 1][0] - '0'));
-		autostart = true;	// 20120105 bkw: this was missing
+		autostart = true;	// 20140105 bkw: this was missing
 	}
 
 	if (M_CheckParm("-nogun")) {

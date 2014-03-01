@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -244,12 +244,10 @@ void P_XYMovement(mobj_t * mo)
 				// explode a missile
 				if (tmhitline) {
 					if ((tmhitline->backsector &&
-					     tmhitline->
-					     backsector->ceilingpic ==
-					     skyflatnum)
-					    || sides[tmhitline->
-						     sidenum[0]].midtexture ==
-					    1) {
+					     tmhitline->backsector->
+					     ceilingpic == skyflatnum)
+					    || sides[tmhitline->sidenum[0]].
+					    midtexture == 1) {
 						// Hack to prevent missiles exploding
 						// against the sky.
 						// Does not handle sky floors.
@@ -401,7 +399,7 @@ void P_NightmareRespawn(mobj_t * mobj)
 	if (!P_CheckPosition(mobj, x, y))
 		return;		// no respawn
 
-	// 20120301 villsa - don't respawn in insta-kill sector
+	// 20140301 villsa - don't respawn in insta-kill sector
 	if (R_PointInSubsector(x, y)->sector->special == 666) {
 		mobj->flags &= ~MF_COUNTKILL;	// don't bother checking for respawns again
 		return;
@@ -422,7 +420,7 @@ void P_NightmareRespawn(mobj_t * mobj)
 	mo->spawnpoint = mobj->spawnpoint;
 	mo->angle = ANG45 * (mthing->angle / 45);
 
-	// 20120212 villsa - fix for respawning spectures
+	// 20140212 villsa - fix for respawning spectures
 	if (mo->type != MT_DEMON2) {
 		mo->alpha = 0;
 		P_CreateFadeThinker(mo, &junk);

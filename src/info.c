@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -2663,7 +2663,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =	//0x51E38
 	 },
 
 	{			/*MT_ITEM_MEDKIT */
-	 2012,			//doomednum
+	 2014,			//doomednum
 	 S_568,			//spawnstate
 	 1000,			//spawnhealth
 	 S_000,			//seestate

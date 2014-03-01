@@ -1,7 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -49,10 +49,10 @@
 #include "con_console.h"	// for cvars
 #include "w_file.h"
 
-// 20120203 villsa - cvar for soundfont location
+// 20140203 villsa - cvar for soundfont location
 CVAR(s_soundfont, doomsnd.sf2);
 
-// 20120203 villsa - cvar for audio driver
+// 20140203 villsa - cvar for audio driver
 #ifdef _WIN32
 CVAR_CMD(s_driver, dsound)
 #elif __APPLE__
@@ -107,7 +107,7 @@ static SDL_sem *semaphore = NULL;
 #define SEMAPHORE_LOCK()    if(SDL_SemWait(semaphore) == 0) {
 #define SEMAPHORE_UNLOCK()  SDL_SemPost(semaphore); }
 
-// 20120205 villsa - bool to determine if sequencer is ready or not
+// 20140205 villsa - bool to determine if sequencer is ready or not
 static dboolean seqready = false;
 
 //
@@ -243,7 +243,7 @@ typedef struct {
 	fluid_settings_t *settings;
 	fluid_synth_t *synth;
 	fluid_audio_driver_t *driver;
-	int sfont_id;		// 20120112 bkw: needs to be signed
+	int sfont_id;		// 20140112 bkw: needs to be signed
 	SDL_Thread *thread;
 	dword playtime;
 
@@ -265,7 +265,7 @@ typedef struct {
 	// MP2E : Only change using Seq_SetStatus
 	seqsignal_e signal;
 
-	// 20120316 villsa - gain property (tweakable)
+	// 20140316 villsa - gain property (tweakable)
 	float gain;
 } doomseq_t;
 
@@ -1190,7 +1190,8 @@ void I_InitSequencer(void)
 	SDL_GetTicks();
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	doomseq.thread = SDL_CreateThread(Thread_PlayerHandler, "PlayerHandler", &doomseq);
+	doomseq.thread =
+	    SDL_CreateThread(Thread_PlayerHandler, "PlayerHandler", &doomseq);
 #else
 	doomseq.thread = SDL_CreateThread(Thread_PlayerHandler, &doomseq);
 #endif
@@ -1206,7 +1207,7 @@ void I_InitSequencer(void)
 	Seq_SetConfig(&doomseq, "synth.midi-channels", 0x10 + MIDI_CHANNELS);
 	Seq_SetConfig(&doomseq, "synth.polyphony", 256);
 
-	// 20120105 bkw: On Linux, always use alsa (fluidsynth default is to use
+	// 20140105 bkw: On Linux, always use alsa (fluidsynth default is to use
 	// JACK, if it's compiled in. We don't want to start jackd for a game).
 	fluid_settings_setstr(doomseq.settings, "audio.driver",
 			      s_driver.string);
@@ -1240,9 +1241,9 @@ void I_InitSequencer(void)
 	CON_DPrintf("Loading %s\\%s\n", I_DoomExeDir(), s_soundfont.string);
 
 #else
-	// 20120111 bkw: look in the same places as doom64.wad. Someday this needs
+	// 20140111 bkw: look in the same places as doom64.wad. Someday this needs
 	// to be a config file setting and not hard-coded.
-	// 20120203 villsa - done :)
+	// 20140203 villsa - done :)
 	// 20140118 MP2E: refactor code to use an array char iterate through array
 	// dynamically at compile time. Also, this function is now case-insensitive
 	{
@@ -1256,7 +1257,8 @@ void I_InitSequencer(void)
 			if (!sfpath)
 				sfpath =
 				    W_SearchDirectoryForFile(sfdirs[ndirs],
-							     s_soundfont.string);
+							     s_soundfont.
+							     string);
 		}
 
 		I_Printf("Found SoundFont %s\n", sfpath);
@@ -1294,7 +1296,7 @@ void I_InitSequencer(void)
 
 	Song_ClearPlaylist();
 
-	// 20120205 villsa - sequencer is now ready
+	// 20140205 villsa - sequencer is now ready
 	seqready = true;
 }
 

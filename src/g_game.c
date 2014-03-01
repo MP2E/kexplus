@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -149,7 +149,7 @@ NETCVAR_PARAM(p_autoaim, 1, gameflags, GF_ALLOWAUTOAIM);
 NETCVAR_PARAM(compat_collision, 1, compatflags, COMPATF_COLLISION);
 NETCVAR_PARAM(compat_mobjpass, 1, compatflags, COMPATF_MOBJPASS);
 NETCVAR_PARAM(compat_limitpain, 1, compatflags, COMPATF_LIMITPAIN);
-NETCVAR_PARAM(compat_grabitems, 0,  compatflags,    COMPATF_REACHITEMS);
+NETCVAR_PARAM(compat_grabitems, 0, compatflags, COMPATF_REACHITEMS);
 
 CVAR_EXTERNAL(v_mlook);
 CVAR_EXTERNAL(v_mlookinvert);
@@ -180,7 +180,7 @@ void G_RegisterCvars(void)
 	CON_CvarRegister(&compat_collision);
 	CON_CvarRegister(&compat_mobjpass);
 	CON_CvarRegister(&compat_limitpain);
-    CON_CvarRegister(&compat_grabitems);
+	CON_CvarRegister(&compat_grabitems);
 }
 
 //
@@ -832,21 +832,32 @@ void G_ClearInput(void)
 // G_SetGameFlags
 //
 
-static void G_SetGameFlags(void) {
-    gameflags = 0;
-    compatflags = 0;
+static void G_SetGameFlags(void)
+{
+	gameflags = 0;
+	compatflags = 0;
 
-    if(sv_lockmonsters.value > 0)  gameflags |= GF_LOCKMONSTERS;
-    if(sv_allowcheats.value > 0)   gameflags |= GF_ALLOWCHEATS;
-    if(sv_friendlyfire.value > 0)  gameflags |= GF_FRIENDLYFIRE;
-    if(sv_keepitems.value > 0)     gameflags |= GF_KEEPITEMS;
-    if(p_allowjump.value > 0)      gameflags |= GF_ALLOWJUMP;
-    if(p_autoaim.value > 0)        gameflags |= GF_ALLOWAUTOAIM;
+	if (sv_lockmonsters.value > 0)
+		gameflags |= GF_LOCKMONSTERS;
+	if (sv_allowcheats.value > 0)
+		gameflags |= GF_ALLOWCHEATS;
+	if (sv_friendlyfire.value > 0)
+		gameflags |= GF_FRIENDLYFIRE;
+	if (sv_keepitems.value > 0)
+		gameflags |= GF_KEEPITEMS;
+	if (p_allowjump.value > 0)
+		gameflags |= GF_ALLOWJUMP;
+	if (p_autoaim.value > 0)
+		gameflags |= GF_ALLOWAUTOAIM;
 
-    if(compat_collision.value > 0) compatflags |= COMPATF_COLLISION;
-    if(compat_mobjpass.value > 0)  compatflags |= COMPATF_MOBJPASS;
-    if(compat_limitpain.value > 0) compatflags |= COMPATF_LIMITPAIN;
-    if(compat_grabitems.value > 0) compatflags |= COMPATF_REACHITEMS;
+	if (compat_collision.value > 0)
+		compatflags |= COMPATF_COLLISION;
+	if (compat_mobjpass.value > 0)
+		compatflags |= COMPATF_MOBJPASS;
+	if (compat_limitpain.value > 0)
+		compatflags |= COMPATF_LIMITPAIN;
+	if (compat_grabitems.value > 0)
+		compatflags |= COMPATF_REACHITEMS;
 }
 
 //
@@ -1010,7 +1021,7 @@ void G_Ticker(void)
 					sizeof(ticcmd_t));
 
 				//
-				// 20120404 villsa - make sure gameaction isn't set to anything before
+				// 20140404 villsa - make sure gameaction isn't set to anything before
 				// reading a demo lump
 				//
 				if (demoplayback && gameaction == ga_nothing)
@@ -1064,8 +1075,8 @@ void G_Ticker(void)
 						dstrcpy(savedescription,
 							"NET GAME");
 					savegameslot =
-					    (players[i].cmd.
-					     buttons & BTS_SAVEMASK) >>
+					    (players[i].
+					     cmd.buttons & BTS_SAVEMASK) >>
 					    BTS_SAVESHIFT;
 					savenow = true;
 				}
@@ -1221,7 +1232,7 @@ dboolean G_CheckSpot(int playernum, mapthing_t * mthing)
 	// spawn a teleport fog
 	ss = R_PointInSubsector(x, y);
 
-	// 20120402 villsa - force angle_t typecast to avoid issues on 64-bit machines
+	// 20140402 villsa - force angle_t typecast to avoid issues on 64-bit machines
 	an = ANG45 * (angle_t) (mthing->angle / 45);
 
 	mo = P_SpawnMobj(x + 20 * dcos(an),
@@ -1395,7 +1406,7 @@ void G_RunTitleMap(void)
 	precache = true;
 	usergame = false;
 	demoplayback = true;
-    iwadDemo = true;
+	iwadDemo = true;
 
 	rngseed = 0;
 
@@ -1412,10 +1423,10 @@ void G_RunGame(void)
 {
 	int next = 0;
 
-    if(!demorecording && !demoplayback) {
-	    G_ReloadDefaults();
-	    G_InitNew(startskill, startmap);
-    }
+	if (!demorecording && !demoplayback) {
+		G_ReloadDefaults();
+		G_InitNew(startskill, startmap);
+	}
 
 	while (gameaction != ga_title) {
 		if (gameaction == ga_loadgame)
@@ -1583,7 +1594,7 @@ void G_Init(void)
 	G_AddCommand("trigger", CMD_TriggerSpecial, 0);
 	G_AddCommand("setcamerastatic", CMD_PlayerCamera, 0);
 	G_AddCommand("setcamerachase", CMD_PlayerCamera, 1);
-    G_AddCommand("enddemo", CMD_EndDemo, 0);
+	G_AddCommand("enddemo", CMD_EndDemo, 0);
 }
 
 //
@@ -1641,15 +1652,15 @@ void G_InitNew(skill_t skill, int map)
 		skill = sk_nightmare;
 
 	// force players to be initialized upon first level load
-    for (i = 0; i < MAXPLAYERS; i++)
-        players[i].playerstate = PST_REBORN;
+	for (i = 0; i < MAXPLAYERS; i++)
+		players[i].playerstate = PST_REBORN;
 
-    // MP2E : if loading from a password, make sure the player's
-    // health and armor are not reset
-    if (passwordgame)
-        players[consoleplayer].playerstate = PST_LIVE;
+	// MP2E : if loading from a password, make sure the player's
+	// health and armor are not reset
+	if (passwordgame)
+		players[consoleplayer].playerstate = PST_LIVE;
 
-    passwordgame = false;
+	passwordgame = false;
 	usergame = true;	// will be set false if a demo
 	paused = false;
 	demoplayback = false;
@@ -1657,7 +1668,7 @@ void G_InitNew(skill_t skill, int map)
 	gamemap = map;
 	gameskill = skill;
 
-    G_SetGameFlags();
+	G_SetGameFlags();
 
 	// [d64] For some reason this is added here
 	M_ClearRandom();

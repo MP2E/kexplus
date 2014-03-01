@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -400,9 +400,9 @@ dboolean M_DecodePassword(dboolean checkOnly)
 	//
 	player->artifacts = ((decode[5] >> 2) & 7);
 
-    // MP2E: set passwordgame true so that player
-    // isn't set PST_REBORN
-    passwordgame = true;
+	// MP2E: set passwordgame true so that player
+	// isn't set PST_REBORN
+	passwordgame = true;
 
 	//
 	// set cheat menu if password leads to map 01

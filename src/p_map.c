@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -79,40 +79,38 @@ d_inline static dboolean P_CheckThingCollision(mobj_t * thing)
 	fixed_t blockdist;
 
 	if (netgame && (tmthing->type == MT_PLAYER && thing->type == MT_PLAYER))
-		return true;	// 20120122 villsa - allow players to go through each other
+		return true;	// 20140122 villsa - allow players to go through each other
 	blockdist = thing->radius + tmthing->radius;
 
-    // [d64]: mimic logic from original version
-    if(compatflags & (COMPATF_COLLISION|COMPATF_REACHITEMS)) {
-        fixed_t x, y;
-        fixed_t rx, ry;
+	// [d64]: mimic logic from original version
+	if (compatflags & (COMPATF_COLLISION | COMPATF_REACHITEMS)) {
+		fixed_t x, y;
+		fixed_t rx, ry;
 
-        x = D_abs(thing->x - tmx);
-        y = D_abs(thing->y - tmy);
+		x = D_abs(thing->x - tmx);
+		y = D_abs(thing->y - tmy);
 
-        rx = blockdist - x;
-        ry = blockdist - x;
+		rx = blockdist - x;
+		ry = blockdist - x;
 
-        if(!(x < y)) {
-            if(((rx - y) + (y >> 1)) <= 0) {
-                //didn't hit it
-                return true;
-            }
-        }
-        else {
-            if(((ry - y) + (x >> 1)) <= 0) {
-                // didn't hit it
-                return true;
-            }
-        }
+		if (!(x < y)) {
+			if (((rx - y) + (y >> 1)) <= 0) {
+				//didn't hit it
+				return true;
+			}
+		} else {
+			if (((ry - y) + (x >> 1)) <= 0) {
+				// didn't hit it
+				return true;
+			}
+		}
+	} else {
+		if (D_abs(thing->x - tmx) >= blockdist ||
+		    D_abs(thing->y - tmy) >= blockdist) {
+			// didn't hit it
+			return true;
+		}
 	}
-    else {
-        if(D_abs(thing->x - tmx) >= blockdist ||
-                D_abs(thing->y - tmy) >= blockdist) {
-                // didn't hit it
-                return true;
-        }
-    }
 
 	return false;
 }
@@ -333,18 +331,18 @@ dboolean PIT_CheckThing(mobj_t * thing)
 		return false;
 	}
 
-    solid = thing->flags & MF_SOLID;
+	solid = thing->flags & MF_SOLID;
 
 	// check for special pickup
 	if (thing->flags & MF_SPECIAL) {
 		if (tmflags & MF_PICKUP) {
-            // [kex] compatibility flags added for item grab bug fix
-            if(compatflags & COMPATF_REACHITEMS ||
-                    (thing->z <= (tmthing->z + (tmthing->height>>1))
-                     || thing ->flags & MF_NOSECTOR)) {
-                // [d64] store off special thing and return true
-                blockthing = thing;
-                return true;
+			// [kex] compatibility flags added for item grab bug fix
+			if (compatflags & COMPATF_REACHITEMS ||
+			    (thing->z <= (tmthing->z + (tmthing->height >> 1))
+			     || thing->flags & MF_NOSECTOR)) {
+				// [d64] store off special thing and return true
+				blockthing = thing;
+				return true;
 			}
 		}
 	}
@@ -508,27 +506,28 @@ dboolean P_TryMove(mobj_t * thing, fixed_t x, fixed_t y)
 // item grabbing behavior
 //
 
-dboolean P_PlayerMove(mobj_t* thing, fixed_t x, fixed_t y) {
-    dboolean moveok;
+dboolean P_PlayerMove(mobj_t * thing, fixed_t x, fixed_t y)
+{
+	dboolean moveok;
 
-    moveok = P_TryMove(thing, x, y);
+	moveok = P_TryMove(thing, x, y);
 
-    //
-    // [d64] seems more like a console optimization but now the player
-    // is no longer able to pick up items during the block things iteration.
-    // this means that only one item can be picked up per tic.
-    //
-    if(thing->flags & MF_PICKUP && blockthing) {
-        mobj_t *touchThing = blockthing;
+	//
+	// [d64] seems more like a console optimization but now the player
+	// is no longer able to pick up items during the block things iteration.
+	// this means that only one item can be picked up per tic.
+	//
+	if (thing->flags & MF_PICKUP && blockthing) {
+		mobj_t *touchThing = blockthing;
 
-        if(touchThing->flags & MF_SPECIAL) {
-            // can remove thing
-            P_TouchSpecialThing(touchThing, thing);
-            blockthing = NULL;
-        }
-    }
+		if (touchThing->flags & MF_SPECIAL) {
+			// can remove thing
+			P_TouchSpecialThing(touchThing, thing);
+			blockthing = NULL;
+		}
+	}
 
-    return moveok;
+	return moveok;
 }
 
 //
@@ -1079,12 +1078,12 @@ dboolean PTR_ShootTraverse(intercept_t * in)
 
 		lineside = P_PointOnLineSide(shootthing->x, shootthing->y, li);
 
-        // [d64] villsa 02252014: moved here
-        if(in->d.thing && in->d.thing->player) {
-            if(li->special & MLU_SHOOT) {
-                P_UseSpecialLine(shootthing, li, lineside);
-            }
-        }
+		// [d64] villsa 02252014: moved here
+		if (in->d.thing && in->d.thing->player) {
+			if (li->special & MLU_SHOOT) {
+				P_UseSpecialLine(shootthing, li, lineside);
+			}
+		}
 
 		sidesector = lineside ? li->backsector : li->frontsector;
 		dist = FixedMul(attackrange, in->frac);

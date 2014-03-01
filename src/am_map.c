@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -613,8 +613,8 @@ static void AM_DrawMapped(void)
 							  [j].firstline + i];
 
 						if (!
-						    (seg->
-						     linedef->flags & ML_SECRET)
+						    (seg->linedef->
+						     flags & ML_SECRET)
 && seg->linedef->backsector)
 							continue;
 
@@ -758,7 +758,7 @@ void AM_DrawWalls(void)
 		y2 = l->v2->y;
 
 		//
-		// 20120208 villsa - re-ordered flag checks to match original game
+		// 20140208 villsa - re-ordered flag checks to match original game
 		//
 
 		if (l->flags & ML_DONTDRAW)
@@ -784,7 +784,8 @@ void AM_DrawWalls(void)
 			//
 			// handle special line
 			//
-			else if (l->special && !(l->flags & ML_HIDEAUTOMAPTRIGGER)) {
+			else if (l->special
+				 && !(l->flags & ML_HIDEAUTOMAPTRIGGER)) {
 				//
 				// draw colored doors based on key requirement
 				//

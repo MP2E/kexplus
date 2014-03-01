@@ -199,7 +199,7 @@ static void NET_CL_PlayerQuitGame(player_t * player)
 	// TODO: check if it is sensible to do this:
 
 	if (demorecording) {
-        endDemo = true;
+		endDemo = true;
 		G_CheckDemoStatus();
 	}
 }

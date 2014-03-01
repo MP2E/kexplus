@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -391,8 +391,8 @@ dboolean P_Move(mobj_t * actor)
 			// if the special is not a door that can be opened
 			// return false
 			if (ld->special & MLU_USE)
-                if(P_UseSpecialLine(actor, ld, 0))
-                    good = true;
+				if (P_UseSpecialLine(actor, ld, 0))
+					good = true;
 		}
 		return good;
 	}
@@ -1516,7 +1516,7 @@ void A_PainShootSkull(mobj_t * actor, angle_t angle)
 	//
 	// if there are all ready 17 skulls on the level,
 	// don't spit another one
-	// 20120212 villsa - new compatibility flag to disable limit
+	// 20140212 villsa - new compatibility flag to disable limit
 	//
 	if (compatflags & COMPATF_LIMITPAIN && count > 0x11)
 		return;

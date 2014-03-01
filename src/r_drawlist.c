@@ -1,7 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -159,8 +159,8 @@ void DL_ProcessDrawList(int tag, dboolean(*procfunc) (vtxlist_t *, int *))
 			// setup texture ID
 			if (tag == DLT_SPRITE) {
 				int flags =
-				    ((visspritelist_t *) head->data)->
-				    spr->flags;
+				    ((visspritelist_t *) head->data)->spr->
+				    flags;
 
 				// textid in sprites contains hack that stores palette index data
 				palette = head->texid >> 24;

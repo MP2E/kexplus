@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -93,7 +93,7 @@ dboolean menuactive = false;
 dboolean mainmenuactive = false;
 dboolean allowclearmenu = true;	// can user hit escape to clear menu?
 
-static dboolean newmenu = false;	// 20120323 villsa
+static dboolean newmenu = false;	// 20140323 villsa
 static char *messageBindCommand;
 static int quickSaveSlot;	// -1 = no quicksave slot picked!
 static int saveSlot;		// which slot to save in
@@ -841,7 +841,7 @@ void M_RegionChoice(int choice)
 	switch (itemOn) {
 	case region_mode:
 		//
-		// 20120304 villsa
+		// 20140304 villsa
 		//
 		if (RegionMenu[region_mode].status == 1)
 			return;
@@ -851,7 +851,7 @@ void M_RegionChoice(int choice)
 
 	case region_lang:
 		//
-		// 20120304 villsa
+		// 20140304 villsa
 		//
 		if (RegionMenu[region_lang].status == 1)
 			return;
@@ -861,7 +861,7 @@ void M_RegionChoice(int choice)
 
 	case region_blood:
 		//
-		// 20120304 villsa
+		// 20140304 villsa
 		//
 		if (RegionMenu[region_blood].status == 1)
 			return;
@@ -1199,7 +1199,7 @@ enum {
 	misc_comp_collision,
 	misc_comp_pain,
 	misc_comp_pass,
-    misc_comp_grab,
+	misc_comp_grab,
 	misc_default,
 	misc_return,
 	misc_end
@@ -1232,7 +1232,7 @@ menuitem_t MiscMenu[] = {
 	{2, "Collision:", M_MiscChoice, 'c'},
 	{2, "Limit Lost Souls:", M_MiscChoice, 'l'},
 	{2, "Tall Actors:", M_MiscChoice, 'i'},
-    {2, "Grab High Items:", M_MiscChoice, 'g'},
+	{2, "Grab High Items:", M_MiscChoice, 'g'},
 	{-2, "Default", M_DoDefaults, 'd'},
 	{1, "/r Return", M_Return, 0x20}
 };
@@ -1264,7 +1264,7 @@ char *MiscHints[misc_end] = {
 	"surrounding blockmaps are not checked for an object",
 	"limit max amount of lost souls spawned by pain elemental to 17",
 	"emulate infinite height bug for all solid actors",
-    "be able to grab high items by bumping into the sector it sits on",
+	"be able to grab high items by bumping into the sector it sits on",
 	NULL,
 	NULL
 };
@@ -1425,9 +1425,9 @@ void M_MiscChoice(int choice)
 		M_SetOptionValue(choice, 0, 1, 1, &compat_mobjpass);
 		break;
 
-    case misc_comp_grab:
-        M_SetOptionValue(choice, 0, 1, 1, &compat_grabitems);
-        break;
+	case misc_comp_grab:
+		M_SetOptionValue(choice, 0, 1, 1, &compat_grabitems);
+		break;
 	}
 }
 
@@ -1480,7 +1480,7 @@ void M_DrawMisc(void)
 	DRAWMISCITEM(misc_comp_collision, compat_collision.value, msgNames);
 	DRAWMISCITEM(misc_comp_pain, compat_limitpain.value, msgNames);
 	DRAWMISCITEM(misc_comp_pass, !compat_mobjpass.value, msgNames);
-    DRAWMISCITEM(misc_comp_grab, compat_grabitems.value, msgNames);
+	DRAWMISCITEM(misc_comp_grab, compat_grabitems.value, msgNames);
 
 #undef DRAWMISCITEM
 
@@ -2027,29 +2027,29 @@ static const int Resolution4_3[MAX_RES4_3][2] = {
 
 #define MAX_RES16_9  12
 static const int Resolution16_9[MAX_RES16_9][2] = {
-    {640, 360},
+	{640, 360},
 	{854, 480},
-    {1024, 576},
-    {1024, 600},
+	{1024, 576},
+	{1024, 600},
 	{1280, 720},
 	{1366, 768},
 	{1600, 900},
 	{1920, 1080},
-    {2048, 1152},
-    {2560, 1440},
-    {2880, 1620},
-    {3840, 2160}
+	{2048, 1152},
+	{2560, 1440},
+	{2880, 1620},
+	{3840, 2160}
 };
 
 #define MAX_RES16_10  7
 static const int Resolution16_10[MAX_RES16_10][2] = {
 	{320, 200},
-    {1024, 640},
+	{1024, 640},
 	{1280, 800},
 	{1440, 900},
 	{1680, 1050},
 	{1920, 1200},
-    {2560, 1600}
+	{2560, 1600}
 };
 
 static const float ratioVal[3] = {
@@ -4281,7 +4281,7 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 	dglEnable(GL_TEXTURE_2D);
 
 	//
-	// 20120404 villsa - reset active textures just to make sure
+	// 20140404 villsa - reset active textures just to make sure
 	// we don't end up seeing that thumbnail texture on a wall or something
 	//
 	GL_ResetTextures();
@@ -4731,8 +4731,9 @@ dboolean M_Responder(event_t * ev)
 
 				currentMenu->lastOn = itemOn;
 				if (currentMenu == &featuresDef) {
-					if (currentMenu->menuitems[itemOn].
-					    routine == M_DoFeature
+					if (currentMenu->
+					    menuitems[itemOn].routine ==
+					    M_DoFeature
 					    && itemOn == features_levels) {
 						gameaction = ga_warplevel;
 						gamemap = nextmap =
@@ -4741,19 +4742,20 @@ dboolean M_Responder(event_t * ev)
 						dmemset(passwordData, 0xff, 16);
 						return true;
 					}
-				} else if (currentMenu->menuitems[itemOn].
-					   status >= 2
-					   || currentMenu->menuitems[itemOn].
-					   status == -2) {
-					currentMenu->menuitems[itemOn].
-					    routine(2);
+				} else if (currentMenu->
+					   menuitems[itemOn].status >= 2
+					   || currentMenu->
+					   menuitems[itemOn].status == -2) {
+					currentMenu->
+					    menuitems[itemOn].routine(2);
 				} else {
 					if (currentMenu == &ControlsDef) {
 						// don't do the fade effect and jump straight to the next screen
 						M_ChangeKeyBinding(itemOn);
 					} else {
-						currentMenu->menuitems[itemOn].
-						    routine(itemOn);
+						currentMenu->
+						    menuitems[itemOn].routine
+						    (itemOn);
 					}
 
 					S_StartSound(NULL, sfx_pistol);
@@ -5071,8 +5073,8 @@ void M_Drawer(void)
 					     currentMenu->menuitems[i].name);
 			} else {
 				int strwidth =
-				    M_StringWidth(currentMenu->menuitems[i].
-						  name);
+				    M_StringWidth(currentMenu->
+						  menuitems[i].name);
 
 				Draw_Text(((int)(160.0f / currentMenu->scale) -
 					   (strwidth / 2)), y, D_RGBA(255, 0, 0,
@@ -5149,8 +5151,7 @@ void M_Drawer(void)
 		else {
 			Draw_BigText(x - 12,
 				     currentMenu->y - 4 + (itemOn -
-							   currentMenu->
-							   menupageoffset)
+							   currentMenu->menupageoffset)
 				     * height, MENUCOLORWHITE, "/l");
 		}
 	}

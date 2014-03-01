@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -242,7 +242,7 @@ void W_Init(void)
 			W_MergeFile(filename);
 		}
 	}
-	// 20120724 villsa - find drag & drop wad files
+	// 20140724 villsa - find drag & drop wad files
 	else {
 		for (i = 1; i < myargc; i++) {
 			if (dstrstr(myargv[i], ".wad") ||
@@ -627,4 +627,3 @@ void W_Checksum(md5_digest_t digest)
 
 	MD5_Final(digest, &md5_context);
 }
-

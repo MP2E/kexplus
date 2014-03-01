@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1999-2000 Paul Brook
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #ifndef _WIN32
-// 20120105 bkw: G_GetConfigFileName() needs these, better safe than sorry
+// 20140105 bkw: G_GetConfigFileName() needs these, better safe than sorry
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -65,7 +65,7 @@ char *G_GetConfigFileName(void)
 	CON_DPrintf("Loading config: %s\\%s\n", I_DoomExeDir(), ConfigFileName);
 	return ConfigFileName;
 #else
-	// 20120105 bkw: Be UNIX-friendly and use ~/.doom64ex/config.cfg
+	// 20140105 bkw: Be UNIX-friendly and use ~/.doom64ex/config.cfg
 	if (ConfigFileName == NULL) {
 		char confdir[PATH_MAX];
 		static char conffile[PATH_MAX];

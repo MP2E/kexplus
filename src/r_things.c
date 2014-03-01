@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -565,8 +565,8 @@ static void AddSpriteDrawlist(drawlist_t * dl, visspritelist_t * vis, int texid)
 	// hack to include info on palette indexes
 	list->texid =
 	    (texid |
-	     ((mobj->player ? mobj->player->palette : mobj->
-	       info->palette) << 24)
+	     ((mobj->player ? mobj->player->palette : mobj->info->
+	       palette) << 24)
 	     | (list->flags << 16));
 }
 

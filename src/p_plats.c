@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 1997 Midway Home Entertainment, Inc
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -54,8 +54,8 @@ void T_PlatRaise(plat_t * plat)
 		if (plat->type == raiseAndChange
 		    || plat->type == raiseToNearestAndChange) {
 			if (!(leveltime & 7))
-				S_StartSound((mobj_t *) & plat->
-					     sector->soundorg, sfx_secmove);
+				S_StartSound((mobj_t *) & plat->sector->
+					     soundorg, sfx_secmove);
 		}
 		//
 		// [d64] crushed and plat->crush is no longer used.
@@ -70,8 +70,8 @@ void T_PlatRaise(plat_t * plat)
 			if (res == pastdest) {
 				plat->count = plat->wait;
 				plat->status = waiting;
-				S_StartSound((mobj_t *) & plat->
-					     sector->soundorg, sfx_pstop);
+				S_StartSound((mobj_t *) & plat->sector->
+					     soundorg, sfx_pstop);
 
 				switch (plat->type) {
 				case blazeDWUS:

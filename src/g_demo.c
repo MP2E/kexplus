@@ -71,7 +71,7 @@ extern int starttime;
 
 void G_ReadDemoTiccmd(ticcmd_t * cmd)
 {
-    unsigned int lowbyte;
+	unsigned int lowbyte;
 
 	if (*demo_p == DEMOMARKER) {
 		// end of demo data stream
@@ -81,9 +81,9 @@ void G_ReadDemoTiccmd(ticcmd_t * cmd)
 
 	cmd->forwardmove = ((signed char)*demo_p++);
 	cmd->sidemove = ((signed char)*demo_p++);
-    lowbyte = (unsigned char)(*demo_p++);
+	lowbyte = (unsigned char)(*demo_p++);
 	cmd->angleturn = (((unsigned int)(*demo_p++)) << 8) + lowbyte;
-    lowbyte = (unsigned char)(*demo_p++);
+	lowbyte = (unsigned char)(*demo_p++);
 	cmd->pitch = (((unsigned int)(*demo_p++)) << 8) + lowbyte;
 	cmd->buttons = (unsigned char)*demo_p++;
 	cmd->buttons2 = (unsigned char)*demo_p++;
@@ -96,19 +96,19 @@ void G_ReadDemoTiccmd(ticcmd_t * cmd)
 void G_WriteDemoTiccmd(ticcmd_t * cmd)
 {
 	char buf[8];
-    signed short angleturn;
-    signed short pitch;
+	signed short angleturn;
+	signed short pitch;
 	char *p = buf;
 
-    angleturn = cmd->angleturn;
-    pitch = cmd->pitch;
+	angleturn = cmd->angleturn;
+	pitch = cmd->pitch;
 
 	*p++ = cmd->forwardmove;
 	*p++ = cmd->sidemove;
-    *p++ = angleturn & 0xff;
-    *p++ = (angleturn >> 8) & 0xff;
-    *p++ = pitch & 0xff;
-    *p++ = (pitch >> 8) & 0xff;
+	*p++ = angleturn & 0xff;
+	*p++ = (angleturn >> 8) & 0xff;
+	*p++ = pitch & 0xff;
+	*p++ = (pitch >> 8) & 0xff;
 	*p++ = cmd->buttons;
 	*p++ = cmd->buttons2;
 
@@ -138,25 +138,24 @@ void G_RecordDemo(const char *name)
 	if (access(demoname, F_OK)) {
 		demofp = fopen(demoname, "wb");
 	} else {
-        int demonum = 0;
+		int demonum = 0;
 
-        while(demonum < 10000) {
-            sprintf(demoname, "%s%i.lmp", name, demonum);
-            if(access(demoname, F_OK)) {
-                demofp = fopen(demoname, "wb");
-                break;
-            }
-            demonum++;
-	    }
+		while (demonum < 10000) {
+			sprintf(demoname, "%s%i.lmp", name, demonum);
+			if (access(demoname, F_OK)) {
+				demofp = fopen(demoname, "wb");
+				break;
+			}
+			demonum++;
+		}
 
-        // [kex]: so yeah... dunno how to properly handle this...
-        if(demonum >= 10000) {
-            I_Error("G_RecordDemo: file %s already exists", demoname);
-            return;
-        }
-    }
-
-
+		// [kex]: so yeah... dunno how to properly handle this...
+		if (demonum >= 10000) {
+			I_Error("G_RecordDemo: file %s already exists",
+				demoname);
+			return;
+		}
+	}
 
 	CON_DPrintf("--------Recording %s--------\n", demoname);
 
@@ -207,7 +206,7 @@ void G_RecordDemo(const char *name)
 	demorecording = true;
 	usergame = false;
 
-    G_RunGame();
+	G_RunGame();
 	G_CheckDemoStatus();
 }
 
@@ -226,7 +225,7 @@ void G_PlayDemo(const char *name)
 
 	p = M_CheckParm("-playdemo");
 	if (p && p < myargc - 1) {
-		// 20120107 bkw: add .lmp extension if missing.
+		// 20140107 bkw: add .lmp extension if missing.
 		if (dstrrchr(myargv[p + 1], '.'))
 			dstrcpy(filename, myargv[p + 1]);
 		else
@@ -309,8 +308,8 @@ void G_PlayDemo(const char *name)
 	usergame = false;
 	demoplayback = true;
 
-    G_RunGame();
-    iwadDemo = false;
+	G_RunGame();
+	iwadDemo = false;
 }
 
 //

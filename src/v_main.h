@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -25,19 +25,19 @@
 struct SDL_Window;
 struct SDL_GLContext;
 
-extern SDL_Window * window;
-extern SDL_GLContext * glcontext;
+extern SDL_Window *window;
+extern SDL_GLContext *glcontext;
 #else
 struct SDL_Surface;
 
-extern SDL_Surface * screen;
+extern SDL_Surface *screen;
 #endif
 
 enum {
-	V_WINDOWED_OFF		= 0x00,
-	V_WINDOWED_ON		= 0x01,
-	V_WINDOWED_NOBORDER	= 0x02,
-	V_WINDOWED_MASK		= 0x03,
+	V_WINDOWED_OFF = 0x00,
+	V_WINDOWED_ON = 0x01,
+	V_WINDOWED_NOBORDER = 0x02,
+	V_WINDOWED_MASK = 0x03,
 };
 
 typedef struct {
@@ -56,24 +56,24 @@ typedef struct {
 
 typedef struct {
 	int disp_id;
-	char * disp_name;
+	char *disp_name;
 
-	vidmode_t * modes;
+	vidmode_t *modes;
 	int num_modes;
 } viddisp_t;
 
 typedef struct {
-	viddisp_t * displays;
+	viddisp_t *displays;
 	int num_displays;
 } vidinfo_t;
 
-extern const vidmode_t * vidmode;
+extern const vidmode_t *vidmode;
 extern vidinfo_t vidinfo;
 
 void V_Init(void);
 dboolean V_SetMode(const vidmode_t * vm);
 dboolean V_RevertMode(void);
-vidmode_t * V_Mode(int display, int width, int height, int x, int h, int flags);
+vidmode_t *V_Mode(int display, int width, int height, int x, int h, int flags);
 
 void V_UpdateVidInfo(void);
 void V_ClearVidInfo(void);
@@ -87,25 +87,25 @@ d_inline int V_NumDisplays(void)
 
 d_inline int V_NumModes(int display)
 {
-	if(display < 0 || display >= vidinfo.num_displays)
+	if (display < 0 || display >= vidinfo.num_displays)
 		return 0;
 	return vidinfo.displays[display].num_modes;
 }
 
-d_inline const viddisp_t * V_GetDisplay(int display)
+d_inline const viddisp_t *V_GetDisplay(int display)
 {
-	if(display < 0 || display >= vidinfo.num_displays)
+	if (display < 0 || display >= vidinfo.num_displays)
 		return NULL;
 	return &vidinfo.displays[display];
 }
 
-d_inline const vidmode_t * V_GetMode(int display, int mode)
+d_inline const vidmode_t *V_GetMode(int display, int mode)
 {
-	if(display < 0 || display >= vidinfo.num_displays)
+	if (display < 0 || display >= vidinfo.num_displays)
 		return NULL;
 
-	const viddisp_t * disp = &vidinfo.displays[display];
-	if(mode < 0 || mode >= disp->num_modes)
+	const viddisp_t *disp = &vidinfo.displays[display];
+	if (mode < 0 || mode >= disp->num_modes)
 		return NULL;
 	return &disp->modes[mode];
 }

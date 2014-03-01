@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -100,7 +100,7 @@ int I_ShutdownWait(void)
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT ||
 		    (event.type == SDL_KEYDOWN
-			 && event.key.keysym.sym == SDLK_ESCAPE)) {
+		     && event.key.keysym.sym == SDLK_ESCAPE)) {
 #ifndef USESYSCONSOLE
 			exit(0);
 #else
@@ -399,8 +399,8 @@ void I_CenterMouse(void)
 	// Warp the the screen center
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_WarpMouseInWindow(window,
-			(unsigned short)(video_width / 2),
-			(unsigned short)(video_height / 2));
+			      (unsigned short)(video_width / 2),
+			      (unsigned short)(video_height / 2));
 #else
 	SDL_WarpMouse((unsigned short)(video_width / 2),
 		      (unsigned short)(video_height / 2));
@@ -418,7 +418,7 @@ void I_CenterMouse(void)
 static dboolean I_MouseShouldBeGrabbed()
 {
 #ifndef _WIN32
-	// 20120105 bkw: Always grab the mouse in fullscreen mode
+	// 20140105 bkw: Always grab the mouse in fullscreen mode
 	if (!InWindow)
 		return true;
 #endif
@@ -558,7 +558,8 @@ static void I_GetEvent(SDL_Event * Event)
 	case SDL_KEYDOWN:
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		// TODO: 'repeat' shouldn't be ignored when console is open.
-		if(Event->key.repeat) break;
+		if (Event->key.repeat)
+			break;
 #endif
 		event.type = ev_keydown;
 		event.data1 = I_TranslateKey(&Event->key.keysym);
@@ -577,8 +578,11 @@ static void I_GetEvent(SDL_Event * Event)
 		if (!window_focused)
 			break;
 
-		event.type = Event->type == SDL_MOUSEBUTTONUP ? ev_mouseup : ev_mousedown;
-		event.data1 = I_SDLtoDoomMouseState(SDL_GetMouseState (NULL, NULL));
+		event.type =
+		    Event->type ==
+		    SDL_MOUSEBUTTONUP ? ev_mouseup : ev_mousedown;
+		event.data1 =
+		    I_SDLtoDoomMouseState(SDL_GetMouseState(NULL, NULL));
 		event.data2 = event.data3 = 0;
 
 		D_PostEvent(&event);
@@ -593,14 +597,15 @@ static void I_GetEvent(SDL_Event * Event)
 			event.type = ev_keydown;
 			event.data1 = KEY_MWHEELDOWN;
 			mwheeldowntic = tic;
-		} else break;
+		} else
+			break;
 
 		event.data2 = event.data3 = 0;
 		D_PostEvent(&event);
 		break;
 
 	case SDL_WINDOWEVENT:
-		switch(Event->window.event) {
+		switch (Event->window.event) {
 		case SDL_WINDOWEVENT_FOCUS_GAINED:
 			window_focused = 1;
 			break;

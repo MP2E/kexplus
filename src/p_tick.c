@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -346,9 +346,8 @@ void P_Stop(void)
 
 	if (demoplayback && iwadDemo) {
 		demoplayback = false;
-        iwadDemo = false;
-    }
-
+		iwadDemo = false;
+	}
 	// do wipe/melt effect
 	if (gameaction != ga_loadgame) {
 		if (r_wipe.value) {
@@ -366,16 +365,15 @@ void P_Stop(void)
 
 	S_ResetSound();
 
-    // action is warpquick only because the user
-    // cancelled demo playback...
-    // boot the user back to the title screen
-    if(gameaction == ga_warpquick && demoplayback) {
-        gameaction = ga_title;
-        demoplayback = false;
-    }
-    else {
-        gameaction = action;
-    }
+	// action is warpquick only because the user
+	// cancelled demo playback...
+	// boot the user back to the title screen
+	if (gameaction == ga_warpquick && demoplayback) {
+		gameaction = ga_title;
+		demoplayback = false;
+	} else {
+		gameaction = action;
+	}
 }
 
 //

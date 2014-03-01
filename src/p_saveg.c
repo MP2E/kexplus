@@ -3,7 +3,7 @@
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
 // Copyright(C) 2005 Simon Howard
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -67,7 +67,7 @@ char *P_GetSaveGameName(int num)
 #ifdef _WIN32
 	sprintf(name, SAVEGAMENAME "%d.dsg", num);
 #else
-	// 20120105 bkw: UNIX-friendly savegame location
+	// 20140105 bkw: UNIX-friendly savegame location
 	sprintf(name, "%s/.doom64ex/" SAVEGAMENAME "%d.dsg", getenv("HOME"),
 		num);
 #endif
@@ -1824,8 +1824,8 @@ void P_UnArchiveSpecials(void)
 				saveg_specials[i].readfunc(thinker);
 
 				((thinker_t *) thinker)->function.acp1 =
-				    (actionf_p1) saveg_specials[i].
-				    function.acp1;
+				    (actionf_p1) saveg_specials[i].function.
+				    acp1;
 				P_AddThinker(thinker);
 
 				// handle special cases
@@ -1850,7 +1850,8 @@ void P_UnArchiveSpecials(void)
 
 				case tc_combine:
 					P_CombineLightSpecials(((combine_t *)
-								thinker)->sector);
+								thinker)->
+							       sector);
 					P_RemoveThinker(thinker);
 					break;
 				}

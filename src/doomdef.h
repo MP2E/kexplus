@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -269,7 +269,7 @@ typedef enum {
 
 } powerduration_t;
 
-// 20120209 villsa - game flags
+// 20140209 villsa - game flags
 enum {
 	GF_NOMONSTERS = (1 << 0),
 	GF_FASTMONSTERS = (1 << 1),
@@ -283,12 +283,12 @@ enum {
 	GF_KEEPITEMS = (1 << 9),
 };
 
-// 20120209 villsa - compatibility flags
+// 20140209 villsa - compatibility flags
 enum {
 	COMPATF_COLLISION = (1 << 0),	// don't use maxradius for mobj position checks
 	COMPATF_MOBJPASS = (1 << 1),	// allow mobjs to stand on top one another
 	COMPATF_LIMITPAIN = (1 << 2),	// pain elemental limited to 17 lost souls?
-    COMPATF_REACHITEMS  = (1 << 3)      // able to grab high items by bumping
+	COMPATF_REACHITEMS = (1 << 3)	// able to grab high items by bumping
 };
 
 extern dboolean windowpause;

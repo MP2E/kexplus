@@ -1,7 +1,7 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -283,7 +283,7 @@ byte *GL_GetScreenBuffer(int x, int y, int width, int height)
 	buffer = (byte *) Z_Calloc(col, PU_STATIC, 0);
 
 	//
-	// 20120313 villsa - force pack alignment to 1
+	// 20140313 villsa - force pack alignment to 1
 	//
 	dglGetIntegerv(GL_PACK_ALIGNMENT, &pack);
 	dglPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -293,7 +293,7 @@ byte *GL_GetScreenBuffer(int x, int y, int width, int height)
 
 	//
 	// Need to vertically flip the image
-	// 20120313 villsa - better method to flip image. uses one buffer instead of two
+	// 20140313 villsa - better method to flip image. uses one buffer instead of two
 	//
 	for (i = 0; i < height / 2; i++) {
 		dmemcpy(buffer, &data[i * col], col);
@@ -632,7 +632,8 @@ void GL_Init(void)
 			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
 					    (int)v_buffersize.value);
 
-			if (!V_SetMode(V_Mode(0, 640, 480, -1, -1, V_WINDOWED_ON))) {
+			if (!V_SetMode
+			    (V_Mode(0, 640, 480, -1, -1, V_WINDOWED_ON))) {
 				// give up
 				I_Error("GL_Init: Failed to create window.");
 			}

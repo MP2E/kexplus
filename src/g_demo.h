@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1993-1997 Id Software, Inc.
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,15 +33,15 @@ void G_PlayDemo(const char *name);
 void G_ReadDemoTiccmd(ticcmd_t * cmd);
 void G_WriteDemoTiccmd(ticcmd_t * cmd);
 
-extern char demoname[256]; // name of demo lump
-extern dboolean demorecording; // currently recording a demo
-extern dboolean demoplayback; // currently playing a demo
+extern char demoname[256];	// name of demo lump
+extern dboolean demorecording;	// currently recording a demo
+extern dboolean demoplayback;	// currently playing a demo
 extern dboolean netdemo;
 extern byte *demobuffer;
 extern byte *demo_p;
 extern byte *demoend;
 extern dboolean singledemo;
-extern dboolean endDemo; // signal recorder to stop on next tic
-extern dboolean iwadDemo; //hide hud, end playback after 1 level
+extern dboolean endDemo;	// signal recorder to stop on next tic
+extern dboolean iwadDemo;	//hide hud, end playback after 1 level
 
 #endif

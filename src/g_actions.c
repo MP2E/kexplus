@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1999-2000 Paul Brook
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -356,7 +356,7 @@ void G_ActionTicker(void)
 	if (OptimizeTree) {
 		G_DoOptimizeActionTree();
 
-		// 20120310 villsa - do we really need to optimize this every tick?
+		// 20140310 villsa - do we really need to optimize this every tick?
 		// set back to false when we're done
 		OptimizeTree = false;
 	}

@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 1999-2000 Paul Brook
-// Copyright(C) 2007-2012 Samuel Villarreal
+// Copyright(C) 2007-2014 Samuel Villarreal
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -397,8 +397,8 @@ dboolean CON_Responder(event_t * ev)
 					    console_buffer[c]->len;
 					dmemcpy(console_inputbuffer,
 						console_buffer[console_prevcmds
-							       [console_nextcmd]]->line,
-						console_inputlength);
+							       [console_nextcmd]]->
+						line, console_inputlength);
 				}
 				break;
 
