@@ -2043,6 +2043,10 @@ void M_Video(int choice)
 {
 	int i;
 
+	V_UpdateVidInfo();
+	if (V_NumDisplays() < 2)
+		VideoDef.menuitems[video_display].status = -3;
+
 	M_SetupNextMenu(&VideoDef);
 
 	m_videoDisplay = vidmode->disp_id;
@@ -2056,7 +2060,7 @@ void M_DrawVideo(void)
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	static const char *windowedType[3] = { "Off", "On", "Noborder" };
 #endif
-	static char bitValue[8];
+	static char *bitValue;
 	char res[16];
 	int y;
 
@@ -2068,14 +2072,16 @@ void M_DrawVideo(void)
 			     i_gamma.value);
 	}
 #define DRAWVIDEOITEM(a, b) \
-    if(currentMenu->menupageoffset <= a && \
-        a - currentMenu->menupageoffset < currentMenu->numpageitems) \
+	if(currentMenu->menupageoffset <= y && \
+		y - currentMenu->menupageoffset < currentMenu->numpageitems) \
     { \
-        y = a - currentMenu->menupageoffset; \
+		y++; \
         Draw_BigText(VideoDef.x + 176, VideoDef.y+LINEHEIGHT*y, MENUCOLORRED, b); \
     }
 
 #define DRAWVIDEOITEM2(a, b, c) DRAWVIDEOITEM(a, c[(int)b])
+
+	y = filter - currentMenu->menupageoffset - 1;
 
 	DRAWVIDEOITEM2(filter, r_filter.value, filterType);
 	DRAWVIDEOITEM2(anisotropic, r_anisotropic.value, msgNames);
@@ -2084,14 +2090,53 @@ void M_DrawVideo(void)
 #else
 	DRAWVIDEOITEM2(windowed, v_windowed.value, msgNames);
 #endif
+	DRAWVIDEOITEM2(vsync, v_vsync.value, msgNames);
 
-	disp = V_GetDisplay(m_videoDisplay);
-	if (!disp) {
-		m_videoDisplay = 0;
-		disp = V_GetDisplay(m_videoDisplay);
+	if (currentMenu->menupageoffset <= depth &&
+		depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
+		if (v_depthsize.value == 8)
+			bitValue = "8";
+		else if (v_depthsize.value == 16)
+			bitValue = "16";
+		else if (v_depthsize.value == 24)
+			bitValue = "24";
+		else
+			bitValue = "Invalid";
+
+		y++;
+		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
+				 MENUCOLORRED, bitValue);
 	}
 
-	// TODO: Only show this option when the user has two or more displays connected
+	if (currentMenu->menupageoffset <= buffer &&
+		buffer - currentMenu->menupageoffset < currentMenu->numpageitems) {
+		if (v_buffersize.value == 8)
+			bitValue = "8";
+		else if (v_buffersize.value == 16)
+			bitValue = "16";
+		else if (v_buffersize.value == 24)
+			bitValue = "24";
+		else if (v_buffersize.value == 32)
+			bitValue = "32";
+		else
+			bitValue = "Invalid";
+
+		I_Printf(">> %s\n", bitValue);
+		y++;
+		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
+				 MENUCOLORRED, bitValue);
+	}
+
+	if (currentMenu->menuitems[video_display].status == -3) {
+		disp = NULL;
+	} else {
+		disp = V_GetDisplay(m_videoDisplay);
+		if (!disp) {
+			m_videoDisplay = 0;
+			disp = V_GetDisplay(m_videoDisplay);
+		}
+	}
+
 	if (disp) {
 		char str[16];
 		if(disp->disp_name) {
@@ -2127,42 +2172,6 @@ void M_DrawVideo(void)
 
 	sprintf(res, "%ix%i", (int)v_width.value, (int)v_height.value);
 	DRAWVIDEOITEM(resolution, res);
-
-	DRAWVIDEOITEM2(vsync, v_vsync.value, msgNames);
-
-	if (currentMenu->menupageoffset <= depth &&
-	    depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
-		if (v_depthsize.value == 8)
-			dsnprintf(bitValue, 1, "8");
-		else if (v_depthsize.value == 16)
-			dsnprintf(bitValue, 2, "16");
-		else if (v_depthsize.value == 24)
-			dsnprintf(bitValue, 2, "24");
-		else
-			dsnprintf(bitValue, 8, "Invalid");
-
-		y = depth - currentMenu->menupageoffset;
-		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
-			     MENUCOLORRED, bitValue);
-	}
-
-	if (currentMenu->menupageoffset <= buffer &&
-	    buffer - currentMenu->menupageoffset < currentMenu->numpageitems) {
-		if (v_buffersize.value == 8)
-			dsnprintf(bitValue, 1, "8");
-		else if (v_buffersize.value == 16)
-			dsnprintf(bitValue, 2, "16");
-		else if (v_buffersize.value == 24)
-			dsnprintf(bitValue, 2, "24");
-		else if (v_buffersize.value == 32)
-			dsnprintf(bitValue, 2, "32");
-		else
-			dsnprintf(bitValue, 8, "Invalid");
-
-		y = buffer - currentMenu->menupageoffset;
-		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
-			     MENUCOLORRED, bitValue);
-	}
 #undef DRAWVIDEOITEM
 #undef DRAWVIDEOITEM2
 
