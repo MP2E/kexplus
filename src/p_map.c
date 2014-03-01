@@ -79,7 +79,7 @@ d_inline static dboolean P_CheckThingCollision(mobj_t * thing)
 	fixed_t blockdist;
 
 	if (netgame && (tmthing->type == MT_PLAYER && thing->type == MT_PLAYER))
-		return true;	// 20140122 villsa - allow players to go through each other
+		return true;	// 20120122 villsa - allow players to go through each other
 	blockdist = thing->radius + tmthing->radius;
 
 	// [d64]: mimic logic from original version
