@@ -30,6 +30,8 @@
 #define DEFAULT_FLUID_DRIVER "coreaudio"
 #elif __linux__
 #define DEFAULT_FLUID_DRIVER "alsa"
+#elif PANDORA
+#define DEFAULT_FLUID_DRIVER "alsa"
 #else
 #define DEFAULT_FLUID_DRIVER "sndio"
 #endif

@@ -475,14 +475,30 @@ static void R_DrawSimpleSky(int lump, int offset)
 
 static void R_DrawVoidSky(void)
 {
+#ifdef HAVE_GLES
+	GLshort vtx[4*2];
+	GLfloat tex[4*2];
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(2, GL_SHORT, 0, vtx);
+	#define dglRecti(x1, y1, x2, y2) \
+	vtx[0]=x1; vtx[1]=y1; vtx[2]=x2; vtx[3]=y1; \
+	vtx[4]=x2; vtx[5]=y2; vtx[6]=x1; vtx[7]=y2; \
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+#endif
 	GL_SetOrtho(1);
 
 	dglDisable(GL_TEXTURE_2D);
 	dglColor4ubv((byte *) & sky->skycolor[2]);
 	dglRecti(SCREENWIDTH, SCREENHEIGHT, 0, 0);
 	dglEnable(GL_TEXTURE_2D);
+#ifdef HAVE_GLES
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+#endif
 
 	GL_ResetViewport();
+
 }
 
 //

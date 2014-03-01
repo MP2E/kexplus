@@ -25,7 +25,100 @@
 
 #include <math.h>
 
+#ifdef HAVE_GLES
+#include <stddef.h>
+#include "SDL_opengles.h"
+// specific definitions for GLES
+typedef  unsigned int GLhandleARB;
+typedef ptrdiff_t GLintptrARB;
+typedef ptrdiff_t GLsizeiptrARB;
+
+#define GL_TEXTURE0_ARB	GL_TEXTURE0
+#define GL_TEXTURE1_ARB	GL_TEXTURE1
+#define GL_TEXTURE2_ARB	GL_TEXTURE2
+#define GL_TEXTURE3_ARB	GL_TEXTURE3
+#define GL_MAX_TEXTURE_UNITS_ARB	GL_MAX_TEXTURE_UNITS
+
+#define GL_SOURCE0_RGB		GL_SRC0_RGB
+#define GL_SOURCE1_RGB		GL_SRC1_RGB
+#define GL_SOURCE2_RGB		GL_SRC2_RGB
+#define GL_SOURCE3_RGB		GL_SRC3_RGB
+#define GL_SOURCE0_ALPHA	GL_SRC0_ALPHA
+#define GL_SOURCE1_ALPHA	GL_SRC1_ALPHA
+#define GL_SOURCE2_ALPHA	GL_SRC2_ALPHA
+#define GL_SOURCE3_ALPHA	GL_SRC3_ALPHA
+
+#define GL_COMBINE_ARB	GL_COMBINE
+
+#define GL_MIRRORED_REPEAT	GL_MIRRORED_REPEAT_OES
+
+#define GL_RGBA8	GL_RGBA
+#define GL_RGB8		GL_RGB
+
+#define GL_CLAMP	GL_CLAMP_TO_EDGE
+
+#define APIENTRYP	GL_APIENTRYP
+#define GLdouble	double
+
+typedef void (APIENTRYP PFNGLACTIVETEXTUREARBPROC) (GLenum texture);
+typedef void (APIENTRYP PFNGLCLIENTACTIVETEXTUREARBPROC) (GLenum texture);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1DARBPROC) (GLenum target, GLdouble s);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1DVARBPROC) (GLenum target, const GLdouble *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1FARBPROC) (GLenum target, GLfloat s);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1FVARBPROC) (GLenum target, const GLfloat *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1IARBPROC) (GLenum target, GLint s);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1IVARBPROC) (GLenum target, const GLint *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1SARBPROC) (GLenum target, GLshort s);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD1SVARBPROC) (GLenum target, const GLshort *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2DARBPROC) (GLenum target, GLdouble s, GLdouble t);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2DVARBPROC) (GLenum target, const GLdouble *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2FARBPROC) (GLenum target, GLfloat s, GLfloat t);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2FVARBPROC) (GLenum target, const GLfloat *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2IARBPROC) (GLenum target, GLint s, GLint t);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2IVARBPROC) (GLenum target, const GLint *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2SARBPROC) (GLenum target, GLshort s, GLshort t);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD2SVARBPROC) (GLenum target, const GLshort *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3DARBPROC) (GLenum target, GLdouble s, GLdouble t, GLdouble r);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3DVARBPROC) (GLenum target, const GLdouble *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3FARBPROC) (GLenum target, GLfloat s, GLfloat t, GLfloat r);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3FVARBPROC) (GLenum target, const GLfloat *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3IARBPROC) (GLenum target, GLint s, GLint t, GLint r);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3IVARBPROC) (GLenum target, const GLint *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3SARBPROC) (GLenum target, GLshort s, GLshort t, GLshort r);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD3SVARBPROC) (GLenum target, const GLshort *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4DARBPROC) (GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4DVARBPROC) (GLenum target, const GLdouble *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4FARBPROC) (GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4FVARBPROC) (GLenum target, const GLfloat *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4IARBPROC) (GLenum target, GLint s, GLint t, GLint r, GLint q);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4IVARBPROC) (GLenum target, const GLint *v);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4SARBPROC) (GLenum target, GLshort s, GLshort t, GLshort r, GLshort q);
+typedef void (APIENTRYP PFNGLMULTITEXCOORD4SVARBPROC) (GLenum target, const GLshort *v);
+
+typedef void (APIENTRYP PFNGLLOCKARRAYSEXTPROC) (GLint first, GLsizei count);
+typedef void (APIENTRYP PFNGLUNLOCKARRAYSEXTPROC) (void);
+
+typedef void (APIENTRYP PFNGLFOGCOORDFEXTPROC) (GLfloat coord);
+typedef void (APIENTRYP PFNGLFOGCOORDFVEXTPROC) (const GLfloat *coord);
+typedef void (APIENTRYP PFNGLFOGCOORDDEXTPROC) (GLdouble coord);
+typedef void (APIENTRYP PFNGLFOGCOORDDVEXTPROC) (const GLdouble *coord);
+typedef void (APIENTRYP PFNGLFOGCOORDPOINTEREXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
+
+typedef void (APIENTRYP PFNGLBINDBUFFERARBPROC) (GLenum target, GLuint buffer);
+typedef void (APIENTRYP PFNGLDELETEBUFFERSARBPROC) (GLsizei n, const GLuint *buffers);
+typedef void (APIENTRYP PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);
+typedef GLboolean (APIENTRYP PFNGLISBUFFERARBPROC) (GLuint buffer);
+typedef void (APIENTRYP PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
+typedef void (APIENTRYP PFNGLBUFFERSUBDATAARBPROC) (GLenum target, GLintptrARB offset, GLsizeiptrARB size, const GLvoid *data);
+typedef void (APIENTRYP PFNGLGETBUFFERSUBDATAARBPROC) (GLenum target, GLintptrARB offset, GLsizeiptrARB size, GLvoid *data);
+typedef GLvoid* (APIENTRYP PFNGLMAPBUFFERARBPROC) (GLenum target, GLenum access);
+typedef GLboolean (APIENTRYP PFNGLUNMAPBUFFERARBPROC) (GLenum target);
+typedef void (APIENTRYP PFNGLGETBUFFERPARAMETERIVARBPROC) (GLenum target, GLenum pname, GLint *params);
+typedef void (APIENTRYP PFNGLGETBUFFERPOINTERVARBPROC) (GLenum target, GLenum pname, GLvoid* *params);
+
+#else
 #include "SDL_opengl.h"
+#endif
 #include "gl_main.h"
 #include "i_system.h"
 
@@ -74,7 +167,11 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglClear(mask) glClear(mask)
 #define dglClearAccum(red, green, blue, alpha) glClearAccum(red, green, blue, alpha)
 #define dglClearColor(red, green, blue, alpha) glClearColor(red, green, blue, alpha)
+#ifdef HAVE_GLES
+#define dglClearDepth(depth) glClearDepthf(depth)
+#else
 #define dglClearDepth(depth) glClearDepth(depth)
+#endif
 #define dglClearIndex(c) glClearIndex(c)
 #define dglClearStencil(s) glClearStencil(s)
 #define dglClipPlane(plane, equation) glClipPlane(plane, equation)
@@ -105,7 +202,11 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglColor4s(red, green, blue, alpha) glColor4s(red, green, blue, alpha)
 #define dglColor4sv(v) glColor4sv(v)
 #define dglColor4ub(red, green, blue, alpha) glColor4ub(red, green, blue, alpha)
+#ifdef HAVE_GLES
+#define dglColor4ubv(v) glColor4ub((v)[0], (v)[1], (v)[2], (v)[3])
+#else
 #define dglColor4ubv(v) glColor4ubv(v)
+#endif
 #define dglColor4ui(red, green, blue, alpha) glColor4ui(red, green, blue, alpha)
 #define dglColor4uiv(v) glColor4uiv(v)
 #define dglColor4us(red, green, blue, alpha) glColor4us(red, green, blue, alpha)
@@ -123,7 +224,11 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglDeleteTextures(n, textures) glDeleteTextures(n, textures)
 #define dglDepthFunc(func) glDepthFunc(func)
 #define dglDepthMask(flag) glDepthMask(flag)
+#ifdef HAVE_GLES
+#define dglDepthRange(zNear, zFar) glDepthRangef(zNear, zFar)
+#else
 #define dglDepthRange(zNear, zFar) glDepthRange(zNear, zFar)
+#endif
 #define dglDisable(cap) glDisable(cap)
 #define dglDisableClientState(array) glDisableClientState(array)
 #define dglDrawArrays(mode, first, count) glDrawArrays(mode, first, count)
@@ -154,7 +259,11 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglFlush() glFlush()
 #define dglFogf(pname, param) glFogf(pname, param)
 #define dglFogfv(pname, params) glFogfv(pname, params)
+#ifdef HAVE_GLES
+#define dglFogi(pname, param) glFogf(pname, param)
+#else
 #define dglFogi(pname, param) glFogi(pname, param)
+#endif
 #define dglFogiv(pname, params) glFogiv(pname, params)
 #define dglFrontFace(mode) glFrontFace(mode)
 #define dglFrustum(left, right, bottom, top, zNear, zFar) glFrustum(left, right, bottom, top, zNear, zFar)
@@ -249,7 +358,11 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglNormal3s(nx, ny, nz) glNormal3s(nx, ny, nz)
 #define dglNormal3sv(v) glNormal3sv(v)
 #define dglNormalPointer(type, stride, pointer) glNormalPointer(type, stride, pointer)
+#ifdef HAVE_GLES
+#define dglOrtho(left, right, bottom, top, zNear, zFar) glOrthof(left, right, bottom, top, zNear, zFar)
+#else
 #define dglOrtho(left, right, bottom, top, zNear, zFar) glOrtho(left, right, bottom, top, zNear, zFar)
+#endif
 #define dglPassThrough(token) glPassThrough(token)
 #define dglPixelMapfv(map, mapsize, values) glPixelMapfv(map, mapsize, values)
 #define dglPixelMapuiv(map, mapsize, values) glPixelMapuiv(map, mapsize, values)
@@ -302,7 +415,9 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglRectdv(v1, v2) glRectdv(v1, v2)
 #define dglRectf(x1, y1, x2, y2) glRectf(x1, y1, x2, y2)
 #define dglRectfv(v1, v2) glRectfv(v1, v2)
+#ifndef HAVE_GLES
 #define dglRecti(x1, y1, x2, y2) glRecti(x1, y1, x2, y2)
+#endif
 #define dglRectiv(v1, v2) glRectiv(v1, v2)
 #define dglRects(x1, y1, x2, y2) glRects(x1, y1, x2, y2)
 #define dglRectsv(v1, v2) glRectsv(v1, v2)
@@ -368,7 +483,11 @@ extern void dglTexCombReplaceAlpha(int t);
 #define dglTexParameteriv(target, pname, params) glTexParameteriv(target, pname, params)
 #define dglTexSubImage1D(target, level, xoffset, width, format, type, pixels) glTexSubImage1D(target, level, xoffset, width, format, type, pixels)
 #define dglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels) glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels)
+#ifdef HAVE_GLES
+#define dglTranslated(x, y, z) glTranslatef(x, y, z)
+#else
 #define dglTranslated(x, y, z) glTranslated(x, y, z)
+#endif
 #define dglTranslatef(x, y, z) glTranslatef(x, y, z)
 #define dglVertex2d(x, y) glVertex2d(x, y)
 #define dglVertex2dv(v) glVertex2dv(v)
@@ -557,7 +676,11 @@ d_inline static void glClearDepth_DEBUG(GLclampd depth, const char *file,
 	I_Printf("file = %s, line = %i, glClearDepth(depth=%f)\n", file, line,
 		 depth);
 #endif
+#ifdef HAVE_GLES
+	glClearDepthf(depth);
+#else
 	glClearDepth(depth);
+#endif
 	dglLogError("glClearDepth", file, line);
 }
 
@@ -876,7 +999,11 @@ d_inline static void glColor4ubv_DEBUG(GLubyte * v, const char *file, int line)
 #ifdef LOG_GLFUNC_CALLS
 	I_Printf("file = %s, line = %i, glColor4ubv(v=%p)\n", file, line, v);
 #endif
+#ifdef HAVE_GLES
+	glColor4ub(v[0], v[1], v[2], v[3]);
+#else
 	glColor4ubv(v);
+#endif
 	dglLogError("glColor4ubv", file, line);
 }
 
@@ -1097,7 +1224,11 @@ d_inline static void glDepthRange_DEBUG(GLclampd zNear, GLclampd zFar,
 	I_Printf("file = %s, line = %i, glDepthRange(zNear=%f, zFar=%f)\n",
 		 file, line, zNear, zFar);
 #endif
+#ifdef HAVE_GLES
+	glDepthRangef(zNear, zFar);
+#else
 	glDepthRange(zNear, zFar);
+#endif
 	dglLogError("glDepthRange", file, line);
 }
 
@@ -1426,7 +1557,11 @@ d_inline static void glFogi_DEBUG(GLenum pname, GLint param, const char *file,
 	I_Printf("file = %s, line = %i, glFogi(pname=0x%x, param=%i)\n", file,
 		 line, pname, param);
 #endif
+#ifdef HAVE_GLES
+	glFogf(pname, param);
+#else
 	glFogi(pname, param);
+#endif
 	dglLogError("glFogi", file, line);
 }
 
@@ -2505,7 +2640,11 @@ d_inline static void glOrtho_DEBUG(GLdouble left, GLdouble right,
 	    ("file = %s, line = %i, glOrtho(left=%f, right=%f, bottom=%f, top=%f, zNear=%f, zFar=%f)\n",
 	     file, line, left, right, bottom, top, zNear, zFar);
 #endif
+#ifdef HAVE_GLES
+	glOrthof(left, right, bottom, top, zNear, zFar);
+#else
 	glOrtho(left, right, bottom, top, zNear, zFar);
+#endif
 	dglLogError("glOrtho", file, line);
 }
 
@@ -3828,7 +3967,11 @@ d_inline static void glTranslated_DEBUG(GLdouble x, GLdouble y, GLdouble z,
 	I_Printf("file = %s, line = %i, glTranslated(x=%f, y=%f, z=%f)\n", file,
 		 line, x, y, z);
 #endif
+#ifdef HAVE_GLES
+	glTranslatef(x, y, z);
+#else
 	glTranslated(x, y, z);
+#endif
 	dglLogError("glTranslated", file, line);
 }
 
@@ -4350,7 +4493,9 @@ d_inline static void glViewport_DEBUG(GLint x, GLint y, GLsizei width,
 #define dglRectdv(v1, v2) glRectdv_DEBUG(v1, v2, __FILE__, __LINE__)
 #define dglRectf(x1, y1, x2, y2) glRectf_DEBUG(x1, y1, x2, y2, __FILE__, __LINE__)
 #define dglRectfv(v1, v2) glRectfv_DEBUG(v1, v2, __FILE__, __LINE__)
+#ifdef HAVE_GLES
 #define dglRecti(x1, y1, x2, y2) glRecti_DEBUG(x1, y1, x2, y2, __FILE__, __LINE__)
+#endif
 #define dglRectiv(v1, v2) glRectiv_DEBUG(v1, v2, __FILE__, __LINE__)
 #define dglRects(x1, y1, x2, y2) glRects_DEBUG(x1, y1, x2, y2, __FILE__, __LINE__)
 #define dglRectsv(v1, v2) glRectsv_DEBUG(v1, v2, __FILE__, __LINE__)
@@ -4451,6 +4596,17 @@ d_inline static void glViewport_DEBUG(GLint x, GLint y, GLsizei width,
 // GL_ARB_multitexture
 //
 extern dboolean has_GL_ARB_multitexture;
+#ifdef HAVE_GLES
+#define GL_ARB_multitexture_Define() \
+dboolean has_GL_ARB_multitexture = true;
+
+#define GL_ARB_multitexture_Init() \
+has_GL_ARB_multitexture = true;
+
+#define _glActiveTextureARB	glActiveTexture
+#define _glClientActiveTextureARB glClientActiveTexture
+//#define _glMultiTexCoord2fARB(a, b)	glMultiTexCoord4f(a, b, 0.0f, 1.0f);
+#else
 
 extern PFNGLACTIVETEXTUREARBPROC _glActiveTextureARB;
 extern PFNGLCLIENTACTIVETEXTUREARBPROC _glClientActiveTextureARB;
@@ -4560,7 +4716,7 @@ _glMultiTexCoord4iARB = GL_RegisterProc("glMultiTexCoord4iARB"); \
 _glMultiTexCoord4ivARB = GL_RegisterProc("glMultiTexCoord4ivARB"); \
 _glMultiTexCoord4sARB = GL_RegisterProc("glMultiTexCoord4sARB"); \
 _glMultiTexCoord4svARB = GL_RegisterProc("glMultiTexCoord4svARB")
-
+#endif
 #ifndef USE_DEBUG_GLFUNCS
 
 #define dglActiveTextureARB(texture) _glActiveTextureARB(texture)
@@ -5495,23 +5651,29 @@ has_GL_ARB_texture_non_power_of_two = GL_CheckExtension("GL_ARB_texture_non_powe
 //
 extern dboolean has_GL_ARB_texture_env_combine;
 
+#ifdef HAVE_GLES
+#define GL_ARB_texture_env_combine_Define() \
+dboolean has_GL_ARB_texture_env_combine = true;
+
+#define GL_ARB_texture_env_combine_Init() \
+has_GL_ARB_texture_env_combine = true;
+#else
 #define GL_ARB_texture_env_combine_Define() \
 dboolean has_GL_ARB_texture_env_combine = false;
 
 #define GL_ARB_texture_env_combine_Init() \
 has_GL_ARB_texture_env_combine = GL_CheckExtension("GL_ARB_texture_env_combine");
+#endif
 
 //
 // GL_EXT_texture_env_combine
 //
 extern dboolean has_GL_EXT_texture_env_combine;
-
 #define GL_EXT_texture_env_combine_Define() \
 dboolean has_GL_EXT_texture_env_combine = false;
 
 #define GL_EXT_texture_env_combine_Init() \
 has_GL_EXT_texture_env_combine = GL_CheckExtension("GL_EXT_texture_env_combine");
-
 //
 // GL_EXT_texture_filter_anisotropic
 //

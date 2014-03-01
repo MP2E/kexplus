@@ -775,6 +775,9 @@ void R_RenderPlayerSprites(player_t * player)
 
 void R_DrawThingBBox(void)
 {
+#ifdef HAVE_GLES
+#warning no debug tools
+#else
 	float bbox[4];
 	float z1;
 	float z2;
@@ -854,4 +857,5 @@ void R_DrawThingBBox(void)
 	GL_SetState(GLSTATE_TEXTURE0, 1);
 	GL_SetState(GLSTATE_CULL, 1);
 	GL_SetState(GLSTATE_BLEND, 0);
+#endif
 }

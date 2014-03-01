@@ -135,12 +135,16 @@ int Draw_Text(int x, int y, rcolor color, float scale,
 
 	GL_SetState(GLSTATE_BLEND, 1);
 
+#ifdef HAVE_GLES
+	#warning *TODO* Polygone mode
+#else
 	if (!r_fillmode.value) {
 		dglEnable(GL_TEXTURE_2D);
 		dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		r_fillmode.value = 1.0f;
 		fill = true;
 	}
+#endif
 
 	GL_BindGfxTexture("SFONT", true);
 
@@ -212,13 +216,14 @@ int Draw_Text(int x, int y, rcolor color, float scale,
 		dglDrawGeometry(vi, vtxstring);
 
 	GL_ResetViewport();
-
+#ifdef HAVE_GLES
+#else
 	if (fill) {
 		dglDisable(GL_TEXTURE_2D);
 		dglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		r_fillmode.value = 0.0f;
 	}
-
+#endif
 	GL_SetState(GLSTATE_BLEND, 0);
 	GL_SetOrthoScale(1.0f);
 

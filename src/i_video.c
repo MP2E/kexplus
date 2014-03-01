@@ -31,7 +31,11 @@
 #include <math.h>
 
 #include "SDL.h"
+#ifdef HAVE_GLES
+#include "SDL_opengles.h"
+#else
 #include "SDL_opengl.h"
+#endif
 
 #include "m_misc.h"
 #include "doomdef.h"
@@ -45,15 +49,28 @@
 #include "i_xinput.h"
 #endif
 
+#ifdef PANDORA
+CVAR(v_msensitivityx, 6);
+CVAR(v_msensitivityy, 5);
+CVAR(v_macceleration, 1);
+CVAR(v_mlook, 1);
+#else
 CVAR(v_msensitivityx, 5);
 CVAR(v_msensitivityy, 5);
 CVAR(v_macceleration, 0);
 CVAR(v_mlook, 0);
+#endif
 CVAR(v_mlookinvert, 0);
 CVAR(v_yaxismove, 0);
+#ifdef PANDORA
+CVAR(v_width, 800);
+CVAR(v_height, 480);
+CVAR(v_windowed, 0);
+#else
 CVAR(v_width, 640);
 CVAR(v_height, 480);
 CVAR(v_windowed, 1);
+#endif
 CVAR(v_vsync, 1);
 CVAR(v_depthsize, 24);
 CVAR(v_buffersize, 32);
@@ -65,9 +82,9 @@ static void I_ReadMouse(void);
 static void I_InitInputs(void);
 void I_UpdateGrab(void);
 
-//================================================================================
+//==============================================================================
 // Video
-//================================================================================
+//==============================================================================
 
 SDL_Surface *screen;
 int video_width;
@@ -77,6 +94,10 @@ dboolean window_focused;
 
 int mouse_x = 0;
 int mouse_y = 0;
+
+#ifdef PANDORA
+dboolean noshouldermb;
+#endif
 
 //
 // I_InitScreen
@@ -92,14 +113,27 @@ void I_InitScreen(void)
 	video_width = (int)v_width.value;
 	video_height = (int)v_height.value;
 	video_ratio = (float)video_width / (float)video_height;
-
+#ifdef PANDORA
+	noshouldermb=false;
+	if (M_CheckParm("-noshouldermb"))
+		noshouldermb=true;
+#else
 	if (M_CheckParm("-window"))
 		InWindow = true;
 	if (M_CheckParm("-fullscreen"))
+#endif
 		InWindow = false;
 
 	newwidth = newheight = 0;
-
+#ifdef PANDORA
+	if (video_width!=800) newwidth=800;
+	if (video_height!=480) newheight=480;
+	video_ratio = (float)newwidth / (float)newheight;
+	if (InWindow) {
+		InWindow = 0;
+		CON_CvarSetValue(v_windowed.name, (float)0);
+	}
+#else
 	p = M_CheckParm("-width");
 	if (p && p < myargc - 1)
 		newwidth = datoi(myargv[p + 1]);
@@ -107,7 +141,7 @@ void I_InitScreen(void)
 	p = M_CheckParm("-height");
 	if (p && p < myargc - 1)
 		newheight = datoi(myargv[p + 1]);
-
+#endif
 	if (newwidth && newheight) {
 		video_width = newwidth;
 		video_height = newheight;
@@ -195,6 +229,9 @@ void I_InitVideo(void)
 #ifdef _DEBUG
 	f |= SDL_INIT_NOPARACHUTE;
 #endif
+#ifdef PANDORA
+	f |= SDL_INIT_JOYSTICK;
+#endif
 
 	putenv("SDL_VIDEO_CENTERED=1");
 
@@ -223,8 +260,9 @@ void I_StartTic(void)
 #ifdef _USE_XINPUT
 	I_XInputPollEvent();
 #endif
-
+#ifndef PANDORA
 	I_ReadMouse();
+#endif
 }
 
 //
@@ -251,6 +289,9 @@ int UseJoystick;
 int UseMouse[2];
 dboolean DigiJoy;
 int DualMouse;
+#ifdef PANDORA
+SDL_Joystick	*joy0;
+#endif
 
 dboolean MouseMode;		//false=microsoft, true=mouse systems
 
@@ -441,12 +482,16 @@ static int I_SDLtoDoomMouseState(Uint8 buttonstate)
 
 static void I_UpdateFocus(void)
 {
+#ifdef PANDORA
+	window_focused = true;
+#else
 	Uint8 state;
 	state = SDL_GetAppState();
 
 	// We should have input (keyboard) focus and be visible
 	// (not minimised)
 	window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
+#endif
 }
 
 // I_CenterMouse
@@ -460,7 +505,12 @@ void I_CenterMouse(void)
 		      (unsigned short)(video_height / 2));
 
 	// Clear any relative movement caused by warping
+	SDL_Event dummy[ 1 ];
+
 	SDL_PumpEvents();
+	while( SDL_PeepEvents( dummy, 1, SDL_GETEVENT,
+		SDL_EVENTMASK( SDL_MOUSEMOTION ) ) ) { }
+
 	SDL_GetRelativeMouseState(NULL, NULL);
 }
 
@@ -475,11 +525,9 @@ static dboolean I_MouseShouldBeGrabbed()
 	if (!InWindow)
 		return true;
 #endif
-
 	// if the window doesnt have focus, never grab it
 	if (!window_focused)
 		return false;
-
 #ifdef _WIN32
 	if (!InWindow && m_menumouse.value <= 0)
 		return true;
@@ -510,7 +558,11 @@ static void I_ReadMouse(void)
 	if (x != 0 || y != 0 || btn || (lastmbtn != btn)) {
 		ev.type = ev_mouse;
 		ev.data1 = I_SDLtoDoomMouseState(btn);
+#ifdef PANDORA
+		ev.data2 = x << 6;
+#else
 		ev.data2 = x << 5;
+#endif
 		ev.data3 = (-y) << 5;
 		ev.data4 = 0;
 		D_PostEvent(&ev);
@@ -520,6 +572,25 @@ static void I_ReadMouse(void)
 
 	if (I_MouseShouldBeGrabbed())
 		I_CenterMouse();
+
+#ifdef PANDORA
+	if (UseJoystick) {
+	// read joystick too
+		x = SDL_JoystickGetAxis(joy0, 0);
+		y = SDL_JoystickGetAxis(joy0, 1);
+	// dead zone
+		if ((x>-10) && (x<10)) x = 0;
+		if ((y>-10) && (y<10)) y = 0;
+		if (x || y) {
+			ev.type = ev_gamepad;
+			ev.data1 = 0;
+			ev.data2 = x;
+			ev.data3 = (-y);
+			ev.data4 = 0;
+			D_PostEvent(&ev);
+		}
+	}
+#endif
 }
 
 //
@@ -543,7 +614,11 @@ int I_MouseAccel(int val)
 	if (val < 0)
 		return -I_MouseAccel(-val);
 
+#ifdef PANDORA
+	return (int)(powf((float)val, (float)mouse_accelfactor));
+#else
 	return (int)(pow((double)val, (double)mouse_accelfactor));
+#endif
 }
 
 //
@@ -552,9 +627,16 @@ int I_MouseAccel(int val)
 
 static void I_ActivateMouse(void)
 {
+#ifndef PANDORA
 	SDL_SetCursor(cursors[1]);
+#endif
+    // Common code
 	SDL_WM_GrabInput(SDL_GRAB_ON);
+#ifdef PANDORA
+	SDL_ShowCursor(0);
+#else
 	SDL_ShowCursor(1);
+#endif
 }
 
 //
@@ -563,7 +645,9 @@ static void I_ActivateMouse(void)
 
 static void I_DeactivateMouse(void)
 {
+#ifndef PANDORA
 	SDL_SetCursor(cursors[0]);
+#endif
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 	SDL_ShowCursor(m_menumouse.value < 1);
 }
@@ -629,10 +713,9 @@ static void I_GetEvent(SDL_Event * Event)
 			event.type = Event->type ==
 			    SDL_MOUSEBUTTONUP ? ev_mouseup : ev_mousedown;
 			event.data1 =
-			    I_SDLtoDoomMouseState(SDL_GetMouseState
+			    I_SDLtoDoomMouseState(SDL_GetRelativeMouseState
 						  (NULL, NULL));
 		}
-
 		event.data2 = event.data3 = 0;
 		D_PostEvent(&event);
 		break;
@@ -684,7 +767,16 @@ static void I_InitInputs(void)
 
 	I_CenterMouse();
 	I_MouseAccelChange();
-
+#ifdef PANDORA
+	UseJoystick = (SDL_NumJoysticks()>0);
+	if (UseJoystick)
+		joy0 = SDL_JoystickOpen(0);
+	else
+		joy0 = NULL;
+	if (joy0) {
+		I_Printf("Using Joystck named %s\n", SDL_JoystickName(0));
+	}
+#endif
 #ifdef _USE_XINPUT
 	I_XInputInit();
 #endif

@@ -477,6 +477,22 @@ dboolean CON_Responder(event_t * ev)
 
 void CON_Draw(void)
 {
+#ifdef HAVE_GLES
+	GLfloat vtx[4*2];
+	int idx;
+	GLenum	glwhat;
+	#undef dglRectf
+	#define dglRectf(x1, y1, x2, y2) \
+	vtx[0]=x1; vtx[1]=y1; vtx[2]=x2; vtx[3]=y1; \
+	vtx[4]=x2; vtx[5]=y2; vtx[6]=x1; vtx[7]=y2; \
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	#undef dglBegin
+	#define dglBegin(what) idx=0; glwhat=what
+	#undef dglVertex2f
+	#define dglVertex2f(x, y)	vtx[idx*2+0]=x; vtx[idx*2+1]=y; idx++
+	#undef dglEnd
+	#define dglEnd()	glDrawArrays(glwhat, 0, idx)
+#endif
 	int line;
 	float y = 0;
 	float x = 0;
@@ -487,7 +503,11 @@ void CON_Draw(void)
 
 	if (!console_enabled)
 		return;
-
+#ifdef HAVE_GLES
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, vtx);
+#endif
 	GL_SetOrtho(1);
 	GL_SetState(GLSTATE_BLEND, 1);
 
@@ -505,6 +525,10 @@ void CON_Draw(void)
 	dglVertex2f(SCREENWIDTH, CONSOLE_Y + CONFONT_YPAD);
 	dglEnd();
 	dglEnable(GL_TEXTURE_2D);
+#ifdef HAVE_GLES
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+#endif
 
 	line = console_head;
 

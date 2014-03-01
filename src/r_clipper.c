@@ -31,8 +31,13 @@
 #include "z_zone.h"
 #include <math.h>
 
+#ifdef HAVE_GLES
+static GLfloat viewMatrix[16];
+static GLfloat projMatrix[16];
+#else
 static GLdouble viewMatrix[16];
 static GLdouble projMatrix[16];
+#endif
 float frustum[6][4];
 
 typedef struct clipnode_s {
@@ -277,8 +282,13 @@ void R_FrustrumSetup(void)
 {
 	float clip[16];
 
+#ifdef HAVE_GLES
+	dglGetFloatv(GL_PROJECTION_MATRIX, projMatrix);
+	dglGetFloatv(GL_MODELVIEW_MATRIX, viewMatrix);
+#else
 	dglGetDoublev(GL_PROJECTION_MATRIX, projMatrix);
 	dglGetDoublev(GL_MODELVIEW_MATRIX, viewMatrix);
+#endif
 
 	clip[0] = CALCMATRIX(0, 0, 1, 4, 2, 8, 3, 12);
 	clip[1] = CALCMATRIX(0, 1, 1, 5, 2, 9, 3, 13);

@@ -35,7 +35,6 @@ function(TRY_C_COMPILER_FLAG flag name)
    endif()
 endfunction()
 
-
 ##----------------------------------------------------------------------------|
 ## Environment Detection                                                      |
 ##
@@ -52,12 +51,30 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
    TRY_C_COMPILER_FLAG(/Wall    FLAG_C_Wall   )
 endif()
 
+##----------------------------------------------------------------------------|
+## Options                                                                    |
+##
+
+option(PANDORA "Set to ON if targeting an OpenPandora device" OFF)
+option(GLES "Set to ON GLES instead of OpenGL" OFF)
+
+if(PANDORA)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPANDORA")
+endif()
+
+if(GLES)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_GLES")
+endif()
+
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 find_package(SDL REQUIRED)
 find_package(FluidSynth REQUIRED)
 find_package(SDL_net REQUIRED)
-find_package(OpenGL REQUIRED)
+
+if(NOT GLES)
+    find_package(OpenGL REQUIRED)
+endif()
 
 ##----------------------------------------------------------------------------|
 ## Embed current revision into version.h                                      |

@@ -27,7 +27,12 @@
 #include <math.h>
 
 #include "SDL.h"
+#ifdef HAVE_GLES
+#include "SDL_opengles.h"
+#include "eglport.h"
+#else
 #include "SDL_opengl.h"
+#endif
 
 #include "doomdef.h"
 #include "doomstat.h"
@@ -249,7 +254,11 @@ float GL_GetOrthoScale(void)
 void GL_SwapBuffers(void)
 {
 	dglFinish();
+#ifdef HAVE_GLES
+	EGL_SwapBuffers();
+#else
 	SDL_GL_SwapBuffers();
+#endif
 }
 
 //
@@ -572,6 +581,7 @@ void GL_Init(void)
 
 	I_InitScreen();
 
+	#ifndef HAVE_GLES
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 0);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 0);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 0);
@@ -587,8 +597,12 @@ void GL_Init(void)
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, (int)v_vsync.value);
 
 	flags |= SDL_OPENGL;
+	#endif
 
+	#ifdef PANDORA
+	#else
 	if (!InWindow)
+	#endif
 		flags |= SDL_FULLSCREEN;
 
 	if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags) == NULL) {
@@ -599,14 +613,18 @@ void GL_Init(void)
 			CON_CvarSetValue(v_depthsize.name, 8);
 		}
 
+		#ifndef HAVE_GLES
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
+		#endif
 
 		if (SDL_SetVideoMode(video_width, video_height, SDL_BPP, flags)
 		    == NULL) {
 			// fall back to lower buffer setting
 			CON_CvarSetValue(v_buffersize.name, 16);
+			#ifndef HAVE_GLES
 			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
 					    (int)v_buffersize.value);
+			#endif
 
 			if (SDL_SetVideoMode
 			    (video_width, video_height, SDL_BPP,
@@ -616,6 +634,9 @@ void GL_Init(void)
 			}
 		}
 	}
+	#ifdef HAVE_GLES
+	EGL_Open(video_width, video_height);
+	#endif
 
 	gl_vendor = dglGetString(GL_VENDOR);
 	I_Printf("GL_VENDOR: %s\n", gl_vendor);

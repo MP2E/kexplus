@@ -276,12 +276,28 @@ void AM_DrawLine(int x1, int x2, int y1, int y2, float scale, rcolor c)
 	dglSetVertexColor(v, c, 2);
 
 	dglDisable(GL_TEXTURE_2D);
+#ifdef HAVE_GLES
+	#define aaa	(1.0f/255.0f)
+	GLfloat col[] = {v[0].r*aaa, v[0].g*aaa, v[0].b*aaa, v[0].a*aaa, v[1].r*aaa, v[1].g*aaa, v[1].b*aaa, v[1].a*aaa};
+	GLfloat vtx[] = {v[0].x, v[0].z, -v[0].y, v[1].x, v[1].z, -v[1].y};
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vtx);
+	//glEnableClientState(GL_COLOR_ARRAY);
+	glColorPointer(4, GL_FLOAT, 0, col);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDrawArrays(GL_LINES, 0, 2);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+	//glDisableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	#undef aaa
+#else
 	dglBegin(GL_LINES);
 	dglColor4ub(v[0].r, v[0].g, v[0].b, v[0].a);
 	dglVertex3f(v[0].x, v[0].z, -v[0].y);
 	dglColor4ub(v[1].r, v[1].g, v[1].b, v[1].a);
 	dglVertex3f(v[1].x, v[1].z, -v[1].y);
 	dglEnd();
+#endif
 	dglEnable(GL_TEXTURE_2D);
 }
 
@@ -327,9 +343,13 @@ void AM_DrawTriangle(mobj_t * mobj, float scale, dboolean solid, byte r, byte g,
 	if (!R_FrustrumTestVertex(tri, 3))
 		return;
 
+#ifdef HAVE_GLES
+	#warning *TODO* Polygon mode
+#else
 	if (r_fillmode.value)
 		dglPolygonMode(GL_FRONT_AND_BACK,
 			       (solid == 1) ? GL_LINE : GL_FILL);
+#endif
 
 	dglSetVertex(tri);
 	dglTriangle(0, 1, 2);
@@ -337,9 +357,11 @@ void AM_DrawTriangle(mobj_t * mobj, float scale, dboolean solid, byte r, byte g,
 	dglDrawGeometry(3, tri);
 	dglEnable(GL_TEXTURE_2D);
 
+#ifdef HAVE_GLES
+#else
 	if (r_fillmode.value)
 		dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+#endif
 	if (devparm)
 		vertCount += 3;
 }

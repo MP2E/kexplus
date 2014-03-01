@@ -24,7 +24,11 @@
 //
 //-----------------------------------------------------------------------------
 
+#ifdef HAVE_GLES
+#include "SDL_opengles.h"
+#else
 #include "SDL_opengl.h"
+#endif
 #include "doomdef.h"
 #include "doomstat.h"
 #include "gl_main.h"
@@ -98,8 +102,12 @@ void dglSetVertex(vtx_t * vtx)
 
 	// 20120623 villsa - avoid redundant calls by checking for
 	// the previous pointer that was set
+#ifndef HAVE_GLES
 	if (dgl_prevptr == vtx)
 		return;
+#else
+	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+#endif
 
 	dglTexCoordPointer(2, GL_FLOAT, sizeof(vtx_t), &vtx->tu);
 	dglVertexPointer(3, GL_FLOAT, sizeof(vtx_t), vtx);
@@ -143,7 +151,7 @@ void dglDrawGeometry(dword count, vtx_t * vtx)
 
 	if (has_GL_EXT_compiled_vertex_array)
 		dglUnlockArraysEXT();
-
+#ifndef HAVE_GLES
 	if (r_drawtris.value) {
 		dword j = 0;
 		byte b;
@@ -182,7 +190,7 @@ void dglDrawGeometry(dword count, vtx_t * vtx)
 		if (b)
 			dglEnable(GL_FOG);
 	}
-
+#endif
 	if (devparm)
 		statindice += indicecnt;
 

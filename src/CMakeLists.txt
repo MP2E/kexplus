@@ -6,7 +6,10 @@
 
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext
     ${FLUIDSYNTH_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIR}
-    ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+    ${PNG_INCLUDE_DIR})
+if(NOT GLES)
+include_directories(${OPENGL_INCLUDE_DIR})
+endif()
 
 if(APPLE)
     set(EXTRA_SOURCES apple/SDLMain.m)
@@ -15,6 +18,10 @@ elseif(WIN32)
         win32/resources/doom64.rc)
 else()
         LIST(APPEND EXTRA_SOURCES unix/i_cpu_posix.c)
+endif()
+
+if(PANDORA)
+    LIST(APPEND EXTRA_SOURCES eglport.c)
 endif()
 
 if(MSVC)
@@ -116,9 +123,12 @@ elseif(WIN32)
 target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
     ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} iphlpapi
     ws2_32 winmm dxguid m)
+elseif(GLES)
+	target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
+		${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} GLES_CM EGL GLUES_CM m)
 else()
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
-    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
+	target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
+		${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
 endif()
 
 ##----------------------------------------------------------------------------|

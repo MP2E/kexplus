@@ -381,6 +381,31 @@ static void ProcessButtonActions(alist_t ** actions, int b, int ob)
 	ButtonAction = false;
 }
 
+#ifdef PANDORA
+void I_JoyReadActions(event_t * ev)
+{
+	playercontrols_t *pc = &Controls;
+
+	if (ev->type == ev_gamepad) {
+		//
+		// left analog stick
+		//
+		float x;
+		float y;
+
+		pc->flags |= PCF_GAMEPAD;
+
+		y = (float)ev->data3 * 0.0015f;
+
+		x = (float)ev->data2 * 0.0015f;
+		pc->joyx += (int)x;
+
+		pc->joyy += (int)y;
+
+		return;
+	}
+}
+#endif
 //
 // G_ActionResponder
 //
@@ -409,7 +434,11 @@ dboolean G_ActionResponder(event_t * ev)
 		MouseButtons = ev->data1;
 		G_DoCmdMouseMove(ev->data2, ev->data3);
 		break;
-
+#ifdef PANDORA
+	case ev_gamepad:
+		I_JoyReadActions(ev);
+		break;
+#endif
 #ifdef _USE_XINPUT		// XINPUT
 	case ev_gamepad:
 		I_XInputReadActions(ev);

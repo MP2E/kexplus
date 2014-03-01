@@ -23,7 +23,12 @@
 #ifndef __GL_MAIN_H__
 #define __GL_MAIN_H__
 
+#ifdef HAVE_GLES
+#include "SDL_opengles.h"
+#include <GLES/glues.h>
+#else
 #include "SDL_opengl.h"
+#endif
 
 typedef GLuint dtexture;
 typedef GLfloat rfloat;

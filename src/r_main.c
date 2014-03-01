@@ -543,6 +543,9 @@ static void R_SetViewClipping(angle_t angle)
 
 void R_DrawWireframe(dboolean enable)
 {
+#ifdef HAVE_GLES
+#warning *TODO* Polygon mode
+#else
 	if (enable == true)
 		CON_CvarSetValue(r_fillmode.name, 0);
 	else			//Turn off wireframe and set device back to the way it was
@@ -550,6 +553,7 @@ void R_DrawWireframe(dboolean enable)
 		CON_CvarSetValue(r_fillmode.name, 1);
 		dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+#endif
 }
 
 //
@@ -598,7 +602,19 @@ static void R_DrawReadDisk(void)
 //
 // R_DrawBlockMap
 //
+#ifdef HAVE_GLES
+	#define MAXVTX	4096
+	GLfloat glesvtx[MAXVTX];
+	int	idx;
+	#undef dglBegin
+	#define dglBegin(what)	idx=0
+	#undef dglVertex3f
+	#define dglVertex3f(x, y, z)	glesvtx[idx*3+0]=x; glesvtx[idx*3+1]=y; glesvtx[idx*3+2]=z; if (idx==MAXVTX) I_Error("GLES index overflow"); idx++
+	#undef dglEnd
+	#define dglEnd()	glDrawArrays(DRAWING, 0, idx)
 
+	#define GL_POLYGON	GL_TRIANGLE_FAN
+#endif
 static void R_DrawBlockMap(void)
 {
 	float fx;
@@ -611,7 +627,14 @@ static void R_DrawBlockMap(void)
 	dglDisable(GL_TEXTURE_2D);
 	dglDepthRange(0.0f, 0.0f);
 	dglColor4ub(0, 128, 255, 255);
+#ifdef HAVE_GLES
+	#define DRAWING	GL_LINE_LOOP
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, glesvtx);
+#else
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 
 	mo = players[displayplayer].mo;
 	fz = F2D3D(mo->floorz);
@@ -634,7 +657,13 @@ static void R_DrawBlockMap(void)
 	}
 
 	dglDepthRange(0.0f, 1.0f);
+#ifdef HAVE_GLES
+	#undef DRAWING
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+#else
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
 	dglEnable(GL_TEXTURE_2D);
 }
 
@@ -646,7 +675,12 @@ static void R_DrawRayTrace(void)
 {
 	thinker_t *thinker;
 	tracedrawer_t *tdrawer;
-
+#ifdef HAVE_GLES
+	#define DRAWING	GL_LINES
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, glesvtx);
+#endif
 	for (thinker = thinkercap.next; thinker != &thinkercap;
 	     thinker = thinker->next) {
 		if (thinker->function.acp1 == (actionf_p1) T_TraceDrawer) {
@@ -678,6 +712,11 @@ static void R_DrawRayTrace(void)
 			dglDepthRange(0.0f, 1.0f);
 		}
 	}
+#ifdef HAVE_GLES
+	#undef DRAWING
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+#endif
 }
 
 //
@@ -788,6 +827,12 @@ static void R_DrawContextWall(line_t * line)
 	// do the actual drawing
 	//
 	GL_SetState(GLSTATE_BLEND, 1);
+#ifdef HAVE_GLES
+	#define DRAWING	GL_TRIANGLE_FAN
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, glesvtx);
+#endif
 
 	dglDepthRange(0.0f, 0.0f);
 	dglDisable(GL_TEXTURE_2D);
@@ -800,19 +845,31 @@ static void R_DrawContextWall(line_t * line)
 	dglVertex3f(vtx[3].x, vtx[3].y, vtx[3].z);
 	dglEnd();
 	dglColor4ub(255, 255, 255, 255);
+#ifdef HAVE_GLES
+	#undef DRAWING
+	#define DRAWING	GL_LINE_LOOP
+#else
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 	dglBegin(GL_POLYGON);
 	dglVertex3f(vtx[0].x, vtx[0].y, vtx[0].z);
 	dglVertex3f(vtx[1].x, vtx[1].y, vtx[1].z);
 	dglVertex3f(vtx[2].x, vtx[2].y, vtx[2].z);
 	dglVertex3f(vtx[3].x, vtx[3].y, vtx[3].z);
 	dglEnd();
+#ifndef HAVE_GLES
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
 	dglEnable(GL_TEXTURE_2D);
 	dglEnable(GL_CULL_FACE);
 	dglDepthRange(0.0f, 1.0f);
 
 	GL_SetState(GLSTATE_BLEND, 0);
+#ifdef HAVE_GLES
+	#undef DRAWING
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+#endif
 }
 
 //
@@ -821,8 +878,12 @@ static void R_DrawContextWall(line_t * line)
 
 void R_RenderPlayerView(player_t * player)
 {
+#ifdef HAVE_GLES
+#warning *TODO* Polygon mode
+#else
 	if (!r_fillmode.value)
 		dglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 
 	if (devparm)
 		renderTic = I_GetTimeMS();

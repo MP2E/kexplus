@@ -1541,10 +1541,17 @@ menuitem_t MouseMenu[] = {
 };
 
 menudefault_t MouseDefault[] = {
+#ifdef PANDORA
+	{&v_msensitivityx, 6},
+	{&v_msensitivityy, 5},
+	{&v_macceleration, 1},
+	{&v_mlook, 1},
+#else
 	{&v_msensitivityx, 5},
 	{&v_msensitivityy, 5},
 	{&v_macceleration, 0},
 	{&v_mlook, 0},
+#endif
 	{&v_mlookinvert, 0},
 	{&v_yaxismove, 0},
 	{NULL, -1}
@@ -1981,7 +1988,11 @@ menudefault_t VideoDefault[] = {
 	{&i_gamma, 0},
 	{&r_filter, 0},
 	{&r_anisotropic, 0},
+#ifdef HAVE_GLES
+	{&v_windowed, 0},
+#else
 	{&v_windowed, 1},
+#endif
 	{&v_vsync, 1},
 	{&v_depthsize, 24},
 	{&v_buffersize, 32},
@@ -2041,9 +2052,10 @@ static const int Resolution16_9[MAX_RES16_9][2] = {
     {3840, 2160}
 };
 
-#define MAX_RES16_10  7
+#define MAX_RES16_10  8
 static const int Resolution16_10[MAX_RES16_10][2] = {
 	{320, 200},
+	{800, 480},
     {1024, 640},
 	{1280, 800},
 	{1440, 900},
@@ -4238,6 +4250,17 @@ static dboolean M_SetThumbnail(int which)
 
 static void M_DrawSaveGameFrontend(menu_t * def)
 {
+#ifdef HAVE_GLES
+	GLshort vtx[4*2];
+	GLfloat tex[4*2];
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(2, GL_SHORT, 0, vtx);
+	#define dglRecti(x1, y1, x2, y2) \
+		vtx[0]=x1; vtx[1]=y1; vtx[2]=x2; vtx[3]=y1; \
+		vtx[4]=x2; vtx[5]=y2; vtx[6]=x1; vtx[7]=y2; \
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+#endif
 	GL_SetState(GLSTATE_BLEND, 1);
 	GL_SetOrtho(0);
 
@@ -4259,12 +4282,19 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 	// stats panel
 	//
 	dglRecti(def->x + 272, def->y + 124, def->x + 464, def->y + 176);
-
 	//
 	// draw outline for panels
 	//
 	dglColor4ub(192, 192, 192, menualphacolor);
+#ifdef HAVE_GLES
+	#undef dglRecti
+	#define dglRecti(x1, y1, x2, y2) \
+		vtx[0]=x1; vtx[1]=y1; vtx[2]=x2; vtx[3]=y1; \
+		vtx[4]=x2; vtx[5]=y2; vtx[6]=x1; vtx[7]=y2; \
+		glDrawArrays(GL_LINE_LOOP, 0, 4);
+#else
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 	//
 	// save game panel
 	//
@@ -4277,9 +4307,25 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 	// stats panel
 	//
 	dglRecti(def->x + 272, def->y + 124, def->x + 464, def->y + 176);
+#ifdef HAVE_GLES
+	#undef dglRecti
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, tex);
+	int idx;
+	GLenum glwhat;
+	#define GL_POLYGON GL_TRIANGLE_FAN
+	#undef dglBegin
+	#define dglBegin(what)	idx=0; glwhat=what
+	#undef dglTexCoord2f
+	#define dglTexCoord2f(a, b)	tex[idx*2+0]=a; tex[idx*2+1]=b
+	#undef dglVertex2i
+	#define dglVertex2i(a, b)	vtx[idx*2+0]=a; vtx[idx*2+1]=b; idx++
+	#undef dglEnd
+	#define dglEnd()	glDrawArrays(glwhat, 0, idx)
+#else
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
 	dglEnable(GL_TEXTURE_2D);
-
 	//
 	// 20120404 villsa - reset active textures just to make sure
 	// we don't end up seeing that thumbnail texture on a wall or something
@@ -4294,6 +4340,11 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 
 		dglBindTexture(GL_TEXTURE_2D, thumbnail);
 
+#ifdef HAVE_GLES
+		glDisableClientState(GL_COLOR_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, tex);
+		glVertexPointer(2, GL_SHORT, 0, vtx);
+#endif
 		dglBegin(GL_POLYGON);
 		dglColor4ub(0xff, 0xff, 0xff, menualphacolor);
 		dglTexCoord2f(0, 0);
@@ -4305,6 +4356,9 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 		dglTexCoord2f(0, 1);
 		dglVertex2i(def->x + 288, def->y + 112);
 		dglEnd();
+		#ifdef HAVE_GLES
+		glEnableClientState(GL_COLOR_ARRAY);
+		#endif
 
 		curgfx = -1;
 

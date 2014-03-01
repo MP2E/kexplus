@@ -52,7 +52,11 @@ static char *ConfigFileName =
     ;
 
 char DefaultConfig[] =
+#ifdef PANDORA
+#include "defconfig_pandora.inc"
+#else
 #include "defconfig.inc"	// wtf?
+#endif
     ;
 
 //

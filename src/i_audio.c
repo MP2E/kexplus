@@ -59,6 +59,8 @@ CVAR_CMD(s_driver, dsound)
 CVAR_CMD(s_driver, coreaudio)
 #elif __linux__
 CVAR_CMD(s_driver, alsa)
+#elif PANDORA
+CVAR_CMD(s_driver, alsa)
 #else				// BSD assumed
 CVAR_CMD(s_driver, sndio)
 #endif
@@ -114,7 +116,11 @@ static dboolean seqready = false;
 // DEFINES
 //
 
+#ifdef PANDORA
+#define MIDI_CHANNELS   24
+#else
 #define MIDI_CHANNELS   64
+#endif
 #define MIDI_MESSAGE    0x07
 #define MIDI_END        0x2f
 #define MIDI_SET_TEMPO  0x51
@@ -1199,7 +1205,11 @@ void I_InitSequencer(void)
 	//
 	doomseq.settings = new_fluid_settings();
 	Seq_SetConfig(&doomseq, "synth.midi-channels", 0x10 + MIDI_CHANNELS);
+#ifdef PANDORA
+	Seq_SetConfig(&doomseq, "synth.polyphony", 160);
+#else
 	Seq_SetConfig(&doomseq, "synth.polyphony", 256);
+#endif
 
 	// 20120105 bkw: On Linux, always use alsa (fluidsynth default is to use
 	// JACK, if it's compiled in. We don't want to start jackd for a game).
@@ -1216,6 +1226,9 @@ void I_InitSequencer(void)
 		CON_Warnf("I_InitSequencer: failed to create synthesizer");
 		return;
 	}
+#ifdef PANDORA
+	fluid_synth_set_interp_method(doomseq.synth, -1, FLUID_INTERP_NONE);
+#endif
 	//
 	// init audio driver
 	//

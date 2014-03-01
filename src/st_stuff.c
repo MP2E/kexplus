@@ -466,6 +466,18 @@ void ST_Ticker(void)
 
 void ST_FlashingScreen(byte r, byte g, byte b, byte a)
 {
+#ifdef HAVE_GLES
+	GLshort vtx[4*2];
+	GLfloat tex[4*2];
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(2, GL_SHORT, 0, vtx);
+	#define dglRecti(x1, y1, x2, y2) \
+	vtx[0]=x1; vtx[1]=y1; vtx[2]=x2; vtx[3]=y1; \
+	vtx[4]=x2; vtx[5]=y2; vtx[6]=x1; vtx[7]=y2; \
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+#endif
+
 	rcolor c = D_RGBA(r, g, b, a);
 
 	GL_SetState(GLSTATE_BLEND, 1);
@@ -477,6 +489,10 @@ void ST_FlashingScreen(byte r, byte g, byte b, byte a)
 	dglEnable(GL_TEXTURE_2D);
 
 	GL_SetState(GLSTATE_BLEND, 0);
+#ifdef HAVE_GLES
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+#endif
 }
 
 //
