@@ -520,8 +520,8 @@ void CON_Draw(void)
 		}
 	}
 
-	Draw_ConsoleText(SCREENWIDTH - (64 * CONFONT_SCALE), CONSOLE_Y - 2,
-			 RED, CONFONT_SCALE, "rev. %s", PACKAGE_VERSION);
+	Draw_ConsoleText(SCREENWIDTH - (128 * CONFONT_SCALE), CONSOLE_Y - 2,
+			 RED, CONFONT_SCALE, "%s", PACKAGE_VERSION);
 
 	y = CONSOLE_Y + CONFONT_YPAD;
 

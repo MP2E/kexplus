@@ -79,7 +79,7 @@ find_package(OpenGL REQUIRED)
 ##
 
 execute_process(
-	COMMAND git rev-parse --short HEAD
+    COMMAND git describe HEAD
 	COMMAND tr -d "\\n"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src
 	OUTPUT_VARIABLE GITREVISION
