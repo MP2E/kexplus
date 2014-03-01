@@ -40,32 +40,32 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "doomdef.h"
-#include "i_video.h"
-#include "d_englsh.h"
-#include "m_cheat.h"
-#include "m_misc.h"
-#include "d_main.h"
-#include "i_system.h"
-#include "z_zone.h"
-#include "w_wad.h"
-#include "st_stuff.h"
-#include "g_actions.h"
-#include "g_game.h"
-#include "s_sound.h"
 #include "doomstat.h"
 #include "sounds.h"
-#include "m_menu.h"
-#include "m_fixed.h"
 #include "d_devstat.h"
-#include "r_local.h"
-#include "m_shift.h"
-#include "m_password.h"
-#include "r_wipe.h"
-#include "st_stuff.h"
-#include "p_saveg.h"
-#include "p_setup.h"
+#include "d_englsh.h"
+#include "d_main.h"
+#include "g_actions.h"
+#include "g_game.h"
 #include "gl_texture.h"
 #include "gl_draw.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "m_cheat.h"
+#include "m_fixed.h"
+#include "m_menu.h"
+#include "m_misc.h"
+#include "m_password.h"
+#include "m_shift.h"
+#include "p_saveg.h"
+#include "p_setup.h"
+#include "r_local.h"
+#include "r_wipe.h"
+#include "s_sound.h"
+#include "st_stuff.h"
+#include "v_main.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 #ifdef _WIN32
 #include "i_xinput.h"
@@ -128,8 +128,8 @@ static int levelwarp = 0;
 static dboolean wireframeon = false;
 static dboolean lockmonstersmon = false;
 static int thermowait = 0;
-static int m_aspectRatio = 0;
-static int m_ScreenSize = 1;
+static int m_videoDisplay = 0;
+static int m_videoMode = 0;
 
 //------------------------------------------------------------------------
 //
@@ -1927,16 +1927,18 @@ void M_ChangeOpacity(int choice)
 void M_ChangeGammaLevel(int choice);
 void M_ChangeFilter(int choice);
 void M_ChangeWindowed(int choice);
-void M_ChangeRatio(int choice);
+void M_ChangeVideoDisplay(int choice);
 void M_ChangeResolution(int choice);
 void M_ChangeVSync(int choice);
 void M_ChangeDepthSize(int choice);
 void M_ChangeBufferSize(int choice);
 void M_ChangeAnisotropic(int choice);
+//void M_ReturnVideo(int choice);
 void M_DrawVideo(void);
 
 CVAR_EXTERNAL(v_width);
 CVAR_EXTERNAL(v_height);
+CVAR_EXTERNAL(v_display);
 CVAR_EXTERNAL(v_windowed);
 CVAR_EXTERNAL(v_vsync);
 CVAR_EXTERNAL(v_depthsize);
@@ -1955,7 +1957,7 @@ enum {
 	vsync,
 	depth,
 	buffer,
-	ratio,
+	video_display,
 	resolution,
 	v_default,
 	video_return,
@@ -1971,10 +1973,11 @@ menuitem_t VideoMenu[] = {
 	{2, "Vsync:", M_ChangeVSync, 'v'},
 	{2, "Depth Size:", M_ChangeDepthSize, 'd'},
 	{2, "Buffer Size:", M_ChangeBufferSize, 'b'},
-	{2, "Aspect Ratio:", M_ChangeRatio, 'a'},
+	{2, "Video Display:", M_ChangeVideoDisplay, 'i'},
 	{2, "Resolution:", M_ChangeResolution, 'r'},
 	{-2, "Default", M_DoDefaults, 'e'},
 	{1, "/r Return", M_Return, 0x20}
+//	{1, "/r Return", M_ReturnVideo, 0x20}
 };
 
 menudefault_t VideoDefault[] = {
@@ -2012,52 +2015,6 @@ menu_t VideoDef = {
 	VideoBars
 };
 
-#define MAX_RES4_3  9
-static const int Resolution4_3[MAX_RES4_3][2] = {
-	{320, 240},
-	{640, 480},
-	{768, 576},
-	{800, 600},
-	{1024, 768},
-	{1152, 864},
-	{1280, 960},
-	{1400, 1050},
-	{1600, 1200}
-};
-
-#define MAX_RES16_9  12
-static const int Resolution16_9[MAX_RES16_9][2] = {
-	{640, 360},
-	{854, 480},
-	{1024, 576},
-	{1024, 600},
-	{1280, 720},
-	{1366, 768},
-	{1600, 900},
-	{1920, 1080},
-	{2048, 1152},
-	{2560, 1440},
-	{2880, 1620},
-	{3840, 2160}
-};
-
-#define MAX_RES16_10  7
-static const int Resolution16_10[MAX_RES16_10][2] = {
-	{320, 200},
-	{1024, 640},
-	{1280, 800},
-	{1440, 900},
-	{1680, 1050},
-	{1920, 1200},
-	{2560, 1600}
-};
-
-static const float ratioVal[3] = {
-	4.0f / 3.0f,
-	16.0f / 9.0f,
-	16.0f / 10.0f
-};
-
 static char gammamsg[21][28] = {
 	GAMMALVL0,
 	GAMMALVL1,
@@ -2084,54 +2041,21 @@ static char gammamsg[21][28] = {
 
 void M_Video(int choice)
 {
-	float checkratio;
 	int i;
 
 	M_SetupNextMenu(&VideoDef);
 
-	checkratio = v_width.value / v_height.value;
-
-	if (dfcmp(checkratio, ratioVal[2]))
-		m_aspectRatio = 2;
-	else if (dfcmp(checkratio, ratioVal[1]))
-		m_aspectRatio = 1;
-	else
-		m_aspectRatio = 0;
-
-	switch (m_aspectRatio) {
-	case 0:
-		for (i = 0; i < MAX_RES4_3; i++) {
-			if ((int)v_width.value == Resolution4_3[i][0]) {
-				m_ScreenSize = i;
-				return;
-			}
-		}
-		break;
-	case 1:
-		for (i = 0; i < MAX_RES16_9; i++) {
-			if ((int)v_width.value == Resolution16_9[i][0]) {
-				m_ScreenSize = i;
-				return;
-			}
-		}
-		break;
-	case 2:
-		for (i = 0; i < MAX_RES16_10; i++) {
-			if ((int)v_width.value == Resolution16_10[i][0]) {
-				m_ScreenSize = i;
-				return;
-			}
-		}
-		break;
-	}
-
-	m_ScreenSize = 1;
+	m_videoDisplay = vidmode->disp_id;
+	m_videoMode = vidmode->id;
 }
 
 void M_DrawVideo(void)
 {
+	const viddisp_t * disp;
 	static const char *filterType[2] = { "Linear", "Nearest" };
-	static const char *ratioName[3] = { "4 : 3", "16 : 9", "16 : 10" };
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	static const char *windowedType[3] = { "Off", "On", "Noborder" };
+#endif
 	static char bitValue[8];
 	char res[16];
 	int y;
@@ -2155,8 +2079,28 @@ void M_DrawVideo(void)
 
 	DRAWVIDEOITEM2(filter, r_filter.value, filterType);
 	DRAWVIDEOITEM2(anisotropic, r_anisotropic.value, msgNames);
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	DRAWVIDEOITEM2(windowed, v_windowed.value, windowedType);
+#else
 	DRAWVIDEOITEM2(windowed, v_windowed.value, msgNames);
-	DRAWVIDEOITEM2(ratio, m_aspectRatio, ratioName);
+#endif
+
+	disp = V_GetDisplay(m_videoDisplay);
+	if (!disp) {
+		m_videoDisplay = 0;
+		disp = V_GetDisplay(m_videoDisplay);
+	}
+
+	// TODO: Only show this option when the user has two or more displays connected
+	if (disp) {
+		if(disp->disp_name) {
+			DRAWVIDEOITEM(video_display, disp->disp_name);
+		} else {
+			char str[16];
+			sprintf(str, "%d", disp->disp_id);
+			DRAWVIDEOITEM(video_display, str);
+		}
+	}
 
 	sprintf(res, "%ix%i", (int)v_width.value, (int)v_height.value);
 	DRAWVIDEOITEM(resolution, res);
@@ -2244,60 +2188,44 @@ void M_ChangeAnisotropic(int choice)
 
 void M_ChangeWindowed(int choice)
 {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	M_SetOptionValue(choice, 0, 2, 1, &v_windowed);
+#else
 	M_SetOptionValue(choice, 0, 1, 1, &v_windowed);
+#endif
 }
 
 static void M_SetResolution(void)
 {
+	const vidmode_t * mode;
 	int width = SCREENWIDTH;
 	int height = SCREENHEIGHT;
 
-	switch (m_aspectRatio) {
-	case 0:
-		width = Resolution4_3[m_ScreenSize][0];
-		height = Resolution4_3[m_ScreenSize][1];
-		break;
-	case 1:
-		width = Resolution16_9[m_ScreenSize][0];
-		height = Resolution16_9[m_ScreenSize][1];
-		break;
-	case 2:
-		width = Resolution16_10[m_ScreenSize][0];
-		height = Resolution16_10[m_ScreenSize][1];
-		break;
+	mode = V_GetMode(m_videoDisplay, m_videoMode);
+	if (mode) {
+		width = mode->w;
+		height = mode->h;
 	}
 
 	M_SetCvar(&v_width, (float)width);
 	M_SetCvar(&v_height, (float)height);
 }
 
-void M_ChangeRatio(int choice)
+void M_ChangeVideoDisplay(int choice)
 {
 	int max = 0;
 
+	max = V_NumDisplays();
+
 	if (choice) {
-		if (++m_aspectRatio > 2) {
+		if (++m_videoDisplay > max - 1) {
 			if (choice == 2)
-				m_aspectRatio = 0;
+				m_videoDisplay = 0;
 			else
-				m_aspectRatio = 2;
+				m_videoDisplay = max - 1;
 		}
 	} else
-		m_aspectRatio = MAX(m_aspectRatio--, 0);
-
-	switch (m_aspectRatio) {
-	case 0:
-		max = MAX_RES4_3;
-		break;
-	case 1:
-		max = MAX_RES16_9;
-		break;
-	case 2:
-		max = MAX_RES16_10;
-		break;
-	}
-
-	m_ScreenSize = MIN(m_ScreenSize, max - 1);
+		m_videoDisplay = MAX(m_videoDisplay--, 0);
 
 	M_SetResolution();
 }
@@ -2306,27 +2234,17 @@ void M_ChangeResolution(int choice)
 {
 	int max = 0;
 
-	switch (m_aspectRatio) {
-	case 0:
-		max = MAX_RES4_3;
-		break;
-	case 1:
-		max = MAX_RES16_9;
-		break;
-	case 2:
-		max = MAX_RES16_10;
-		break;
-	}
+	max = V_NumModes(m_videoDisplay);
 
 	if (choice) {
-		if (++m_ScreenSize > max - 1) {
+		if (++m_videoMode > max - 1) {
 			if (choice == 2)
-				m_ScreenSize = 0;
+				m_videoMode = 0;
 			else
-				m_ScreenSize = max - 1;
+				m_videoMode = max - 1;
 		}
 	} else
-		m_ScreenSize = MAX(m_ScreenSize--, 0);
+		m_videoMode = MAX(m_videoMode--, 0);
 
 	M_SetResolution();
 }
@@ -2345,6 +2263,25 @@ void M_ChangeBufferSize(int choice)
 {
 	M_SetOptionValue(choice, 8, 32, 8, &v_buffersize);
 }
+
+#if 0
+// 2014/03/01 dotfloat:
+// I couldn't figure out how to do a custom return
+// without it being a horrible hack.
+void M_ReturnVideo(int choice)
+{
+	const vidmode_t * vm;
+	vm = V_Mode((int)v_display.value,
+			(int)v_width.value, (int)v_height.value,
+			-1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
+
+	if (!V_ModeEquals(vm, vidmode)) {
+		V_SetMode(NULL);
+	}
+
+	M_Return(0);
+}
+#endif
 
 //------------------------------------------------------------------------
 //

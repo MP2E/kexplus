@@ -120,4 +120,18 @@ static d_inline dboolean V_ModeEquals(const vidmode_t * a, const vidmode_t * b)
 			(a->flags == b->flags);
 }
 
+static d_inline int V_GetClosestMode(const vidmode_t * vm)
+{
+	int i, j;
+	for (i = 0; i < vidinfo.num_displays; i++) {
+		const viddisp_t * disp = &vidinfo.displays[i];
+		for (j = 0; j < disp->num_modes; j++) {
+			const vidmode_t * mode = &disp->modes[j];
+			if(mode->w == vm->w && mode->h == vm->h)
+				return mode->id;
+		}
+	}
+	return -1;
+}
+
 #endif /* __V_MAIN__ */

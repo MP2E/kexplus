@@ -311,6 +311,7 @@ dboolean V_SetMode(const vidmode_t * vm)
 				dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
 			}
 			dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+			vidmodes[0].id = V_GetClosestMode(vm);
 		}
 	}
 
