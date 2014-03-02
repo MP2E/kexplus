@@ -384,9 +384,16 @@ dboolean M_DecodePassword(dboolean checkOnly)
 	    M_DecodePassItem(decode[3] & 0xf, player->maxammo[am_misl]);
 
 	//
-	// get health/armor
+	// get health
 	//
 	player->health = M_DecodePassItem(decode[4] >> 4, 200);
+
+	if (player->mo) {
+		player->mo->health = player->health;
+	}
+	//
+	// get armor
+	//
 	player->armorpoints = M_DecodePassItem(decode[4] & 0xf, 200);
 
 	//
