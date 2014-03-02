@@ -5,14 +5,14 @@
 ##-----------------------------------------------------------------------------
 
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext
-    ${FLUIDSYNTH_INCLUDE_DIR} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIR}
-    ${PNG_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+    ${FLUIDSYNTH_INCLUDE_DIRS} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIRS}
+    ${PNG_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
 if(APPLE)
     set(EXTRA_SOURCES apple/SDLMain.m)
 elseif(WIN32)
     set(EXTRA_SOURCES win32/i_exception.c win32/i_cpu.c
-        win32/resources/doom64.rc)
+        win32/resources/doom64.rc win32/SDL_win32_main.c)
 else()
         LIST(APPEND EXTRA_SOURCES unix/i_cpu_posix.c)
 endif()
@@ -111,15 +111,15 @@ add_executable(doom64ex
 )
 
 if(MSVC)
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
-    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY})
+    target_link_libraries(doom64ex ${FLUIDSYNTH_LIBRARIES} ${SDL_NET_LIBRARIES}
+        ${SDL_LIBRARY} ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES})
 elseif(WIN32)
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
-    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} iphlpapi
-    ws2_32 winmm dxguid m)
+    target_link_libraries(doom64ex ${FLUIDSYNTH_LIBRARIES} ${SDL_NET_LIBRARIES}
+        ${SDL_LIBRARY} ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES}
+        imm32 version iphlpapi ws2_32 winmm dxguid m)
 else()
-target_link_libraries(doom64ex ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${SDL_LIBRARY}
-    ${FLUIDSYNTH_LIBRARIES} ${SDLNET_LIBRARY} ${OPENGL_LIBRARY} m)
+    target_link_libraries(doom64ex ${FLUIDSYNTH_LIBRARIES} ${SDL_NET_LIBRARIES}
+        ${SDL_LIBRARY} ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} ${OPENGL_LIBRARIES} m)
 endif()
 
 ##----------------------------------------------------------------------------|
@@ -214,12 +214,12 @@ SET(DIRS ${FLUIDSYNTH_LIBRARY_DIRS} ${SDL_LIBRARY_DIRS} ${SDL_NET_LIBRARY_DIRS}
 # The quotes are escaped and variables to use at install time are escaped 
 INSTALL(CODE "
     file(GLOB_RECURSE QTPLUGINS
-      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+        \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARIES_SUFFIX}\")
     set(BU_CHMOD_BUNDLE_ITEMS ON)
     include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"\${FLUIDSYNTH_LIBRARY}\"
-        \"\${SDL_LIBRARY}\" \"\${SDL_NET_LIBRARY}\"
-        \"\${PNG_LIBRARY}\" \"\${OPENGL_LIBRARY}\" \"${DIRS}\")
+    fixup_bundle(\"${APPS}\" \"\${FLUIDSYNTH_LIBRARIES}\"
+        \"\${SDL_LIBRARY}\" \"\${SDL_NET_LIBRARIES}\"
+        \"\${PNG_LIBRARIES}\" \"\${OPENGL_LIBRARIES}\" \"${DIRS}\")
     " COMPONENT Runtime)
 # To Create a package, one can run "cpack -G DragNDrop CPackConfig.cmake" on Mac OS X
 # where CPackConfig.cmake is created by including CPack

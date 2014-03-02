@@ -1,5 +1,5 @@
 # - Find SDL2 library and headers
-# 
+#
 # Find module for SDL 2.0 (http://www.libsdl.org/).
 # It defines the following variables:
 #  SDL2_INCLUDE_DIRS - The location of the headers, e.g., SDL.h.

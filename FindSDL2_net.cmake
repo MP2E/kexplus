@@ -1,5 +1,5 @@
 # - Find SDL2_net library and headers
-# 
+#
 # Find module for SDL_net 2.0 (http://www.libsdl.org/projects/SDL_net/).
 # It defines the following variables:
 #  SDL2_NET_INCLUDE_DIRS - The location of the headers, e.g., SDL_net.h.

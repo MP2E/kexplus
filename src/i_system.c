@@ -103,7 +103,7 @@ LRESULT CALLBACK SysConsoleProc(HWND hwnd, UINT msg, WPARAM wParam,
 		switch (LOWORD(wParam)) {
 		case QUIT_ID:
 			I_DestroySysConsole();
-			I_ShutdownVideo();
+			V_Shutdown;
 			exit(0);
 			break;
 
