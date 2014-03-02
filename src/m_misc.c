@@ -330,27 +330,11 @@ int M_CacheThumbNail(byte ** data)
 {
 	byte *buff;
 	byte *tbn;
-	int x;
-	int width;
-	const float ratio = (4.0f / 3.0f);
 
-	// 20120313 villsa - fix for widescreen resolutions
-	if (!dfcmp(((float)ViewWidth / (float)ViewHeight), ratio)) {
-		float fitwidth = ViewHeight * ratio;
-		float fitx = (ViewWidth - fitwidth) / 2.0f;
-
-		// clip widescreen thumbnails into 4:3 ratio
-		x = (int)fitx;
-		width = (int)fitwidth;
-	} else {
-		x = 0;
-		width = video_width;
-	}
-
-	buff = GL_GetScreenBuffer(x, 0, width, video_height);
+	buff = GL_GetScreenBuffer(0, 0, video_width, video_height);
 	tbn = Z_Calloc(SAVEGAMETBSIZE, PU_STATIC, 0);
 
-	gluScaleImage(GL_RGB, width, video_height,
+	gluScaleImage(GL_RGB, video_width, video_height,
 		      GL_UNSIGNED_BYTE, buff, 128, 128, GL_UNSIGNED_BYTE, tbn);
 
 	Z_Free(buff);

@@ -275,6 +275,9 @@ byte *GL_GetScreenBuffer(int x, int y, int width, int height)
 	byte *buffer;
 	byte *data;
 	int i;
+	int j;
+	int offset1;
+	int offset2;
 	int pack;
 	int col;
 
@@ -296,9 +299,14 @@ byte *GL_GetScreenBuffer(int x, int y, int width, int height)
 	// 20120313 villsa - better method to flip image. uses one buffer instead of two
 	//
 	for (i = 0; i < height / 2; i++) {
-		dmemcpy(buffer, &data[i * col], col);
-		dmemcpy(&data[i * col], &data[(height - (i + 1)) * col], col);
-		dmemcpy(&data[(height - (i + 1)) * col], buffer, col);
+		for (j = 0; j < col; j++) {
+			offset1 = (i * col) + j;
+			offset2 = ((height - (i + 1)) * col) + j;
+
+			buffer[j] = data[offset1];
+			data[offset1] = data[offset2];
+			data[offset2] = buffer[j];
+		}
 	}
 
 	Z_Free(buffer);
