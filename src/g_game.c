@@ -36,7 +36,6 @@
 #include "m_misc.h"
 #include "m_menu.h"
 #include "m_cheat.h"
-#include "m_password.h"
 #include "m_random.h"
 #include "i_system.h"
 #include "p_setup.h"
@@ -1423,7 +1422,7 @@ void G_RunGame(void)
 {
 	int next = 0;
 
-    if(!demorecording && !demoplayback && !passwordgame) {
+    if(!demorecording && !demoplayback) {
 	    G_ReloadDefaults();
 	    G_InitNew(startskill, startmap);
     }
