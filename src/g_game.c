@@ -1423,10 +1423,10 @@ void G_RunGame(void)
 {
 	int next = 0;
 
-	if (!demorecording && !demoplayback) {
-		G_ReloadDefaults();
-		G_InitNew(startskill, startmap);
-	}
+    if(!demorecording && !demoplayback && !passwordgame) {
+	    G_ReloadDefaults();
+	    G_InitNew(startskill, startmap);
+    }
 
 	while (gameaction != ga_title) {
 		if (gameaction == ga_loadgame)
@@ -1655,12 +1655,15 @@ void G_InitNew(skill_t skill, int map)
 	for (i = 0; i < MAXPLAYERS; i++)
 		players[i].playerstate = PST_REBORN;
 
+<<<<<<< HEAD
 	// MP2E : if loading from a password, make sure the player's
 	// health and armor are not reset
 	if (passwordgame)
 		players[consoleplayer].playerstate = PST_LIVE;
 
 	passwordgame = false;
+=======
+>>>>>>> parent of 0475688... Reimplement password playerstate solution
 	usergame = true;	// will be set false if a demo
 	paused = false;
 	demoplayback = false;
