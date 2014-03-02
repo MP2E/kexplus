@@ -1977,7 +1977,7 @@ menuitem_t VideoMenu[] = {
 	{2, "Resolution:", M_ChangeResolution, 'r'},
 	{-2, "Default", M_DoDefaults, 'e'},
 	{1, "/r Return", M_Return, 0x20}
-//	{1, "/r Return", M_ReturnVideo, 0x20}
+//      {1, "/r Return", M_ReturnVideo, 0x20}
 };
 
 menudefault_t VideoDefault[] = {
@@ -2055,7 +2055,7 @@ void M_Video(int choice)
 
 void M_DrawVideo(void)
 {
-	const viddisp_t * disp;
+	const viddisp_t *disp;
 	static const char *filterType[2] = { "Linear", "Nearest" };
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	static const char *windowedType[3] = { "Off", "On", "Noborder" };
@@ -2093,7 +2093,7 @@ void M_DrawVideo(void)
 	DRAWVIDEOITEM2(vsync, v_vsync.value, msgNames);
 
 	if (currentMenu->menupageoffset <= depth &&
-		depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
+	    depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
 		if (v_depthsize.value == 8)
 			bitValue = "8";
 		else if (v_depthsize.value == 16)
@@ -2105,11 +2105,11 @@ void M_DrawVideo(void)
 
 		y++;
 		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
-				 MENUCOLORRED, bitValue);
+			     MENUCOLORRED, bitValue);
 	}
 
 	if (currentMenu->menupageoffset <= buffer &&
-		buffer - currentMenu->menupageoffset < currentMenu->numpageitems) {
+	    buffer - currentMenu->menupageoffset < currentMenu->numpageitems) {
 		if (v_buffersize.value == 8)
 			bitValue = "8";
 		else if (v_buffersize.value == 16)
@@ -2123,7 +2123,7 @@ void M_DrawVideo(void)
 
 		y++;
 		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
-				 MENUCOLORRED, bitValue);
+			     MENUCOLORRED, bitValue);
 	}
 
 	if (currentMenu->menuitems[video_display].status == -3) {
@@ -2138,7 +2138,7 @@ void M_DrawVideo(void)
 
 	if (disp) {
 		char str[16];
-		if(disp->disp_name) {
+		if (disp->disp_name) {
 			char *a, *b;
 
 			a = str;
@@ -2148,15 +2148,13 @@ void M_DrawVideo(void)
 			// so filter /[0-9a-zA-Z -%!.?:]/
 			while (a != (str + 14) && *b) {
 				if (isdigit(*b) ||
-					islower(*b) ||
-					isupper(*b) ||
-					(*b == ' ') ||
-					(*b == '-') ||
-					(*b == '%') ||
-					(*b == '!') ||
-					(*b == '.') ||
-					(*b == '?') ||
-					(*b == ':') )
+				    islower(*b) ||
+				    isupper(*b) ||
+				    (*b == ' ') ||
+				    (*b == '-') ||
+				    (*b == '%') ||
+				    (*b == '!') ||
+				    (*b == '.') || (*b == '?') || (*b == ':'))
 					*(a++) = *b;
 				b++;
 			}
@@ -2182,10 +2180,10 @@ void M_DrawVideo(void)
 
 void M_SetVideo(void)
 {
-	const vidmode_t * vm;
+	const vidmode_t *vm;
 	vm = V_Mode((int)v_display.value,
-			(int)v_width.value, (int)v_height.value,
-			-1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
+		    (int)v_width.value, (int)v_height.value,
+		    -1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
 
 	if (!V_ModeEquals(vm, vidmode)) {
 		V_SetMode(NULL);
@@ -2240,7 +2238,7 @@ void M_ChangeWindowed(int choice)
 
 static void M_SetResolution(void)
 {
-	const vidmode_t * mode;
+	const vidmode_t *mode;
 	int width = SCREENWIDTH;
 	int height = SCREENHEIGHT;
 
@@ -3718,7 +3716,7 @@ void M_ReturnToOptions(int choice)
 
 static void M_Return(int choice)
 {
-	if(currentMenu == &VideoDef) {
+	if (currentMenu == &VideoDef) {
 		M_SetVideo();
 	}
 
@@ -3736,7 +3734,7 @@ static void M_Return(int choice)
 
 static void M_ReturnInstant(void)
 {
-	if(currentMenu == &VideoDef) {
+	if (currentMenu == &VideoDef) {
 		M_SetVideo();
 	}
 
@@ -4490,9 +4488,6 @@ dboolean M_Responder(event_t * ev)
 	case BUTTON_START:
 		ch = KEY_ESCAPE;
 		break;
-	case BUTTON_BACK:
-		ch = KEY_BACKSPACE;
-		break;
 	case BUTTON_A:
 		ch = KEY_ENTER;
 		break;
@@ -4700,9 +4695,8 @@ dboolean M_Responder(event_t * ev)
 
 				currentMenu->lastOn = itemOn;
 				if (currentMenu == &featuresDef) {
-					if (currentMenu->
-					    menuitems[itemOn].routine ==
-					    M_DoFeature
+					if (currentMenu->menuitems[itemOn].
+					    routine == M_DoFeature
 					    && itemOn == features_levels) {
 						gameaction = ga_warplevel;
 						gamemap = nextmap =
@@ -4711,20 +4705,19 @@ dboolean M_Responder(event_t * ev)
 						dmemset(passwordData, 0xff, 16);
 						return true;
 					}
-				} else if (currentMenu->
-					   menuitems[itemOn].status >= 2
-					   || currentMenu->
-					   menuitems[itemOn].status == -2) {
-					currentMenu->
-					    menuitems[itemOn].routine(2);
+				} else if (currentMenu->menuitems[itemOn].
+					   status >= 2
+					   || currentMenu->menuitems[itemOn].
+					   status == -2) {
+					currentMenu->menuitems[itemOn].
+					    routine(2);
 				} else {
 					if (currentMenu == &ControlsDef) {
 						// don't do the fade effect and jump straight to the next screen
 						M_ChangeKeyBinding(itemOn);
 					} else {
-						currentMenu->
-						    menuitems[itemOn].routine
-						    (itemOn);
+						currentMenu->menuitems[itemOn].
+						    routine(itemOn);
 					}
 
 					S_StartSound(NULL, sfx_pistol);
@@ -5042,8 +5035,8 @@ void M_Drawer(void)
 					     currentMenu->menuitems[i].name);
 			} else {
 				int strwidth =
-				    M_StringWidth(currentMenu->
-						  menuitems[i].name);
+				    M_StringWidth(currentMenu->menuitems[i].
+						  name);
 
 				Draw_Text(((int)(160.0f / currentMenu->scale) -
 					   (strwidth / 2)), y, D_RGBA(255, 0, 0,
@@ -5120,7 +5113,8 @@ void M_Drawer(void)
 		else {
 			Draw_BigText(x - 12,
 				     currentMenu->y - 4 + (itemOn -
-							   currentMenu->menupageoffset)
+							   currentMenu->
+							   menupageoffset)
 				     * height, MENUCOLORWHITE, "/l");
 		}
 	}
