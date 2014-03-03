@@ -44,7 +44,6 @@
 #include "i_video.h"
 #include "m_misc.h"
 #include "r_main.h"
-#include "v_main.h"
 #include "z_zone.h"
 
 int video_width;
@@ -624,7 +623,7 @@ void GL_Init(void)
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, (int)v_vsync.value);
 #endif
 
-	if (!V_SetMode(NULL)) {
+	if (!I_SetMode(NULL)) {
 		// re-adjust depth size if video can't run it
 		if (v_depthsize.value >= 24) {
 			CON_CvarSetValue(v_depthsize.name, 16);
@@ -634,14 +633,14 @@ void GL_Init(void)
 
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
 
-		if (!V_SetMode(NULL)) {
+		if (!I_SetMode(NULL)) {
 			// fall back to lower buffer setting
 			CON_CvarSetValue(v_buffersize.name, 16);
 			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
 					    (int)v_buffersize.value);
 
-			if (!V_SetMode
-			    (V_Mode(0, 640, 480, -1, -1, V_WINDOWED_ON))) {
+			if (!I_SetMode
+				(I_Mode(0, 640, 480, -1, -1, I_WINDOWED_ON))) {
 				// give up
 				I_Error("GL_Init: Failed to create window.");
 			}

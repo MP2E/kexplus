@@ -20,11 +20,6 @@
 // 02111-1307, USA.
 //
 //-----------------------------------------------------------------------------
-//
-// DESCRIPTION:
-//    SDL Stuff
-//
-//-----------------------------------------------------------------------------
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,82 +30,39 @@
 
 #include "doomdef.h"
 #include "doomstat.h"
+#include "con_cvar.h"
 #include "d_main.h"
+#include "g_actions.h"
 #include "gl_main.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "m_misc.h"
-#include "v_main.h"
-
-#ifdef _WIN32
-#include "i_xinput.h"
-#endif
+#include "z_zone.h"
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-#define SDL_keysym	SDL_Keysym
-#define SDLK_KP0	SDLK_KP_0
-#define SDLK_KP1	SDLK_KP_1
-#define SDLK_KP2	SDLK_KP_2
-#define SDLK_KP3	SDLK_KP_3
-#define SDLK_KP4	SDLK_KP_4
-#define SDLK_KP5	SDLK_KP_5
-#define SDLK_KP6	SDLK_KP_6
-#define SDLK_KP7	SDLK_KP_7
-#define SDLK_KP8	SDLK_KP_8
-#define SDLK_KP9	SDLK_KP_9
-#define SDLK_
+SDL_Window *window = NULL;
+SDL_GLContext *glcontext = NULL;
+#else
+SDL_Surface *screen = NULL;
 #endif
 
-CVAR_EXTERNAL(m_menumouse);
-CVAR_EXTERNAL(v_msensitivityx);
-CVAR_EXTERNAL(v_msensitivityy);
-CVAR_EXTERNAL(v_macceleration);
-CVAR_EXTERNAL(v_mlook);
-CVAR_EXTERNAL(v_mlookinvert);
-CVAR_EXTERNAL(v_yaxismove);
-CVAR_EXTERNAL(v_vsync);
-CVAR_EXTERNAL(v_depthsize);
-CVAR_EXTERNAL(v_buffersize);
-CVAR_EXTERNAL(v_width);
-CVAR_EXTERNAL(v_height);
-CVAR_EXTERNAL(v_windowed);
-
-static void I_GetEvent(SDL_Event * Event);
-static void I_ReadMouse(void);
-static void I_InitInputs(void);
-void I_UpdateGrab(void);
-
-//================================================================================
-// Video
-//================================================================================
+CVAR(v_vsync, 1);
+CVAR(v_depthsize, 24);
+CVAR(v_buffersize, 32);
+CVAR(v_width, 640);
+CVAR(v_height, 480);
+CVAR(v_windowed, 1);
+CVAR(v_display, 0);
 
 dboolean window_focused;
 
-int mouse_x = 0;
-int mouse_y = 0;
+static vidmode_t vidmodes[2] = { {0} };	// vidmodes[0]: current, vidmodes[1]: previous
+static int num_vidmodes = 0;
 
-//
-// I_ShutdownWait
-//
+const vidmode_t *vidmode = &vidmodes[0];
+vidinfo_t vidinfo = { 0 };
 
-int I_ShutdownWait(void)
-{
-	static SDL_Event event;
-
-	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT ||
-		    (event.type == SDL_KEYDOWN
-		     && event.key.keysym.sym == SDLK_ESCAPE)) {
-#ifndef USESYSCONSOLE
-			exit(0);
-#else
-			return 1;
-#endif
-		}
-	}
-
-	return 0;
-}
+static char title[256];
 
 //
 // I_NetWaitScreen
@@ -120,48 +72,6 @@ int I_ShutdownWait(void)
 void I_NetWaitScreen(void)
 {
 	I_Printf("STUB: I_NetWaitScreen\n");
-}
-
-//
-// I_InitVideo
-//
-
-void I_InitVideo(void)
-{
-	uint32 f = SDL_INIT_VIDEO;
-
-#ifdef _DEBUG
-	f |= SDL_INIT_NOPARACHUTE;
-#endif
-
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-	putenv("SDL_VIDEO_CENTERED=1");
-#endif
-
-	if (SDL_Init(f) < 0) {
-		printf("ERROR - Failed to initialize SDL");
-		exit(1);
-	}
-
-	I_InitInputs();
-}
-
-//
-// I_StartTic
-//
-
-void I_StartTic(void)
-{
-	SDL_Event Event;
-
-	while (SDL_PollEvent(&Event))
-		I_GetEvent(&Event);
-
-#ifdef _USE_XINPUT
-	I_XInputPollEvent();
-#endif
-
-	I_ReadMouse();
 }
 
 //
@@ -176,524 +86,493 @@ void I_FinishUpdate(void)
 	BusyDisk = false;
 }
 
-//================================================================================
-// Input
-//================================================================================
-
-static SDL_Cursor *cursors[2] = { NULL, NULL };
-
-float mouse_accelfactor;
-
-int UseJoystick;
-int UseMouse[2];
-dboolean DigiJoy;
-int DualMouse;
-
-dboolean MouseMode;		//false=microsoft, true=mouse systems
-
 //
-// I_TranslateKey
+// I_VideoEvent
 //
 
-static int I_TranslateKey(SDL_keysym * key)
+dboolean I_VideoEvent(const SDL_Event * Event)
 {
-	int rc = 0;
-
-	switch (key->sym) {
-	case SDLK_LEFT:
-		rc = KEY_LEFTARROW;
-		break;
-	case SDLK_RIGHT:
-		rc = KEY_RIGHTARROW;
-		break;
-	case SDLK_DOWN:
-		rc = KEY_DOWNARROW;
-		break;
-	case SDLK_UP:
-		rc = KEY_UPARROW;
-		break;
-	case SDLK_ESCAPE:
-		rc = KEY_ESCAPE;
-		break;
-	case SDLK_RETURN:
-		rc = KEY_ENTER;
-		break;
-	case SDLK_TAB:
-		rc = KEY_TAB;
-		break;
-	case SDLK_F1:
-		rc = KEY_F1;
-		break;
-	case SDLK_F2:
-		rc = KEY_F2;
-		break;
-	case SDLK_F3:
-		rc = KEY_F3;
-		break;
-	case SDLK_F4:
-		rc = KEY_F4;
-		break;
-	case SDLK_F5:
-		rc = KEY_F5;
-		break;
-	case SDLK_F6:
-		rc = KEY_F6;
-		break;
-	case SDLK_F7:
-		rc = KEY_F7;
-		break;
-	case SDLK_F8:
-		rc = KEY_F8;
-		break;
-	case SDLK_F9:
-		rc = KEY_F9;
-		break;
-	case SDLK_F10:
-		rc = KEY_F10;
-		break;
-	case SDLK_F11:
-		rc = KEY_F11;
-		break;
-	case SDLK_F12:
-		rc = KEY_F12;
-		break;
-	case SDLK_BACKSPACE:
-		rc = KEY_BACKSPACE;
-		break;
-	case SDLK_DELETE:
-		rc = KEY_DEL;
-		break;
-	case SDLK_INSERT:
-		rc = KEY_INSERT;
-		break;
-	case SDLK_PAGEUP:
-		rc = KEY_PAGEUP;
-		break;
-	case SDLK_PAGEDOWN:
-		rc = KEY_PAGEDOWN;
-		break;
-	case SDLK_HOME:
-		rc = KEY_HOME;
-		break;
-	case SDLK_END:
-		rc = KEY_END;
-		break;
-	case SDLK_PAUSE:
-		rc = KEY_PAUSE;
-		break;
-	case SDLK_EQUALS:
-		rc = KEY_EQUALS;
-		break;
-	case SDLK_MINUS:
-		rc = KEY_MINUS;
-		break;
-	case SDLK_KP0:
-		rc = KEY_KEYPAD0;
-		break;
-	case SDLK_KP1:
-		rc = KEY_KEYPAD1;
-		break;
-	case SDLK_KP2:
-		rc = KEY_KEYPAD2;
-		break;
-	case SDLK_KP3:
-		rc = KEY_KEYPAD3;
-		break;
-	case SDLK_KP4:
-		rc = KEY_KEYPAD4;
-		break;
-	case SDLK_KP5:
-		rc = KEY_KEYPAD5;
-		break;
-	case SDLK_KP6:
-		rc = KEY_KEYPAD6;
-		break;
-	case SDLK_KP7:
-		rc = KEY_KEYPAD7;
-		break;
-	case SDLK_KP8:
-		rc = KEY_KEYPAD8;
-		break;
-	case SDLK_KP9:
-		rc = KEY_KEYPAD9;
-		break;
-	case SDLK_KP_PLUS:
-		rc = KEY_KEYPADPLUS;
-		break;
-	case SDLK_KP_MINUS:
-		rc = KEY_KEYPADMINUS;
-		break;
-	case SDLK_KP_DIVIDE:
-		rc = KEY_KEYPADDIVIDE;
-		break;
-	case SDLK_KP_MULTIPLY:
-		rc = KEY_KEYPADMULTIPLY;
-		break;
-	case SDLK_KP_ENTER:
-		rc = KEY_KEYPADENTER;
-		break;
-	case SDLK_KP_PERIOD:
-		rc = KEY_KEYPADPERIOD;
-		break;
-	case SDLK_LSHIFT:
-	case SDLK_RSHIFT:
-		rc = KEY_RSHIFT;
-		break;
-	case SDLK_LCTRL:
-	case SDLK_RCTRL:
-		rc = KEY_RCTRL;
-		break;
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-	case SDLK_LMETA:
-	case SDLK_RMETA:
-#endif
-	case SDLK_LALT:
-	case SDLK_RALT:
-		rc = KEY_RALT;
-		break;
-	case SDLK_CAPSLOCK:
-		rc = KEY_CAPS;
-		break;
-	default:
-		rc = key->sym;
-		break;
-	}
-
-	return rc;
-
-}
-
-//
-// I_SDLtoDoomMouseState
-//
-
-static int I_SDLtoDoomMouseState(Uint8 buttonstate)
-{
-	return 0 | (buttonstate & SDL_BUTTON(SDL_BUTTON_LEFT) ? 1 : 0)
-	    | (buttonstate & SDL_BUTTON(SDL_BUTTON_MIDDLE) ? 2 : 0)
-	    | (buttonstate & SDL_BUTTON(SDL_BUTTON_RIGHT) ? 4 : 0);
-}
-
-//
-// I_UpdateFocus
-//
-
-#if !SDL_VERSION_ATLEAST(2, 0 ,0)
-static void I_UpdateFocus(void)
-{
-	Uint8 state;
-	state = SDL_GetAppState();
-
-	// We should have input (keyboard) focus and be visible
-	// (not minimised)
-	window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
-}
-#endif
-
-// I_CenterMouse
-// Warp the mouse back to the middle of the screen
-//
-
-void I_CenterMouse(void)
-{
-	// Warp the the screen center
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_WarpMouseInWindow(window,
-			      (unsigned short)(video_width / 2),
-			      (unsigned short)(video_height / 2));
-#else
-	SDL_WarpMouse((unsigned short)(video_width / 2),
-		      (unsigned short)(video_height / 2));
-#endif
-
-	// Clear any relative movement caused by warping
-	SDL_PumpEvents();
-	SDL_GetRelativeMouseState(NULL, NULL);
-}
-
-//
-// I_MouseShouldBeGrabbed
-//
-
-static dboolean I_MouseShouldBeGrabbed()
-{
-#ifndef _WIN32
-	// 20120105 bkw: Always grab the mouse in fullscreen mode
-	if (!InWindow)
-		return true;
-#endif
-
-	// if the window doesnt have focus, never grab it
-	if (!window_focused)
-		return false;
-
-#ifdef _WIN32
-	if (!InWindow && m_menumouse.value <= 0)
-		return true;
-#endif
-
-	// when menu is active or game is paused, release the mouse
-	if (menuactive || paused)
-		return false;
-
-	// only grab mouse when playing levels (but not demos)
-	return (gamestate == GS_LEVEL) && !demoplayback;
-}
-
-//
-// I_ReadMouse
-//
-
-static void I_ReadMouse(void)
-{
-	int x, y;
-	Uint8 btn;
-	event_t ev;
-	static Uint8 lastmbtn = 0;
-
-	SDL_GetRelativeMouseState(&x, &y);
-	btn = SDL_GetMouseState(&mouse_x, &mouse_y);
-
-	if (x != 0 || y != 0 || btn || (lastmbtn != btn)) {
-		ev.type = ev_mouse;
-		ev.data1 = I_SDLtoDoomMouseState(btn);
-		ev.data2 = x << 5;
-		ev.data3 = (-y) << 5;
-		ev.data4 = 0;
-		D_PostEvent(&ev);
-	}
-
-	lastmbtn = btn;
-
-	if (I_MouseShouldBeGrabbed())
-		I_CenterMouse();
-}
-
-//
-// I_MouseAccelChange
-//
-
-void I_MouseAccelChange(void)
-{
-	mouse_accelfactor = v_macceleration.value / 200.0f + 1.0f;
-}
-
-//
-// I_MouseAccel
-//
-
-int I_MouseAccel(int val)
-{
-	if (!v_macceleration.value)
-		return val;
-
-	if (val < 0)
-		return -I_MouseAccel(-val);
-
-	return (int)(pow((double)val, (double)mouse_accelfactor));
-}
-
-//
-// I_ActivateMouse
-//
-
-static void I_ActivateMouse(void)
-{
-	SDL_SetCursor(cursors[1]);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_SetRelativeMouseMode(1);
-#else
-	SDL_WM_GrabInput(SDL_GRAB_ON);
-#endif
-	SDL_ShowCursor(1);
-}
-
-//
-// I_DeactivateMouse
-//
-
-static void I_DeactivateMouse(void)
-{
-	SDL_SetCursor(cursors[0]);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_SetRelativeMouseMode(0);
-#else
-	SDL_WM_GrabInput(SDL_GRAB_OFF);
-#endif
-	SDL_ShowCursor(m_menumouse.value < 1);
-}
-
-//
-// I_UpdateGrab
-//
-
-void I_UpdateGrab(void)
-{
-	static dboolean currently_grabbed = false;
-	dboolean grab;
-
-	grab = I_MouseShouldBeGrabbed();
-	if (grab && !currently_grabbed) {
-		I_ActivateMouse();
-	}
-
-	if (!grab && currently_grabbed) {
-		I_DeactivateMouse();
-	}
-
-	currently_grabbed = grab;
-}
-
-//
-// I_GetEvent
-//
-
-static void I_GetEvent(SDL_Event * Event)
-{
-	event_t event;
-	uint32 mwheeluptic = 0, mwheeldowntic = 0;
-	uint32 tic = gametic;
-
 	switch (Event->type) {
-	case SDL_KEYDOWN:
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-		// TODO: 'repeat' shouldn't be ignored when console is open.
-		if (Event->key.repeat)
-			break;
-#endif
-		event.type = ev_keydown;
-		event.data1 = I_TranslateKey(&Event->key.keysym);
-		D_PostEvent(&event);
-		break;
-
-	case SDL_KEYUP:
-		event.type = ev_keyup;
-		event.data1 = I_TranslateKey(&Event->key.keysym);
-		D_PostEvent(&event);
-		break;
-
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	case SDL_MOUSEBUTTONDOWN:
-	case SDL_MOUSEBUTTONUP:
-		if (!window_focused)
-			break;
-
-		event.type =
-		    Event->type ==
-		    SDL_MOUSEBUTTONUP ? ev_mouseup : ev_mousedown;
-		event.data1 =
-		    I_SDLtoDoomMouseState(SDL_GetMouseState(NULL, NULL));
-		event.data2 = event.data3 = 0;
-
-		D_PostEvent(&event);
-		break;
-
-	case SDL_MOUSEWHEEL:
-		if (Event->wheel.y > 0) {
-			event.type = ev_keydown;
-			event.data1 = KEY_MWHEELUP;
-			mwheeluptic = tic;
-		} else if (Event->wheel.y < 0) {
-			event.type = ev_keydown;
-			event.data1 = KEY_MWHEELDOWN;
-			mwheeldowntic = tic;
-		} else
-			break;
-
-		event.data2 = event.data3 = 0;
-		D_PostEvent(&event);
-		break;
-
-	case SDL_WINDOWEVENT:
-		switch (Event->window.event) {
-		case SDL_WINDOWEVENT_FOCUS_GAINED:
-			window_focused = 1;
-			break;
-
-		case SDL_WINDOWEVENT_FOCUS_LOST:
-			window_focused = 0;
-			break;
-
-		default:
-			break;
-		}
-		break;
 #else
-	case SDL_MOUSEBUTTONDOWN:
-	case SDL_MOUSEBUTTONUP:
-		if (!window_focused)
-			break;
+	case SDL_ACTIVEEVENT: {
+		Uint8 state;
+		state = SDL_GetAppState();
 
-		if (Event->button.button == SDL_BUTTON_WHEELUP) {
-			event.type = ev_keydown;
-			event.data1 = KEY_MWHEELUP;
-			mwheeluptic = tic;
-		} else if (Event->button.button == SDL_BUTTON_WHEELDOWN) {
-			event.type = ev_keydown;
-			event.data1 = KEY_MWHEELDOWN;
-			mwheeldowntic = tic;
-		} else {
-			event.type = Event->type ==
-			    SDL_MOUSEBUTTONUP ? ev_mouseup : ev_mousedown;
-			event.data1 =
-			    I_SDLtoDoomMouseState(SDL_GetMouseState
-						  (NULL, NULL));
-		}
-
-		event.data2 = event.data3 = 0;
-		D_PostEvent(&event);
+		// We should have input (keyboard) focus and be visible
+		// (not minimised)
+		window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
 		break;
-
-	case SDL_ACTIVEEVENT:
-	case SDL_VIDEOEXPOSE:
-		I_UpdateFocus();
-		break;
+	}
 #endif
-
-	case SDL_QUIT:
-		I_Quit();
-		break;
 
 	default:
+		return false;
 		break;
 	}
 
-	if (mwheeluptic && mwheeluptic + 1 < tic) {
-		event.type = ev_keyup;
-		event.data1 = KEY_MWHEELUP;
-		D_PostEvent(&event);
-		mwheeluptic = 0;
-	}
+	return true;
+}
 
-	if (mwheeldowntic && mwheeldowntic + 1 < tic) {
-		event.type = ev_keyup;
-		event.data1 = KEY_MWHEELDOWN;
-		D_PostEvent(&event);
-		mwheeldowntic = 0;
+
+
+//
+// CMD_ListVideoModes
+//
+
+static CMD(ListVidModes)
+{
+	int i, j;
+
+	for (i = 0; i < vidinfo.num_displays; i++) {
+		viddisp_t *disp = &vidinfo.displays[i];
+
+		if (disp->disp_name)
+			I_Printf("Display %d (%s):\n", disp->disp_id,
+				 disp->disp_name);
+		else
+			I_Printf("Display %d:\n", disp->disp_id);
+
+		for (j = 0; j < disp->num_modes; j++) {
+			vidmode_t *vm = &disp->modes[j];
+
+			I_Printf("  %d: %dx%d\n", vm->id, vm->w, vm->h);
+		}
 	}
 }
 
 //
-// I_InitInputs
+// CMD_VidSet
 //
 
-static void I_InitInputs(void)
+static CMD(VidSet)
 {
-	Uint8 data[1] = { 0x00 };
+	if (I_SetMode(NULL)) {
+		I_Printf("Video mode set successfully.\n");
+	} else {
+		I_Printf("Video mode wasn't set.\n");
+	}
+}
 
-	SDL_PumpEvents();
-	cursors[0] = SDL_GetCursor();
-	cursors[1] = SDL_CreateCursor(data, data, 8, 1, 0, 0);
+//
+// CMD_VidRevert
+//
 
-	SDL_ShowCursor(m_menumouse.value < 1);
+static CMD(VidRevert)
+{
+	if (I_RevertMode()) {
+		I_Printf("Video mode reverted successfully.\n");
+	} else {
+		I_Printf("Video mode wasn't reverted.\n");
+	}
+}
 
-	UseMouse[0] = 1;
-	UseMouse[1] = 2;
+//
+// I_InitVideo
+//
 
-	I_CenterMouse();
-	I_MouseAccelChange();
+void I_InitVideo(void)
+{
+	int p, newwidth, newheight;
 
-#ifdef _USE_XINPUT
-	I_XInputInit();
+	newwidth = newheight = 0;
+
+	I_UpdateVidInfo();
+
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
+	putenv("SDL_VIDEO_CENTERED=1");
 #endif
+
+	if (M_CheckParm("-fullscreen"))
+		CON_CvarSetValue(v_windowed.name, 0.f);
+	if (M_CheckParm("-window"))
+		CON_CvarSetValue(v_windowed.name, 1.f);
+	if (M_CheckParm("-noborder"))
+		CON_CvarSetValue(v_windowed.name, 2.f);
+
+	p = M_CheckParm("-width");
+	if (p && p < myargc - 1)
+		newwidth = datoi(myargv[p + 1]);
+
+	p = M_CheckParm("-height");
+	if (p && p < myargc - 1)
+		newheight = datoi(myargv[p + 1]);
+
+	p = M_CheckParm("-display");
+	if (p && p < myargc - 1)
+		CON_CvarSetValue(v_display.name, (float)datoi(myargv[p + 1]));
+
+	if (newwidth && newheight) {
+		CON_CvarSetValue(v_width.name, (float)newwidth);
+		CON_CvarSetValue(v_height.name, (float)newheight);
+	}
+
+	if (v_depthsize.value != 8 &&
+		v_depthsize.value != 16 && v_depthsize.value != 24) {
+		CON_CvarSetValue(v_depthsize.name, 24);
+	}
+
+	if (v_buffersize.value != 8 &&
+		v_buffersize.value != 16 &&
+		v_buffersize.value != 24 && v_buffersize.value != 32) {
+		CON_CvarSetValue(v_buffersize.name, 32);
+	}
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	sprintf(title, "Doom64 - Version Date %s - SDL2", version_date);
+#else
+	sprintf(title, "Doom64 - Version Date %s", version_date);
+	SDL_WM_SetCaption(title, "Doom64");
+#endif
+
+	G_AddCommand("listvidmodes", CMD_ListVidModes, 0);
+	G_AddCommand("v_set", CMD_VidSet, 0);
+	G_AddCommand("v_revert", CMD_VidRevert, 0);
+}
+
+//
+// I_ShutdownVideo
+//
+
+void I_ShutdownVideo(void)
+{
+	I_ClearVidInfo();
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_GL_DeleteContext(glcontext);
+	SDL_DestroyWindow(window);
+#endif
+	SDL_Quit();
+}
+
+//
+// I_TrySetMode
+//
+
+const vidmode_t *I_TrySetMode(const vidmode_t * vm)
+{
+	int flags;
+
+	if (!vm)
+		vm = I_Mode((int)v_display.value,
+				(int)v_width.value, (int)v_height.value,
+				-1, -1, ((int)v_windowed.value) & I_WINDOWED_MASK);
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	int16 x, y;
+	SDL_Rect display_bounds;
+
+	SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
+
+	if (vm->x < 0)
+		x = display_bounds.x + (display_bounds.w - vm->w) / 2;
+	else
+		x = display_bounds.x + vm->x;
+
+	if (vm->y < 0)
+		y = display_bounds.y + (display_bounds.h - vm->h) / 2;
+	else
+		y = display_bounds.y + vm->y;
+
+	if (window) {		// resize and move window
+		assert(glcontext);
+		assert(num_vidmodes);
+
+		int windowed = vm->flags & I_WINDOWED_MASK;
+
+		SDL_SetWindowFullscreen(window, 0);
+		SDL_SetWindowBordered(window, SDL_TRUE);
+		SDL_SetWindowSize(window, vm->w, vm->h);
+
+		if (windowed == I_WINDOWED_OFF)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		else if(windowed == I_WINDOWED_NOBORDER)
+			SDL_SetWindowBordered(window, SDL_FALSE);
+
+		SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
+
+		if (vm->x < 0)
+			x = display_bounds.x + (display_bounds.w - vm->w) / 2;
+		else
+			x = display_bounds.x + vm->x;
+
+		if (vm->y < 0)
+			y = display_bounds.y + (display_bounds.h - vm->h) / 2;
+		else
+			y = display_bounds.y + vm->y;
+
+		SDL_SetWindowPosition(window, x, y);
+
+		GL_SetLogicalResolution(vm->w, vm->h);
+		return vm;
+	}
+
+	flags = SDL_WINDOW_OPENGL;
+	if ((vm->flags & I_WINDOWED_MASK) == I_WINDOWED_OFF)
+		flags |= SDL_WINDOW_FULLSCREEN;
+	if ((vm->flags & I_WINDOWED_MASK) == I_WINDOWED_NOBORDER)
+		flags |= SDL_WINDOW_BORDERLESS;
+
+	window = SDL_CreateWindow(title, x, y, vm->w, vm->h, flags);
+
+	if (window) {
+		glcontext = SDL_GL_CreateContext(window);
+		if (!glcontext) {
+			I_Printf
+				("Couldn't create OpenGL context for window.\n");
+			SDL_DestroyWindow(window);
+		}
+	}
+
+	if (window && glcontext) {
+		GL_SetLogicalResolution(vm->w, vm->h);
+		return vm;
+	}
+#else
+	flags = SDL_OPENGL;
+
+	if ((vm->flags & I_WINDOWED_MASK) == I_WINDOWED_OFF)
+		flags |= SDL_FULLSCREEN;
+//      if((vm->flags & I_WINDOWED_MASK) == I_WINDOWED_NOBORDER) flags |= SDL_NOFRAME;
+
+	screen = SDL_SetVideoMode(vm->w, vm->h, 0, flags);
+
+	if (screen) {
+		GL_SetLogicalResolution(vm->w, vm->h);
+		return vm;
+	}
+#endif
+	return NULL;
+}
+
+//
+// I_SetMode
+//
+
+dboolean I_SetMode(const vidmode_t * vm)
+{
+	if ((vm = I_TrySetMode(vm))) {
+		// Don't add the new vidmode to history if it equals the
+		// previous one, but try to set it anyway in case
+		// it failed last time.
+		if (!I_ModeEquals(vm, &vidmodes[0])) {
+			v_width.value = (float)vm->w;
+			v_height.value = (float)vm->h;
+			v_display.value = (float)vm->disp_id;
+			v_windowed.value = (float)(vm->flags & I_WINDOWED_MASK);
+
+			if (num_vidmodes++) {
+				dmemcpy(&vidmodes[1], &vidmodes[0], sizeof(vidmode_t));
+			}
+			dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+			vidmodes[0].id = I_GetClosestMode(vm);
+		}
+	}
+
+	return (vm ? true : false);
+}
+
+//
+// I_RevertMode
+//
+
+dboolean I_RevertMode(void)
+{
+	const vidmode_t *vm;
+	if (num_vidmodes < 2)
+		return false;	// no mode to revert to
+
+	if ((vm = I_TrySetMode(&vidmodes[1]))) {
+		v_width.value = (float)vm->w;
+		v_height.value = (float)vm->h;
+		v_display.value = (float)vm->disp_id;
+		v_windowed.value = (float)(vm->flags & I_WINDOWED_MASK);
+
+		dmemcpy(&vidmodes[0], vm, sizeof(vidmode_t));
+		num_vidmodes--;
+
+		return true;
+	}
+
+	return false;
+}
+
+//
+// I_Mode
+//
+
+vidmode_t *I_Mode(int display, int w, int h, int x, int y, int flags)
+{
+	static vidmode_t vm = { 0 };
+
+	vm.disp_id = display;
+	vm.id = -1;
+	vm.flags = flags;
+	vm.w = w;
+	vm.h = h;
+	vm.x = x;
+	vm.y = y;
+
+	return &vm;
+}
+
+//
+// __compar_vidmode
+//
+
+static int __compar_vidmode(const void * _a, const void * _b)
+{
+	const vidmode_t * a = (const void *) _a;
+	const vidmode_t * b = (const void *) _b;
+
+	if (a->w < b->w)
+		return -1;
+	if (a->w > b->w)
+		return 1;
+	// a->w == b->w
+	if (a->h < b->h)
+		return -1;
+	if (a->h > b->h)
+		return 1;
+	// a->h == b->h
+	return 0;
+}
+
+//
+// I_UpdateVidInfo
+//
+
+void I_UpdateVidInfo(void)
+{
+	I_ClearVidInfo();
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	int i, j, cm;		// cm: current mode
+	SDL_DisplayMode mode;
+
+	vidinfo.num_displays = SDL_GetNumVideoDisplays();
+	vidinfo.displays =
+		Z_Malloc(sizeof(viddisp_t) * vidinfo.num_displays, PU_STATIC, NULL);
+
+	for (i = 0; i < vidinfo.num_displays; i++) {
+		viddisp_t *disp = &vidinfo.displays[i];
+		const char *disp_name;
+		size_t disp_name_size;
+
+		disp_name = SDL_GetDisplayName(i);
+		if (!disp_name) {
+			disp->disp_name = NULL;
+		} else {
+			disp_name_size = dstrlen(disp_name) + 1;
+			disp->disp_name =
+				Z_Malloc(disp_name_size, PU_STATIC, NULL);
+			dstrncpy(disp->disp_name, disp_name, disp_name_size);
+		}
+
+		disp->disp_id = i;
+		disp->num_modes = SDL_GetNumDisplayModes(i);
+		disp->modes =
+			Z_Calloc(sizeof(vidmode_t) * disp->num_modes, PU_STATIC,
+				 NULL);
+
+		for (j = cm = 0; j < disp->num_modes; j++) {
+			vidmode_t *vm = &disp->modes[j];
+
+			SDL_GetDisplayMode(i, j, &mode);
+
+			if (vm->w == mode.w && vm->h == mode.h)
+				continue;
+
+			vm->disp_id = i;
+			vm->flags = 0;
+			vm->w = mode.w;
+			vm->h = mode.h;
+			vm->x = -1;
+			vm->y = -1;
+
+			cm++;
+		}
+		disp->num_modes = cm;
+
+		qsort(disp->modes, disp->num_modes, sizeof(vidmode_t),
+			  __compar_vidmode);
+		for (j = 0; j < disp->num_modes; j++)
+			disp->modes[j].id = j;
+	}
+#else
+	int i;
+
+	SDL_Rect **modes;
+
+	// All SDLs prior to v2 assume there is only 1 display.
+	vidinfo.num_displays = 1;
+	vidinfo.displays = Z_Malloc(sizeof(viddisp_t), PU_STATIC, NULL);
+
+	viddisp_t *disp = vidinfo.displays;
+
+	disp->disp_id = 0;
+	disp->disp_name = NULL;
+
+	modes = SDL_ListModes(NULL, SDL_FULLSCREEN | SDL_HWSURFACE);
+	if (modes == (SDL_Rect **) -1 || modes == (SDL_Rect **) 0) {
+		disp->num_modes = 0;
+		disp->modes = NULL;
+		return;
+	}
+
+	for (i = 0; modes[i]; i++) ;	// count number of modes
+	disp->num_modes = i;
+	disp->modes =
+		Z_Malloc(sizeof(vidmode_t) * disp->num_modes, PU_STATIC, NULL);
+
+	for (i = 0; modes[i]; i++) {
+		vidmode_t *vm = &disp->modes[i];
+
+		vm->disp_id = 0;
+		vm->flags = 0;
+		vm->w = modes[i]->w;
+		vm->h = modes[i]->h;
+		vm->x = -1;
+		vm->y = -1;
+	}
+
+	qsort(disp->modes, disp->num_modes, sizeof(vidmode_t),
+		  __compar_vidmode);
+	for (i = 0; i < disp->num_modes; i++)
+		disp->modes[i].id = i;
+#endif
+}
+
+//
+// I_ClearVidInfo
+//
+
+void I_ClearVidInfo(void)
+{
+	int i;
+	if (vidinfo.displays) {
+		for (i = 0; i < vidinfo.num_displays; i++) {
+			viddisp_t *disp = vidinfo.displays + i;
+
+			if (disp->disp_name)
+				Z_Free(disp->disp_name);
+			if (disp->modes)
+				Z_Free(disp->modes);
+		}
+		Z_Free(vidinfo.displays);
+		dmemset(&vidinfo, 0, sizeof(vidinfo));
+	}
+}
+
+//
+// I_RegisterVideoCvars
+//
+
+void I_RegisterVideoCvars(void)
+{
+	CON_CvarRegister(&v_width);
+	CON_CvarRegister(&v_height);
+	CON_CvarRegister(&v_windowed);
+	CON_CvarRegister(&v_vsync);
+	CON_CvarRegister(&v_depthsize);
+	CON_CvarRegister(&v_buffersize);
 }

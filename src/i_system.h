@@ -37,6 +37,16 @@
 #define attr_printf(a,b)
 #endif
 
+enum {
+	I_VIDEO = 0x01,
+	I_KEYBOARD = 0x02,
+	I_MOUSE = 0x04,
+	I_XINPUT = 0x08,
+	I_JOYSTICK = 0x10
+};
+
+extern int init_systems;
+
 // Called by DoomMain.
 void I_Init(void);
 

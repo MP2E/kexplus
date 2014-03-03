@@ -63,7 +63,6 @@
 #include "st_stuff.h"
 #include "w_wad.h"
 #include "wi_stuff.h"
-#include "v_main.h"
 #include "z_zone.h"
 
 #include "Ext/ChocolateDoom/net_client.h"
@@ -975,9 +974,6 @@ void D_DoomMain(void)
 
 	I_Printf("ST_Init: Init status bar.\n");
 	ST_Init();
-
-	I_Printf("V_Init: Init Video\n");
-	V_Init();
 
 	I_Printf("GL_Init: Init OpenGL\n");
 	GL_Init();

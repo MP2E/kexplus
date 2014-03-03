@@ -36,7 +36,7 @@
 #include "s_sound.h"
 #include "d_englsh.h"
 #include "r_drawlist.h"
-#include "i_video.h"
+#include "i_mouse.h"
 
 static dboolean showstats = true;
 

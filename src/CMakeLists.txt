@@ -42,7 +42,10 @@ add_executable(doom64ex
     gl_main.c
     gl_texture.c
     i_audio.c
+    i_joystick.c
+    i_keyboard.c
     i_main.c
+    i_mouse.c
     i_png.c
     i_system.c
     i_video.c
@@ -91,7 +94,6 @@ add_executable(doom64ex
     sc_main.c
     st_stuff.c
     tables.c
-    v_main.c
     w_file.c
     w_merge.c
     w_wad.c

@@ -50,6 +50,7 @@
 #include "gl_texture.h"
 #include "gl_draw.h"
 #include "i_system.h"
+#include "i_mouse.h"
 #include "i_video.h"
 #include "m_cheat.h"
 #include "m_fixed.h"
@@ -63,7 +64,6 @@
 #include "r_wipe.h"
 #include "s_sound.h"
 #include "st_stuff.h"
-#include "v_main.h"
 #include "w_wad.h"
 #include "z_zone.h"
 
@@ -2043,8 +2043,8 @@ void M_Video(int choice)
 {
 	int i;
 
-	V_UpdateVidInfo();
-	if (V_NumDisplays() < 2)
+	I_UpdateVidInfo();
+	if (I_NumDisplays() < 2)
 		VideoDef.menuitems[video_display].status = -3;
 
 	M_SetupNextMenu(&VideoDef);
@@ -2129,10 +2129,10 @@ void M_DrawVideo(void)
 	if (currentMenu->menuitems[video_display].status == -3) {
 		disp = NULL;
 	} else {
-		disp = V_GetDisplay(m_videoDisplay);
+		disp = I_GetDisplay(m_videoDisplay);
 		if (!disp) {
 			m_videoDisplay = 0;
-			disp = V_GetDisplay(m_videoDisplay);
+			disp = I_GetDisplay(m_videoDisplay);
 		}
 	}
 
@@ -2183,12 +2183,12 @@ void M_DrawVideo(void)
 void M_SetVideo(void)
 {
 	const vidmode_t * vm;
-	vm = V_Mode((int)v_display.value,
+	vm = I_Mode((int)v_display.value,
 			(int)v_width.value, (int)v_height.value,
-			-1, -1, ((int)v_windowed.value) & V_WINDOWED_MASK);
+			-1, -1, ((int)v_windowed.value) & I_WINDOWED_MASK);
 
-	if (!V_ModeEquals(vm, vidmode)) {
-		V_SetMode(NULL);
+	if (!I_ModeEquals(vm, vidmode)) {
+		I_SetMode(NULL);
 	}
 }
 
@@ -2244,7 +2244,7 @@ static void M_SetResolution(void)
 	int width = SCREENWIDTH;
 	int height = SCREENHEIGHT;
 
-	mode = V_GetMode(m_videoDisplay, m_videoMode);
+	mode = I_GetMode(m_videoDisplay, m_videoMode);
 	if (mode) {
 		width = mode->w;
 		height = mode->h;
@@ -2258,7 +2258,7 @@ void M_ChangeVideoDisplay(int choice)
 {
 	int max = 0;
 
-	max = V_NumDisplays();
+	max = I_NumDisplays();
 
 	if (choice) {
 		if (++m_videoDisplay > max - 1) {
@@ -2277,7 +2277,7 @@ void M_ChangeResolution(int choice)
 {
 	int max = 0;
 
-	max = V_NumModes(m_videoDisplay);
+	max = I_NumModes(m_videoDisplay);
 
 	if (choice) {
 		if (++m_videoMode > max - 1) {

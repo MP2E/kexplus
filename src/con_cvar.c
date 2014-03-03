@@ -230,7 +230,6 @@ void CON_CvarInit(void)
 {
 	AM_RegisterCvars();
 	R_RegisterCvars();
-	V_RegisterCvars();
 	ST_RegisterCvars();
 	S_RegisterCvars();
 	I_RegisterCvars();

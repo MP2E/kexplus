@@ -45,10 +45,12 @@
 #include "d_net.h"
 #include "gl_draw.h"
 #include "i_audio.h"
+#include "i_joystick.h"
+#include "i_keyboard.h"
+#include "i_mouse.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "m_misc.h"
-#include "v_main.h"
 #include "z_zone.h"
 
 #ifdef _WIN32
@@ -56,6 +58,8 @@
 #endif
 
 CVAR(i_interpolateframes, 0);
+
+int init_systems = 0;
 
 #ifdef USESYSCONSOLE
 #include <windows.h>
@@ -455,6 +459,38 @@ unsigned long I_GetRandomTimeSeed(void)
 }
 
 //
+// I_StartTic
+//
+
+void I_StartTic(void)
+{
+	SDL_Event Event;
+
+	while (SDL_PollEvent(&Event)) {
+		if (Event.type == SDL_QUIT)
+			I_Quit();
+
+		if ((init_systems & I_KEYBOARD) &&
+				I_KeyboardEvent(&Event))
+			continue;
+
+		if ((init_systems & I_MOUSE) &&
+				I_MouseEvent(&Event))
+			continue;
+
+		if ((init_systems & I_VIDEO) &&
+				I_VideoEvent(&Event))
+			continue;
+	}
+
+#ifdef _USE_XINPUT
+	I_XInputPollEvent();
+#endif
+
+	I_ReadMouse();
+}
+
+//
 // I_Init
 //
 
@@ -464,8 +500,61 @@ void I_Init(void)
 	//I_SpawnLauncher(hwndMain);
 #endif
 
-	I_InitVideo();
+	int sdl_flags = SDL_INIT_VIDEO;
+	SDL_version compiled;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_version linked;
+#endif
+
+	init_systems = I_KEYBOARD | I_VIDEO ;
+
+	if (!M_CheckParm("-nomouse"))
+		init_systems |= I_MOUSE;
+
+	if (!M_CheckParm("-noxinput"))
+		init_systems |= I_XINPUT;
+
+	if (!M_CheckParm("-nojoy")) // only sadness
+		init_systems |= I_JOYSTICK;
+
+	if (SDL_Init(sdl_flags) < 0)
+		I_Error("Couldn't initialize SDL");
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SDL_GetVersion(&linked);
+	I_Printf("Linked against SDL v%d.%d.%d\n", linked.major, linked.minor,
+		 linked.patch);
+#endif
+
+	SDL_VERSION(&compiled);
+	I_Printf("Compiled against SDL v%d.%d.%d\n", compiled.major,
+		 compiled.minor, compiled.patch);
+
+	// Init Video
+	if (init_systems & I_VIDEO)
+		I_InitVideo();
+
+	// Init Keyboard
+	if (init_systems & I_KEYBOARD)
+		I_InitKeyboard();
+
+	// Init Mouse
+	if (init_systems & I_MOUSE)
+		I_InitMouse();
+
+#if _USE_XINPUT
+	// Init Xinput
+	if (init_systems & I_XINPUT)
+		I_InitXInput();
+#endif
+
+	// Init Joystick
+	if (init_systems & I_JOYSTICK)
+		I_InitJoystick();
+
 	I_InitClockRate();
+
+	SDL_PumpEvents();
 }
 
 //
@@ -495,13 +584,13 @@ void I_Error(char *string, ...)
 			Draw_Text(0, 0, WHITE, 1, 1, "Error - %s\n", buff);
 			GL_SwapBuffers();
 
-			if (I_ShutdownWait())
+	//		if (I_ShutdownWait())
 				break;
 
 			I_Sleep(1);
 		}
 	} else
-		V_Shutdown();
+		I_ShutdownVideo();
 
 #ifdef USESYSCONSOLE
 	{
@@ -630,4 +719,7 @@ void I_RegisterCvars(void)
 	CON_CvarRegister(&i_gamma);
 	CON_CvarRegister(&i_brightness);
 	CON_CvarRegister(&i_interpolateframes);
+
+	I_RegisterVideoCvars();
+	I_RegisterMouseCvars();
 }
