@@ -888,6 +888,12 @@ void G_DoLoadLevel(void)
 
 	map = P_GetMapInfo(gamemap);
 
+	if (map == NULL) {
+		I_Error("G_DoLoadLevel: No mapinfo data found for MAP%02d",
+			gamemap);
+		return;
+	}
+
 	forcecollision = map->oldcollision;
 	forcejump = map->allowjump;
 	forcefreelook = map->allowfreelook;
@@ -1074,8 +1080,8 @@ void G_Ticker(void)
 						dstrcpy(savedescription,
 							"NET GAME");
 					savegameslot =
-					    (players[i].
-					     cmd.buttons & BTS_SAVEMASK) >>
+					    (players[i].cmd.
+					     buttons & BTS_SAVEMASK) >>
 					    BTS_SAVESHIFT;
 					savenow = true;
 				}
@@ -1422,10 +1428,10 @@ void G_RunGame(void)
 {
 	int next = 0;
 
-    if(!demorecording && !demoplayback) {
-	    G_ReloadDefaults();
-	    G_InitNew(startskill, startmap);
-    }
+	if (!demorecording && !demoplayback) {
+		G_ReloadDefaults();
+		G_InitNew(startskill, startmap);
+	}
 
 	while (gameaction != ga_title) {
 		if (gameaction == ga_loadgame)
