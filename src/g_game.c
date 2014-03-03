@@ -36,7 +36,6 @@
 #include "m_misc.h"
 #include "m_menu.h"
 #include "m_cheat.h"
-#include "m_password.h"
 #include "m_random.h"
 #include "i_system.h"
 #include "p_setup.h"
@@ -889,6 +888,12 @@ void G_DoLoadLevel(void)
 
 	map = P_GetMapInfo(gamemap);
 
+	if (map == NULL) {
+		I_Error("G_DoLoadLevel: No mapinfo data found for MAP%02d",
+			gamemap);
+		return;
+	}
+
 	forcecollision = map->oldcollision;
 	forcejump = map->allowjump;
 	forcefreelook = map->allowfreelook;
@@ -1075,8 +1080,8 @@ void G_Ticker(void)
 						dstrcpy(savedescription,
 							"NET GAME");
 					savegameslot =
-					    (players[i].
-					     cmd.buttons & BTS_SAVEMASK) >>
+					    (players[i].cmd.
+					     buttons & BTS_SAVEMASK) >>
 					    BTS_SAVESHIFT;
 					savenow = true;
 				}
@@ -1655,12 +1660,6 @@ void G_InitNew(skill_t skill, int map)
 	for (i = 0; i < MAXPLAYERS; i++)
 		players[i].playerstate = PST_REBORN;
 
-	// MP2E : if loading from a password, make sure the player's
-	// health and armor are not reset
-	if (passwordgame)
-		players[consoleplayer].playerstate = PST_LIVE;
-
-	passwordgame = false;
 	usergame = true;	// will be set false if a demo
 	paused = false;
 	demoplayback = false;

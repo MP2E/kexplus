@@ -39,7 +39,6 @@
 
 byte passwordData[16];
 dboolean doPassword = false;
-dboolean passwordgame = false;
 const char *passwordChar = "bcdfghjklmnpqrstvwxyz0123456789?";
 static const int passwordTable[10] = { 1, 8, 9, 5, 6, 2, 7, 0, 4, 3 };
 
@@ -385,9 +384,16 @@ dboolean M_DecodePassword(dboolean checkOnly)
 	    M_DecodePassItem(decode[3] & 0xf, player->maxammo[am_misl]);
 
 	//
-	// get health/armor
+	// get health
 	//
 	player->health = M_DecodePassItem(decode[4] >> 4, 200);
+
+	if (player->mo) {
+		player->mo->health = player->health;
+	}
+	//
+	// get armor
+	//
 	player->armorpoints = M_DecodePassItem(decode[4] & 0xf, 200);
 
 	//
@@ -399,10 +405,6 @@ dboolean M_DecodePassword(dboolean checkOnly)
 	// get artifacts
 	//
 	player->artifacts = ((decode[5] >> 2) & 7);
-
-	// MP2E: set passwordgame true so that player
-	// isn't set PST_REBORN
-	passwordgame = true;
 
 	//
 	// set cheat menu if password leads to map 01

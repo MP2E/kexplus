@@ -275,8 +275,8 @@ side_t *getSide(int currentSector, int line, int side)
 //
 sector_t *getSector(int currentSector, int line, int side)
 {
-	return sides[(sectors[currentSector].lines[line])->sidenum[side]].
-	    sector;
+	return sides[(sectors[currentSector].lines[line])->
+		     sidenum[side]].sector;
 }
 
 //
@@ -562,8 +562,8 @@ static int P_ModifyLine(int tag1, int tag2, int type)
 				if (line1->flags & ML_TWOSIDED
 				    || line1->sidenum[1] != NO_SIDE_INDEX) {
 					sides[line1->sidenum[1]].bottomtexture =
-					    sides[line2->sidenum[1]].
-					    bottomtexture;
+					    sides[line2->
+						  sidenum[1]].bottomtexture;
 					sides[line1->sidenum[1]].midtexture =
 					    sides[line2->sidenum[1]].midtexture;
 					sides[line1->sidenum[1]].toptexture =
@@ -806,9 +806,10 @@ static void P_SpawnQuake(line_t * line)
 // P_AlertTaggedMobj
 //
 
-static void P_AlertTaggedMobj(player_t * player, int tid)
+static void P_AlertTaggedMobj(mobj_t * activator, int tid)
 {
 	mobj_t *mo;
+	player_t *player;
 	state_t *st;
 
 	for (mo = mobjhead.next; mo != &mobjhead; mo = mo->next) {
@@ -837,6 +838,17 @@ static void P_AlertTaggedMobj(player_t * player, int tid)
 		}
 
 		st = &states[mo->info->seestate];
+
+		// 03022014 villsa - handle checks if activator is not a player
+		if (activator->player) {
+			player = activator->player;
+		} else if (activator->target && activator->target->player) {
+			// if the activator's target is a player
+			player = activator->target->player;
+		} else {
+			// default to player 1
+			player = &players[0];
+		}
 
 		P_SetTarget(&mo->target, player->mo);
 
@@ -1290,7 +1302,7 @@ int P_DoSpecialLine(mobj_t * thing, line_t * line, int side)
 
 	case 94:
 		// Noise Alert
-		P_AlertTaggedMobj(thing->player, line->tag);
+		P_AlertTaggedMobj(thing, line->tag);
 		ok = 1;
 		break;
 
@@ -1674,9 +1686,8 @@ dboolean P_UseSpecialLine(mobj_t * thing, line_t * line, int side)
 			return false;
 
 		// never allow a non-player mobj to use lines with these useflags
-		if (line->
-		    special & (MLU_BLUE | MLU_YELLOW | MLU_RED | MLU_SHOOT |
-			       MLU_MACRO))
+		if (line->special &
+		    (MLU_BLUE | MLU_YELLOW | MLU_RED | MLU_SHOOT | MLU_MACRO))
 			return false;
 
 		// Missiles should NOT trigger specials...
@@ -1872,26 +1883,26 @@ void P_UpdateSpecials(void)
 			if (!buttonlist[i].btimer) {
 				switch (buttonlist[i].where) {
 				case top:
-					sides[buttonlist[i].line->sidenum[0]].
-					    toptexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].toptexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case middle:
-					sides[buttonlist[i].line->sidenum[0]].
-					    midtexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].midtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 
 				case bottom:
-					sides[buttonlist[i].line->sidenum[0]].
-					    bottomtexture =
+					sides[buttonlist[i].line->
+					      sidenum[0]].bottomtexture =
 					    buttonlist[i].btexture ^ 1;
 					break;
 				}
 
-				S_StartSound((mobj_t *) & buttonlist[i].line->
-					     frontsector->soundorg,
+				S_StartSound((mobj_t *) & buttonlist[i].
+					     line->frontsector->soundorg,
 					     sfx_switch1);
 				dmemset(&buttonlist[i], 0, sizeof(button_t));
 			}

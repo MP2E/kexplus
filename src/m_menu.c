@@ -64,6 +64,7 @@
 #include "r_wipe.h"
 #include "s_sound.h"
 #include "st_stuff.h"
+#include "v_main.h"
 #include "w_wad.h"
 #include "z_zone.h"
 
@@ -1977,7 +1978,7 @@ menuitem_t VideoMenu[] = {
 	{2, "Resolution:", M_ChangeResolution, 'r'},
 	{-2, "Default", M_DoDefaults, 'e'},
 	{1, "/r Return", M_Return, 0x20}
-//	{1, "/r Return", M_ReturnVideo, 0x20}
+//      {1, "/r Return", M_ReturnVideo, 0x20}
 };
 
 menudefault_t VideoDefault[] = {
@@ -2055,7 +2056,7 @@ void M_Video(int choice)
 
 void M_DrawVideo(void)
 {
-	const viddisp_t * disp;
+	const viddisp_t *disp;
 	static const char *filterType[2] = { "Linear", "Nearest" };
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	static const char *windowedType[3] = { "Off", "On", "Noborder" };
@@ -2093,7 +2094,7 @@ void M_DrawVideo(void)
 	DRAWVIDEOITEM2(vsync, v_vsync.value, msgNames);
 
 	if (currentMenu->menupageoffset <= depth &&
-		depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
+	    depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
 		if (v_depthsize.value == 8)
 			bitValue = "8";
 		else if (v_depthsize.value == 16)
@@ -2105,11 +2106,11 @@ void M_DrawVideo(void)
 
 		y++;
 		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
-				 MENUCOLORRED, bitValue);
+			     MENUCOLORRED, bitValue);
 	}
 
 	if (currentMenu->menupageoffset <= buffer &&
-		buffer - currentMenu->menupageoffset < currentMenu->numpageitems) {
+	    buffer - currentMenu->menupageoffset < currentMenu->numpageitems) {
 		if (v_buffersize.value == 8)
 			bitValue = "8";
 		else if (v_buffersize.value == 16)
@@ -2123,7 +2124,7 @@ void M_DrawVideo(void)
 
 		y++;
 		Draw_BigText(VideoDef.x + 176, VideoDef.y + LINEHEIGHT * y,
-				 MENUCOLORRED, bitValue);
+			     MENUCOLORRED, bitValue);
 	}
 
 	if (currentMenu->menuitems[video_display].status == -3) {
@@ -2138,7 +2139,7 @@ void M_DrawVideo(void)
 
 	if (disp) {
 		char str[16];
-		if(disp->disp_name) {
+		if (disp->disp_name) {
 			char *a, *b;
 
 			a = str;
@@ -2148,15 +2149,13 @@ void M_DrawVideo(void)
 			// so filter /[0-9a-zA-Z -%!.?:]/
 			while (a != (str + 14) && *b) {
 				if (isdigit(*b) ||
-					islower(*b) ||
-					isupper(*b) ||
-					(*b == ' ') ||
-					(*b == '-') ||
-					(*b == '%') ||
-					(*b == '!') ||
-					(*b == '.') ||
-					(*b == '?') ||
-					(*b == ':') )
+				    islower(*b) ||
+				    isupper(*b) ||
+				    (*b == ' ') ||
+				    (*b == '-') ||
+				    (*b == '%') ||
+				    (*b == '!') ||
+				    (*b == '.') || (*b == '?') || (*b == ':'))
 					*(a++) = *b;
 				b++;
 			}
@@ -2240,7 +2239,7 @@ void M_ChangeWindowed(int choice)
 
 static void M_SetResolution(void)
 {
-	const vidmode_t * mode;
+	const vidmode_t *mode;
 	int width = SCREENWIDTH;
 	int height = SCREENHEIGHT;
 
@@ -2428,6 +2427,7 @@ static void M_PasswordSelect(void)
 			G_DeferedInitNew(gameskill, gamemap);
 			doPassword = true;
 			currentMenu->lastOn = itemOn;
+			S_StartSound(NULL, sfx_pistol);
 			M_ClearMenus();
 
 			return;
@@ -3718,7 +3718,7 @@ void M_ReturnToOptions(int choice)
 
 static void M_Return(int choice)
 {
-	if(currentMenu == &VideoDef) {
+	if (currentMenu == &VideoDef) {
 		M_SetVideo();
 	}
 
@@ -3736,7 +3736,7 @@ static void M_Return(int choice)
 
 static void M_ReturnInstant(void)
 {
-	if(currentMenu == &VideoDef) {
+	if (currentMenu == &VideoDef) {
 		M_SetVideo();
 	}
 

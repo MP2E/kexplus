@@ -65,58 +65,6 @@ vidinfo_t vidinfo = { 0 };
 static char title[256];
 
 //
-// I_NetWaitScreen
-// Blank screen display while waiting for players to join
-//
-
-void I_NetWaitScreen(void)
-{
-	I_Printf("STUB: I_NetWaitScreen\n");
-}
-
-//
-// I_FinishUpdate
-//
-
-void I_FinishUpdate(void)
-{
-	I_UpdateGrab();
-	GL_SwapBuffers();
-
-	BusyDisk = false;
-}
-
-//
-// I_VideoEvent
-//
-
-dboolean I_VideoEvent(const SDL_Event * Event)
-{
-	switch (Event->type) {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-#else
-	case SDL_ACTIVEEVENT: {
-		Uint8 state;
-		state = SDL_GetAppState();
-
-		// We should have input (keyboard) focus and be visible
-		// (not minimised)
-		window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
-		break;
-	}
-#endif
-
-	default:
-		return false;
-		break;
-	}
-
-	return true;
-}
-
-
-
-//
 // CMD_ListVideoModes
 //
 
@@ -165,6 +113,56 @@ static CMD(VidRevert)
 	} else {
 		I_Printf("Video mode wasn't reverted.\n");
 	}
+}
+
+//
+// I_NetWaitScreen
+// Blank screen display while waiting for players to join
+//
+
+void I_NetWaitScreen(void)
+{
+	I_Printf("STUB: I_NetWaitScreen\n");
+}
+
+//
+// I_FinishUpdate
+//
+
+void I_FinishUpdate(void)
+{
+	I_UpdateGrab();
+	GL_SwapBuffers();
+
+	BusyDisk = false;
+}
+
+//
+// I_VideoEvent
+//
+
+dboolean I_VideoEvent(const SDL_Event * Event)
+{
+	switch (Event->type) {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+#else
+	case SDL_ACTIVEEVENT: {
+		Uint8 state;
+		state = SDL_GetAppState();
+
+		// We should have input (keyboard) focus and be visible
+		// (not minimised)
+		window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
+		break;
+	}
+#endif
+
+	default:
+		return false;
+		break;
+	}
+
+	return true;
 }
 
 //
