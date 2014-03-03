@@ -1078,6 +1078,10 @@ dboolean PTR_ShootTraverse(intercept_t * in)
 
 		lineside = P_PointOnLineSide(shootthing->x, shootthing->y, li);
 
+		// We're behind a one-sided wall, so abort.
+		if (lineside && !li->backsector)
+			return false;
+
 		// [d64] villsa 02252012: moved here
 		if (in->d.thing && in->d.thing->player) {
 			if (li->special & MLU_SHOOT) {

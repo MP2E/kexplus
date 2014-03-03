@@ -64,7 +64,6 @@
 #include "r_wipe.h"
 #include "s_sound.h"
 #include "st_stuff.h"
-#include "v_main.h"
 #include "w_wad.h"
 #include "z_zone.h"
 

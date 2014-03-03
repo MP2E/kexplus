@@ -26,6 +26,7 @@
 #include "doomstat.h"
 #include "d_main.h"
 #include "i_mouse.h"
+#include "i_video.h"
 #include "i_system.h"
 
 CVAR(v_msensitivityx, 5);
