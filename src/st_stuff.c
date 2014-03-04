@@ -52,6 +52,8 @@
 #include "gl_draw.h"
 #include "g_demo.h"
 
+extern float ViewBorderX;
+
 #ifdef _WIN32
 #include "i_xinput.h"
 
@@ -473,7 +475,7 @@ void ST_FlashingScreen(byte r, byte g, byte b, byte a)
 
 	dglDisable(GL_TEXTURE_2D);
 	dglColor4ubv((byte *) & c);
-	dglRecti(SCREENWIDTH, SCREENHEIGHT, 0, 0);
+	dglRecti(SCREENWIDTH + ViewBorderX*2, SCREENHEIGHT, 0, 0);
 	dglEnable(GL_TEXTURE_2D);
 
 	GL_SetState(GLSTATE_BLEND, 0);
@@ -494,7 +496,7 @@ static void ST_DrawStatusItem(const float xy[4][2], const float uv[4][2],
 	dglSetVertexColor(st_vtx + st_vtxcount, color, 4);
 
 	for (i = 0; i < 4; i++) {
-		st_vtx[st_vtxcount + i].x = xy[i][0];
+		st_vtx[st_vtxcount + i].x = xy[i][0] + ViewBorderX;;
 		st_vtx[st_vtxcount + i].y = xy[i][1];
 		st_vtx[st_vtxcount + i].tu = uv[i][0];
 		st_vtx[st_vtxcount + i].tv = uv[i][1];

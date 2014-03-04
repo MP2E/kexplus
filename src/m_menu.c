@@ -4886,19 +4886,20 @@ static void M_DrawCursor(int x, int y)
 		int gfxIdx;
 		float factor;
 		float scale;
+		float offx;
 
 		scale = ((m_cursorscale.value + 25.0f) / 100.0f);
 		gfxIdx = GL_BindGfxTexture("CURSOR", true);
 		factor =
-		    (((float)SCREENHEIGHT * video_ratio) / (float)video_width) /
-		    scale;
+			((float)SCREENHEIGHT / (float)video_height) / scale;
+		offx = ((float)video_width - (float)video_height * (4.0f / 3.0f))/2;
 
 		dglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, DGL_CLAMP);
 		dglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, DGL_CLAMP);
 
 		GL_SetOrthoScale(scale);
 		GL_SetState(GLSTATE_BLEND, 1);
-		GL_SetupAndDraw2DQuad((float)x * factor, (float)y * factor,
+		GL_SetupAndDraw2DQuad(((float)x - offx) * factor, (float)y * factor,
 				      gfxwidth[gfxIdx], gfxheight[gfxIdx], 0,
 				      1.0f, 0, 1.0f, WHITE, 0);
 
@@ -5151,7 +5152,9 @@ void M_Drawer(void)
 	}
 #endif
 
-	M_DrawCursor(mouse_x, mouse_y);
+	if (window_mouse) {
+		M_DrawCursor(mouse_x, mouse_y);
+	}
 }
 
 //
@@ -5162,13 +5165,6 @@ void M_ClearMenus(void)
 {
 	if (!allowclearmenu)
 		return;
-
-	// center mouse before clearing menu
-	// so the input code won't try to
-	// re-center the mouse; which can
-	// cause the player's view to warp
-	if (gamestate == GS_LEVEL)
-		I_CenterMouse();
 
 	menufadefunc = NULL;
 	nextmenu = NULL;

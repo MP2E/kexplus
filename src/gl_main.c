@@ -55,6 +55,9 @@ int ViewWindowY = 0;
 int ViewWidth = 0;
 int ViewHeight = 0;
 
+static float ViewBorderX_unscaled = 0;
+float ViewBorderX = 0;
+
 int gl_max_texture_units;
 int gl_max_texture_size;
 dboolean gl_has_combiner;
@@ -180,37 +183,26 @@ void *GL_RegisterProc(const char *address)
 // GL_SetOrtho
 //
 
-static byte checkortho = 0;
-
 void GL_SetOrtho(dboolean stretch)
 {
 	float width;
 	float height;
-
-	if (checkortho) {
-		if (widescreen) {
-			if (stretch && checkortho == 2)
-				return;
-		} else
-			return;
-	}
 
 	dglMatrixMode(GL_MODELVIEW);
 	dglLoadIdentity();
 	dglMatrixMode(GL_PROJECTION);
 	dglLoadIdentity();
 
-	if (widescreen && !stretch) {
-		const float ratio = (4.0f / 3.0f);
-		float fitwidth = ViewHeight * ratio;
-		float fitx = (ViewWidth - fitwidth) / 2.0f;
+	dglViewport(ViewWindowX, ViewWindowY, ViewWidth, ViewHeight);
 
-		dglViewport(ViewWindowX + (int)fitx, ViewWindowY, (int)fitwidth,
-			    ViewHeight);
+	if (!stretch) {
+		width = SCREENHEIGHT * ((float)ViewWidth / (float)ViewHeight);
+	} else {
+		width = SCREENWIDTH;
 	}
-
-	width = SCREENWIDTH;
 	height = SCREENHEIGHT;
+	ViewBorderX_unscaled = (width - SCREENWIDTH)/2;
+	ViewBorderX = ViewBorderX_unscaled / glScaleFactor;
 
 	if (glScaleFactor != 1.0f) {
 		width /= glScaleFactor;
@@ -218,8 +210,6 @@ void GL_SetOrtho(dboolean stretch)
 	}
 
 	dglOrtho(0, width, height, 0, -1, 1);
-
-	checkortho = (stretch && widescreen) ? 2 : 1;
 }
 
 //
@@ -228,8 +218,7 @@ void GL_SetOrtho(dboolean stretch)
 
 void GL_ResetViewport(void)
 {
-	if (widescreen)
-		dglViewport(ViewWindowX, ViewWindowY, ViewWidth, ViewHeight);
+	dglViewport(ViewWindowX, ViewWindowY, ViewWidth, ViewHeight);
 }
 
 //
@@ -239,7 +228,7 @@ void GL_ResetViewport(void)
 void GL_SetOrthoScale(float scale)
 {
 	glScaleFactor = scale;
-	checkortho = 0;
+	ViewBorderX = ViewBorderX_unscaled / scale;
 }
 
 //
@@ -368,6 +357,8 @@ GL_Set2DQuad(vtx_t * v, float x, float y, int width, int height,
 	     float u1, float u2, float v1, float v2, rcolor c)
 {
 	float left, right, top, bottom;
+
+	x += ViewBorderX;
 
 	left = ViewWindowX + x * ViewWidth / video_width;
 	right = left + (width * ViewWidth / video_width);

@@ -82,6 +82,7 @@ extern int video_width;
 extern int video_height;
 extern float video_ratio;
 extern int window_focused;
+extern int window_mouse;
 
 // -------------------------
 // Status flags for refresh.

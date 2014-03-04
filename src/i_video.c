@@ -39,6 +39,9 @@
 #include "m_misc.h"
 #include "z_zone.h"
 
+#define MIN_WIDTH 320
+#define MIN_HEIGHT 240
+
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 SDL_Window *window = NULL;
 SDL_GLContext *glcontext = NULL;
@@ -54,7 +57,8 @@ CVAR(v_height, 480);
 CVAR(v_windowed, 1);
 CVAR(v_display, 0);
 
-dboolean window_focused;
+dboolean window_focused = true;
+dboolean window_mouse = true;
 
 static vidmode_t vidmodes[2] = { {0} };	// vidmodes[0]: current, vidmodes[1]: previous
 static int num_vidmodes = 0;
@@ -145,6 +149,27 @@ dboolean I_VideoEvent(const SDL_Event * Event)
 {
 	switch (Event->type) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_WINDOWEVENT:
+		switch (Event->window.event) {
+		case SDL_WINDOWEVENT_FOCUS_GAINED:
+			window_focused = true;
+			break;
+
+		case SDL_WINDOWEVENT_FOCUS_LOST:
+			window_focused = false;
+			break;
+
+		case SDL_WINDOWEVENT_ENTER:
+			window_mouse = true;
+			break;
+
+		case SDL_WINDOWEVENT_LEAVE:
+			window_mouse = false;
+			break;
+
+		default:
+			break;
+		}
 #else
 	case SDL_ACTIVEEVENT: {
 		Uint8 state;
@@ -153,6 +178,7 @@ dboolean I_VideoEvent(const SDL_Event * Event)
 		// We should have input (keyboard) focus and be visible
 		// (not minimised)
 		window_focused = (state & SDL_APPINPUTFOCUS) && (state & SDL_APPACTIVE);
+		window_mouse = (state & SDL_APPMOUSEFOCUS);
 		break;
 	}
 #endif
@@ -254,6 +280,14 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 		vm = I_Mode((int)v_display.value,
 				(int)v_width.value, (int)v_height.value,
 				-1, -1, ((int)v_windowed.value) & I_WINDOWED_MASK);
+
+	// 20140303 dotfloat: Avoid small windows and division by zero errors.
+	if (vm->w < MIN_WIDTH) {
+		return NULL;
+	}
+	if (vm->h < MIN_HEIGHT) {
+		return NULL;
+	}
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	int16 x, y;

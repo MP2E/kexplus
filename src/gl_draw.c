@@ -34,6 +34,8 @@
 #include "gl_draw.h"
 #include "r_main.h"
 
+extern float ViewBorderX;
+
 //
 // Draw_GfxImage
 //
@@ -179,19 +181,19 @@ int Draw_Text(int x, int y, rcolor color, float scale,
 			fcol = (col * size);
 			frow = (start >= ST_FONTNUMSET) ? 0.5f : 0.0f;
 
-			vtxstring[vi + 0].x = (float)x;
+			vtxstring[vi + 0].x = (float)x + ViewBorderX;
 			vtxstring[vi + 0].y = (float)y;
 			vtxstring[vi + 0].tu = fcol + 0.0015f;
 			vtxstring[vi + 0].tv = frow + size;
-			vtxstring[vi + 1].x = (float)x + ST_FONTWHSIZE;
+			vtxstring[vi + 1].x = (float)x + ST_FONTWHSIZE + ViewBorderX;
 			vtxstring[vi + 1].y = (float)y;
 			vtxstring[vi + 1].tu = (fcol + size) - 0.0015f;
 			vtxstring[vi + 1].tv = frow + size;
-			vtxstring[vi + 2].x = (float)x + ST_FONTWHSIZE;
+			vtxstring[vi + 2].x = (float)x + ST_FONTWHSIZE + ViewBorderX;
 			vtxstring[vi + 2].y = (float)y + ST_FONTWHSIZE;
 			vtxstring[vi + 2].tu = (fcol + size) - 0.0015f;
 			vtxstring[vi + 2].tv = frow + 0.5f;
-			vtxstring[vi + 3].x = (float)x;
+			vtxstring[vi + 3].x = (float)x + ViewBorderX;
 			vtxstring[vi + 3].y = (float)y + ST_FONTWHSIZE;
 			vtxstring[vi + 3].tu = fcol + 0.0015f;
 			vtxstring[vi + 3].tv = frow + 0.5f;
@@ -433,7 +435,7 @@ int Draw_BigText(int x, int y, rcolor color, const char *string)
 	GL_SetOrtho(0);
 
 	for (i = 0, vi = 0; i < dstrlen(string); i++, vi += 4) {
-		vx1 = (float)x;
+		vx1 = (float)x + ViewBorderX;
 		vy1 = (float)y;
 
 		c = string[i];
@@ -909,7 +911,7 @@ float Draw_ConsoleText(float x, float y, rcolor color,
 	GL_SetOrtho(0);
 
 	for (i = 0, vi = 0; i < dstrlen(msg); i++, vi += 4) {
-		vx1 = x;
+		vx1 = x + ViewBorderX;
 		vy1 = y;
 
 		c = msg[i];

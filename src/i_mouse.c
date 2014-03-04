@@ -28,6 +28,7 @@
 #include "i_mouse.h"
 #include "i_video.h"
 #include "i_system.h"
+#include "m_menu.h"
 
 CVAR(v_msensitivityx, 5);
 CVAR(v_msensitivityy, 5);
@@ -133,23 +134,28 @@ void I_UpdateGrab(void)
 	static dboolean currently_grabbed = false;
 	dboolean grab;
 
-	grab = false;
+	grab = window_mouse && !menuactive
+			&& (gamestate == GS_LEVEL)
+			&& !demoplayback;
+
 	if (grab && !currently_grabbed) {
+		SDL_ShowCursor(0);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetRelativeMouseMode(1);
+		SDL_SetWindowGrab(window, 1);
 #else
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 #endif
-	SDL_ShowCursor(1);
 	}
 
 	if (!grab && currently_grabbed) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetRelativeMouseMode(0);
+		SDL_SetWindowGrab(window, 0);
 #else
 		SDL_WM_GrabInput(SDL_GRAB_OFF);
 #endif
-	SDL_ShowCursor(m_menumouse.value < 1);
+		SDL_ShowCursor(m_menumouse.value < 1);
 	}
 
 	currently_grabbed = grab;
@@ -252,6 +258,9 @@ dboolean I_MouseEvent(const SDL_Event * Event)
 void I_InitMouse(void)
 {
 	I_MouseAccelChange();
+
+	SDL_ShowCursor(m_menumouse.value < 1);
+	SDL_SetRelativeMouseMode(0);
 }
 
 //

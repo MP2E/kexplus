@@ -1078,7 +1078,7 @@ dboolean PTR_ShootTraverse(intercept_t * in)
 
 		lineside = P_PointOnLineSide(shootthing->x, shootthing->y, li);
 
-		// We're behind a one-sided wall, so abort.
+		// 20140303 dotfloat: We're behind a one-sided wall, so abort.
 		if (lineside && !li->backsector)
 			return false;
 
