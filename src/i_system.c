@@ -107,7 +107,7 @@ LRESULT CALLBACK SysConsoleProc(HWND hwnd, UINT msg, WPARAM wParam,
 		switch (LOWORD(wParam)) {
 		case QUIT_ID:
 			I_DestroySysConsole();
-			V_Shutdown;
+			I_ShutdownVideo;
 			exit(0);
 			break;
 
@@ -542,10 +542,10 @@ void I_Init(void)
 	if (init_systems & I_MOUSE)
 		I_InitMouse();
 
-#if _USE_XINPUT
+#ifdef _USE_XINPUT
 	// Init Xinput
 	if (init_systems & I_XINPUT)
-		I_InitXInput();
+		I_XInputInit();
 #endif
 
 	// Init Joystick
