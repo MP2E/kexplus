@@ -131,7 +131,7 @@ void I_ReadMouse(void)
 
 void I_UpdateGrab(void)
 {
-	static dboolean currently_grabbed = false;
+	static dboolean currently_grabbed = true;
 	dboolean grab;
 
 	grab = window_mouse && !menuactive
@@ -258,9 +258,7 @@ dboolean I_MouseEvent(const SDL_Event * Event)
 void I_InitMouse(void)
 {
 	I_MouseAccelChange();
-
-	SDL_ShowCursor(m_menumouse.value < 1);
-	SDL_SetRelativeMouseMode(0);
+	I_UpdateGrab();
 }
 
 //
