@@ -67,6 +67,8 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
+extern float ViewBorderX;
+
 #ifdef _WIN32
 #include "i_xinput.h"
 #endif
@@ -4203,8 +4205,11 @@ static dboolean M_SetThumbnail(int which)
 
 static void M_DrawSaveGameFrontend(menu_t * def)
 {
+	float x;
 	GL_SetState(GLSTATE_BLEND, 1);
 	GL_SetOrtho(0);
+
+	x = (float) def->x + ViewBorderX;
 
 	dglDisable(GL_TEXTURE_2D);
 
@@ -4215,15 +4220,15 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 	//
 	// save game panel
 	//
-	dglRecti(def->x - 48, def->y - 12, def->x + 256, def->y + 156);
+	dglRecti(x - 48, def->y - 12, x + 256, def->y + 156);
 	//
 	// thumbnail panel
 	//
-	dglRecti(def->x + 272, def->y - 12, def->x + 464, def->y + 116);
+	dglRecti(x + 272, def->y - 12, x + 464, def->y + 116);
 	//
 	// stats panel
 	//
-	dglRecti(def->x + 272, def->y + 124, def->x + 464, def->y + 176);
+	dglRecti(x + 272, def->y + 124, x + 464, def->y + 176);
 
 	//
 	// draw outline for panels
@@ -4233,15 +4238,15 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 	//
 	// save game panel
 	//
-	dglRecti(def->x - 48, def->y - 12, def->x + 256, def->y + 156);
+	dglRecti(x - 48, def->y - 12, x + 256, def->y + 156);
 	//
 	// thumbnail panel
 	//
-	dglRecti(def->x + 272, def->y - 12, def->x + 464, def->y + 116);
+	dglRecti(x + 272, def->y - 12, x + 464, def->y + 116);
 	//
 	// stats panel
 	//
-	dglRecti(def->x + 272, def->y + 124, def->x + 464, def->y + 176);
+	dglRecti(x + 272, def->y + 124, x + 464, def->y + 176);
 	dglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	dglEnable(GL_TEXTURE_2D);
 
@@ -4262,13 +4267,13 @@ static void M_DrawSaveGameFrontend(menu_t * def)
 		dglBegin(GL_POLYGON);
 		dglColor4ub(0xff, 0xff, 0xff, menualphacolor);
 		dglTexCoord2f(0, 0);
-		dglVertex2i(def->x + 288, def->y + -8);
+		dglVertex2i(x + 288, def->y + -8);
 		dglTexCoord2f(1, 0);
-		dglVertex2i(def->x + 448, def->y + -8);
+		dglVertex2i(x + 448, def->y + -8);
 		dglTexCoord2f(1, 1);
-		dglVertex2i(def->x + 448, def->y + 112);
+		dglVertex2i(x + 448, def->y + 112);
 		dglTexCoord2f(0, 1);
-		dglVertex2i(def->x + 288, def->y + 112);
+		dglVertex2i(x + 288, def->y + 112);
 		dglEnd();
 
 		curgfx = -1;
