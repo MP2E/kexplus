@@ -2249,6 +2249,7 @@ static void M_SetResolution(void)
 		height = mode->h;
 	}
 
+	M_SetCvar(&v_display, (float)m_videoDisplay);
 	M_SetCvar(&v_width, (float)width);
 	M_SetCvar(&v_height, (float)height);
 }
@@ -2268,6 +2269,8 @@ void M_ChangeVideoDisplay(int choice)
 			m_videoDisplay = max - 1;
 		}
 	}
+
+	m_videoMode = I_NumModes(m_videoDisplay) - 1;
 
 	M_SetResolution();
 }

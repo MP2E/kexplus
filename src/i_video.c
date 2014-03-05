@@ -275,11 +275,18 @@ void I_ShutdownVideo(void)
 const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 {
 	int flags;
+	int disp_id;
 
 	if (!vm)
 		vm = I_Mode((int)v_display.value,
 				(int)v_width.value, (int)v_height.value,
 				-1, -1, ((int)v_windowed.value) & I_WINDOWED_MASK);
+
+	disp_id = vm->disp_id;
+
+	if (disp_id < 0 || disp_id >= I_NumDisplays()) {
+		disp_id = 0;
+	}
 
 	// 20140303 dotfloat: Avoid small windows and division by zero errors.
 	if (vm->w < MIN_WIDTH) {
@@ -293,7 +300,7 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 	int16 x, y;
 	SDL_Rect display_bounds;
 
-	SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
+	SDL_GetDisplayBounds(disp_id, &display_bounds);
 
 	if (vm->x < 0)
 		x = display_bounds.x + (display_bounds.w - vm->w) / 2;
@@ -315,12 +322,7 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 		SDL_SetWindowBordered(window, SDL_TRUE);
 		SDL_SetWindowSize(window, vm->w, vm->h);
 
-		if (windowed == I_WINDOWED_OFF)
-			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-		else if(windowed == I_WINDOWED_NOBORDER)
-			SDL_SetWindowBordered(window, SDL_FALSE);
-
-		SDL_GetDisplayBounds(vm->disp_id, &display_bounds);
+		SDL_GetDisplayBounds(disp_id, &display_bounds);
 
 		if (vm->x < 0)
 			x = display_bounds.x + (display_bounds.w - vm->w) / 2;
@@ -333,6 +335,11 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 			y = display_bounds.y + vm->y;
 
 		SDL_SetWindowPosition(window, x, y);
+
+		if (windowed == I_WINDOWED_OFF)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		else if(windowed == I_WINDOWED_NOBORDER)
+			SDL_SetWindowBordered(window, SDL_FALSE);
 
 		GL_SetLogicalResolution(vm->w, vm->h);
 		return vm;
@@ -507,12 +514,14 @@ void I_UpdateVidInfo(void)
 				 NULL);
 
 		for (j = cm = 0; j < disp->num_modes; j++) {
-			vidmode_t *vm = &disp->modes[j];
-
 			SDL_GetDisplayMode(i, j, &mode);
 
-			if (vm->w == mode.w && vm->h == mode.h)
+			// Ignore refresh rates
+			if (cm && disp->modes[cm-1].w == mode.w
+					&& disp->modes[cm-1].h == mode.h)
 				continue;
+
+			vidmode_t *vm = &disp->modes[cm];
 
 			vm->disp_id = i;
 			vm->flags = 0;
@@ -604,6 +613,7 @@ void I_RegisterVideoCvars(void)
 	CON_CvarRegister(&v_width);
 	CON_CvarRegister(&v_height);
 	CON_CvarRegister(&v_windowed);
+	CON_CvarRegister(&v_display);
 	CON_CvarRegister(&v_vsync);
 	CON_CvarRegister(&v_depthsize);
 	CON_CvarRegister(&v_buffersize);
