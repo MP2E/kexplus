@@ -4017,7 +4017,7 @@ static dboolean M_CursorHighlightItem(menu_t * menu)
 	max = (menu->numpageitems == -1) ? menu->numitems : menu->numpageitems;
 	x = menu->x;
 	y = menu->y;
-	mx = (float)mouse_x;
+	mx = (float)mouse_x - ((float)video_width - (float)video_height * (4.0f / 3.0f))/2;
 	my = (float)mouse_y;
 	scalex = ((float)video_width /
 		  ((float)SCREENHEIGHT * video_ratio)) * menu->scale;
@@ -4776,6 +4776,10 @@ dboolean M_Responder(event_t * ev)
 			    && currentMenu->menuitems[i].alphaKey == ch) {
 				itemOn = i;
 				S_StartSound(NULL, sfx_switch1);
+
+				if (currentMenu == &PasswordDef) {
+					M_PasswordSelect();
+				}
 				return true;
 			}
 		}
@@ -4784,6 +4788,10 @@ dboolean M_Responder(event_t * ev)
 			    && currentMenu->menuitems[i].alphaKey == ch) {
 				itemOn = i;
 				S_StartSound(NULL, sfx_switch1);
+
+				if (currentMenu == &PasswordDef) {
+					M_PasswordSelect();
+				}
 				return true;
 			}
 		}
