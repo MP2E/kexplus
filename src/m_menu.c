@@ -1977,7 +1977,6 @@ menuitem_t VideoMenu[] = {
 	{2, "Resolution:", M_ChangeResolution, 'r'},
 	{-2, "Default", M_DoDefaults, 'e'},
 	{1, "/r Return", M_Return, 0x20}
-//      {1, "/r Return", M_ReturnVideo, 0x20}
 };
 
 menudefault_t VideoDefault[] = {
@@ -2259,14 +2258,14 @@ void M_ChangeVideoDisplay(int choice)
 	max = I_NumDisplays();
 
 	if (choice) {
-		if (++m_videoDisplay > max - 1) {
-			if (choice == 2)
-				m_videoDisplay = 0;
-			else
-				m_videoDisplay = max - 1;
+		if (++m_videoDisplay >= max) {
+			m_videoDisplay = 0;
 		}
-	} else
-		m_videoDisplay = MAX(m_videoDisplay--, 0);
+	} else {
+		if (--m_videoDisplay < 0) {
+			m_videoDisplay = max - 1;
+		}
+	}
 
 	M_SetResolution();
 }
@@ -2278,14 +2277,14 @@ void M_ChangeResolution(int choice)
 	max = I_NumModes(m_videoDisplay);
 
 	if (choice) {
-		if (++m_videoMode > max - 1) {
-			if (choice == 2)
-				m_videoMode = 0;
-			else
-				m_videoMode = max - 1;
+		if (++m_videoMode >= max) {
+			m_videoMode = 0;
 		}
-	} else
-		m_videoMode = MAX(m_videoMode--, 0);
+	} else {
+		if (--m_videoMode < 0) {
+			m_videoMode = max - 1;
+		}
+	}
 
 	M_SetResolution();
 }
@@ -2359,10 +2358,8 @@ void M_DrawPassword(void)
 	if (!xgamepad.connected)
 #endif
 	{
-		Draw_BigText(-1, 240 - 48, MENUCOLORWHITE,
-			     "Press Delete To Change");
 		Draw_BigText(-1, 240 - 32, MENUCOLORWHITE,
-			     "Press Backspace To Return");
+				 "Press Escape To Return");
 	}
 
 	if (passInvalid) {
@@ -3075,7 +3072,7 @@ void M_ChangeKeyBinding(int choice)
 void M_DrawControls(void)
 {
 	Draw_BigText(-1, 264, MENUCOLORWHITE, "Press Escape To Return");
-	Draw_BigText(-1, 280, MENUCOLORWHITE, "Press Delete To Unbind");
+	Draw_BigText(-1, 280, MENUCOLORWHITE, "Press Backspace To Unbind");
 }
 
 //------------------------------------------------------------------------
@@ -4741,18 +4738,23 @@ dboolean M_Responder(event_t * ev)
 		return true;
 
 	case KEY_DEL:
-		if (currentMenu == &PasswordDef)
+	case KEY_BACKSPACE:
+		if (currentMenu == &PasswordDef) {
 			M_PasswordDeSelect();
-		else if (currentMenu == &ControlsDef) {
+		} else if (currentMenu == &ControlsDef) {
 			if (currentMenu->menuitems[itemOn].routine) {
 				G_UnbindAction(PlayerActions[itemOn].action);
 				M_BuildControlMenu();
 			}
-		}
-		return true;
+		} else {
+			if (currentMenu->menuitems[itemOn].routine &&
+				currentMenu->menuitems[itemOn].status >= 2) {
+				currentMenu->menuitems[itemOn].routine(0);
 
-	case KEY_BACKSPACE:
-		M_Return(0);
+				if (currentMenu->menuitems[itemOn].status == 3)
+					thermowait = 1;
+			}
+		}
 		return true;
 
 	case KEY_MWHEELUP:
