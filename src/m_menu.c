@@ -1932,6 +1932,7 @@ void M_ChangeWindowed(int choice);
 void M_ChangeVideoDisplay(int choice);
 void M_ChangeResolution(int choice);
 void M_ChangeVSync(int choice);
+void M_ChangeMSAA(int choice);
 void M_ChangeDepthSize(int choice);
 void M_ChangeBufferSize(int choice);
 void M_ChangeAnisotropic(int choice);
@@ -1949,6 +1950,7 @@ CVAR_EXTERNAL(i_gamma);
 CVAR_EXTERNAL(i_brightness);
 CVAR_EXTERNAL(r_filter);
 CVAR_EXTERNAL(r_anisotropic);
+CVAR_EXTERNAL(r_msaa);
 
 enum {
 	video_dgamma,
@@ -1957,6 +1959,7 @@ enum {
 	anisotropic,
 	windowed,
 	vsync,
+	msaa,
 	depth,
 	buffer,
 	video_display,
@@ -1973,6 +1976,7 @@ menuitem_t VideoMenu[] = {
 	{2, "Anisotropy:", M_ChangeAnisotropic, 'a'},
 	{2, "Windowed:", M_ChangeWindowed, 'w'},
 	{2, "Vsync:", M_ChangeVSync, 'v'},
+	{2, "Anti-aliasing:", M_ChangeMSAA, 'm'},
 	{2, "Depth Size:", M_ChangeDepthSize, 'd'},
 	{2, "Buffer Size:", M_ChangeBufferSize, 'b'},
 	{2, "Video Display:", M_ChangeVideoDisplay, 'i'},
@@ -1987,6 +1991,7 @@ menudefault_t VideoDefault[] = {
 	{&r_anisotropic, 0},
 	{&v_windowed, 1},
 	{&v_vsync, 1},
+	{&r_msaa, 0},
 	{&v_depthsize, 24},
 	{&v_buffersize, 32},
 	{NULL, -1},
@@ -2092,6 +2097,13 @@ void M_DrawVideo(void)
 	DRAWVIDEOITEM2(windowed, v_windowed.value, msgNames);
 #endif
 	DRAWVIDEOITEM2(vsync, v_vsync.value, msgNames);
+
+	if (r_msaa.value > 0) {
+		dsprintf(res, "%dx MSAA", (int)r_msaa.value);
+		DRAWVIDEOITEM(msaa, res);
+	} else {
+		DRAWVIDEOITEM(msaa, "Off");
+	}
 
 	if (currentMenu->menupageoffset <= depth &&
 	    depth - currentMenu->menupageoffset < currentMenu->numpageitems) {
@@ -2295,6 +2307,11 @@ void M_ChangeResolution(int choice)
 void M_ChangeVSync(int choice)
 {
 	M_SetOptionValue(choice, 0, 1, 1, &v_vsync);
+}
+
+void M_ChangeMSAA(int choice)
+{
+	M_SetOptionValue(choice, 0, 4, 2, &r_msaa);
 }
 
 void M_ChangeDepthSize(int choice)

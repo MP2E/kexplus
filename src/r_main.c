@@ -80,6 +80,7 @@ unsigned int glBindCalls = 0;
 
 dboolean bRenderSky = false;
 
+CVAR(r_msaa, 0);
 CVAR(r_fov, 74.0);
 CVAR(r_fillmode, 1);
 CVAR(r_uniformtime, 0);
@@ -930,6 +931,7 @@ void R_RenderPlayerView(player_t * player)
 
 void R_RegisterCvars(void)
 {
+	CON_CvarRegister(&r_msaa);
 	CON_CvarRegister(&r_fov);
 	CON_CvarRegister(&r_fillmode);
 	CON_CvarRegister(&r_uniformtime);

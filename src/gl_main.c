@@ -73,6 +73,7 @@ int DGL_CLAMP = GL_CLAMP;
 float max_anisotropic = 0;
 dboolean widescreen = false;
 
+CVAR_EXTERNAL(r_msaa);
 CVAR_EXTERNAL(r_filter);
 CVAR_EXTERNAL(r_texturecombiner);
 CVAR_EXTERNAL(r_anisotropic);
@@ -606,6 +607,7 @@ void GL_SetAttributes(void)
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, (int)v_buffersize.value);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, (int)r_msaa.value);
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_GL_SetSwapInterval((int)v_vsync.value);
@@ -648,8 +650,6 @@ void GL_Configure(void)
 
 void GL_Init(void)
 {
-	GL_SetAttributes();
-
 	if (!I_SetMode(NULL)) {
 		// re-adjust depth size if video can't run it
 		if (v_depthsize.value >= 24) {
@@ -657,12 +657,10 @@ void GL_Init(void)
 		} else if (v_depthsize.value >= 16) {
 			CON_CvarSetValue(v_depthsize.name, 8);
 		}
-		GL_SetAttributes();
 
 		if (!I_SetMode(NULL)) {
 			// fall back to lower buffer setting
 			CON_CvarSetValue(v_buffersize.name, 16);
-			GL_SetAttributes();
 
 			if (!I_SetMode
 				(I_Mode(0, 640, 480, -1, -1, I_WINDOWED_ON))) {
@@ -717,7 +715,6 @@ void GL_Init(void)
 
 	usingGL = true;
 
-	GL_Configure();
 	GL_SetLogicalResolution(video_width, video_height);
 
 	G_AddCommand("dumpglext", CMD_DumpGLExtensions, 0);

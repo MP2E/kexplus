@@ -101,4 +101,6 @@ void GL_SetupAndDraw2DQuad(float x, float y, int width, int height,
 			   float u1, float u2, float v1, float v2, rcolor c,
 			   dboolean stretch);
 void GL_SetLogicalResolution(int width, int height);
+void GL_SetAttributes(void);
+void GL_Configure(void);
 #endif
