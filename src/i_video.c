@@ -316,6 +316,8 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 		assert(glcontext);
 		assert(num_vidmodes);
 
+		SDL_GL_DeleteContext(glcontext);
+
 		int windowed = vm->flags & I_WINDOWED_MASK;
 
 		SDL_SetWindowFullscreen(window, 0);
@@ -341,7 +343,11 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 		else if(windowed == I_WINDOWED_NOBORDER)
 			SDL_SetWindowBordered(window, SDL_FALSE);
 
+		glcontext = SDL_GL_CreateContext(window);
+
+		GL_Configure();
 		GL_SetLogicalResolution(vm->w, vm->h);
+		GL_DumpTextures();
 		return vm;
 	}
 

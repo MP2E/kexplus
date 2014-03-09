@@ -246,7 +246,6 @@ float GL_GetOrthoScale(void)
 
 void GL_SwapBuffers(void)
 {
-	dglFinish();
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_GL_SwapWindow(window);
 #else
@@ -590,10 +589,10 @@ void GL_SetLogicalResolution(int width, int height)
 }
 
 //
-// GL_Init
+// GL_SetAttributes
 //
 
-void GL_Init(void)
+void GL_SetAttributes(void)
 {
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 0);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 0);
@@ -613,6 +612,43 @@ void GL_Init(void)
 #else
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, (int)v_vsync.value);
 #endif
+}
+
+//
+// GL_Configure
+//
+
+void GL_Configure(void)
+{
+	dglClearDepth(1.0f);
+	dglDisable(GL_TEXTURE_2D);
+	dglEnable(GL_CULL_FACE);
+	dglCullFace(GL_FRONT);
+	dglShadeModel(GL_SMOOTH);
+	dglHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	dglDepthFunc(GL_LEQUAL);
+	dglAlphaFunc(GL_GEQUAL, ALPHACLEARGLOBAL);
+	dglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	dglFogi(GL_FOG_MODE, GL_LINEAR);
+	dglHint(GL_FOG_HINT, GL_NICEST);
+	dglEnable(GL_SCISSOR_TEST);
+	dglEnable(GL_DITHER);
+
+	GL_SetTextureFilter();
+	GL_SetDefaultCombiner();
+
+	dglEnableClientState(GL_VERTEX_ARRAY);
+	dglEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	dglEnableClientState(GL_COLOR_ARRAY);
+}
+
+//
+// GL_Init
+//
+
+void GL_Init(void)
+{
+	GL_SetAttributes();
 
 	if (!I_SetMode(NULL)) {
 		// re-adjust depth size if video can't run it
@@ -621,14 +657,12 @@ void GL_Init(void)
 		} else if (v_depthsize.value >= 16) {
 			CON_CvarSetValue(v_depthsize.name, 8);
 		}
-
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, (int)v_depthsize.value);
+		GL_SetAttributes();
 
 		if (!I_SetMode(NULL)) {
 			// fall back to lower buffer setting
 			CON_CvarSetValue(v_buffersize.name, 16);
-			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,
-					    (int)v_buffersize.value);
+			GL_SetAttributes();
 
 			if (!I_SetMode
 				(I_Mode(0, 640, 480, -1, -1, I_WINDOWED_ON))) {
@@ -652,23 +686,6 @@ void GL_Init(void)
 	if (gl_max_texture_units <= 2)
 		CON_Warnf("Not enough texture units supported...\n");
 
-	dglClearDepth(1.0f);
-	dglDisable(GL_TEXTURE_2D);
-	dglEnable(GL_CULL_FACE);
-	dglCullFace(GL_FRONT);
-	dglShadeModel(GL_SMOOTH);
-	dglHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	dglDepthFunc(GL_LEQUAL);
-	dglAlphaFunc(GL_GEQUAL, ALPHACLEARGLOBAL);
-	dglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	dglFogi(GL_FOG_MODE, GL_LINEAR);
-	dglHint(GL_FOG_HINT, GL_NICEST);
-	dglEnable(GL_SCISSOR_TEST);
-	dglEnable(GL_DITHER);
-
-	GL_SetTextureFilter();
-	GL_SetDefaultCombiner();
-
 	r_fillmode.value = 1.0f;
 
 	GL_ARB_multitexture_Init();
@@ -690,21 +707,18 @@ void GL_Init(void)
 		CON_CvarSetValue(r_texturecombiner.name, 0.0f);
 	}
 
-	dglEnableClientState(GL_VERTEX_ARRAY);
-	dglEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	dglEnableClientState(GL_COLOR_ARRAY);
-
 	DGL_CLAMP =
 	    (GetVersionInt(gl_version) >=
-	     OPENGL_VERSION_1_2 ? GL_CLAMP_TO_EDGE : GL_CLAMP);
-
-	glScaleFactor = 1.0f;
+		 OPENGL_VERSION_1_2 ? GL_CLAMP_TO_EDGE : GL_CLAMP);
 
 	if (has_GL_EXT_texture_filter_anisotropic)
 		dglGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,
-			     &max_anisotropic);
+				 &max_anisotropic);
 
 	usingGL = true;
+
+	GL_Configure();
+	GL_SetLogicalResolution(video_width, video_height);
 
 	G_AddCommand("dumpglext", CMD_DumpGLExtensions, 0);
 }

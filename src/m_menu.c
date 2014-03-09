@@ -2186,9 +2186,7 @@ void M_SetVideo(void)
 			(int)v_width.value, (int)v_height.value,
 			-1, -1, ((int)v_windowed.value) & I_WINDOWED_MASK);
 
-	if (!I_ModeEquals(vm, vidmode)) {
-		I_SetMode(NULL);
-	}
+	I_SetMode(NULL);
 }
 
 void M_ChangeGammaLevel(int choice)
