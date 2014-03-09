@@ -2078,8 +2078,8 @@ void M_DrawVideo(void)
 			     i_gamma.value);
 	}
 #define DRAWVIDEOITEM(a, b) \
-	if(currentMenu->menupageoffset <= y && \
-		y - currentMenu->menupageoffset < currentMenu->numpageitems) \
+	if(y >= 0 && \
+		y < currentMenu->numpageitems + currentMenu->menupageoffset) \
     { \
 		y++; \
         Draw_BigText(VideoDef.x + 176, VideoDef.y+LINEHEIGHT*y, MENUCOLORRED, b); \
@@ -2185,7 +2185,7 @@ void M_DrawVideo(void)
 #undef DRAWVIDEOITEM
 #undef DRAWVIDEOITEM2
 
-	Draw_Text(145, 308, MENUCOLORWHITE, VideoDef.scale, false,
+	Draw_Text(165, 340, MENUCOLORWHITE, VideoDef.scale, false,
 		  "Changes will take effect\nafter exiting the menu.");
 
 	GL_SetOrthoScale(VideoDef.scale);
@@ -2240,11 +2240,7 @@ void M_ChangeAnisotropic(int choice)
 
 void M_ChangeWindowed(int choice)
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	M_SetOptionValue(choice, 0, 2, 1, &v_windowed);
-#else
 	M_SetOptionValue(choice, 0, 1, 1, &v_windowed);
-#endif
 }
 
 static void M_SetResolution(void)
