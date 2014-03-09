@@ -617,6 +617,66 @@ void GL_SetAttributes(void)
 }
 
 //
+// GL_CheckAttributes
+//
+
+void GL_CheckAttributes(void)
+{
+#define CHECK_ATTRIB(attr, val) \
+	do { \
+		int v; \
+		SDL_GL_GetAttribute(attr, &v); \
+		if (v != val) { \
+			CON_Printf(YELLOW, "WARNING: Couldn't set %s to %d. Using %d instead.\n", \
+					#attr, val, v); \
+		} \
+	} while (0)
+
+
+#define CHECK_ATTRIB_CVAR(attr, cvar) \
+	do { \
+		int v; \
+		SDL_GL_GetAttribute(attr, &v); \
+		if (v != (int)cvar.value) { \
+			CON_Printf(YELLOW, "WARNING: Couldn't set %s to %d. Using %d instead.\n", \
+					#attr, (int)cvar.value, v); \
+			CON_CvarSetValue(cvar.name, v); \
+		} \
+	} while(0) \
+
+	CHECK_ATTRIB(SDL_GL_RED_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_GREEN_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_BLUE_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_ALPHA_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_STENCIL_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_ACCUM_RED_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_ACCUM_GREEN_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_ACCUM_BLUE_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_ACCUM_ALPHA_SIZE, 0);
+	CHECK_ATTRIB(SDL_GL_DOUBLEBUFFER, 1);
+
+	CHECK_ATTRIB_CVAR(SDL_GL_BUFFER_SIZE, v_buffersize);
+	CHECK_ATTRIB_CVAR(SDL_GL_DEPTH_SIZE, v_depthsize);
+	CHECK_ATTRIB_CVAR(SDL_GL_MULTISAMPLESAMPLES, r_msaa);
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	int vsync = SDL_GL_GetSwapInterval();
+
+	if (vsync != (int)v_vsync.value) {
+		CON_Printf(YELLOW,
+			"WARNING: Couldn't set vsync to %d. Using %d instead.\n",
+			(int)v_vsync.value, vsync);
+		CON_CvarSetValue(v_vsync.name, vsync);
+	}
+#else
+	CHECK_ATTRIB_CVAR(SDL_GL_SWAP_CONTROL, v_vsync);
+#endif
+
+#undef CHECK_ATTRIB
+#undef CHCEK_ATTRIB_CVAR
+}
+
+//
 // GL_Configure
 //
 

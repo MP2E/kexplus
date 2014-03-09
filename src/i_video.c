@@ -340,6 +340,7 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 	}
 
 	if (window && glcontext) {
+		GL_CheckAttributes();
 		GL_Configure();
 		GL_DumpTextures();
 		GL_SetLogicalResolution(vm->w, vm->h);
@@ -360,6 +361,7 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 	screen = SDL_SetVideoMode(vm->w, vm->h, 0, flags);
 
 	if (screen) {
+		GL_CheckAttributes();
 		GL_Configure();
 		GL_DumpTextures();
 		GL_SetLogicalResolution(vm->w, vm->h);
