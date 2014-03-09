@@ -340,6 +340,13 @@ const vidmode_t *I_TrySetMode(const vidmode_t * vm)
 	}
 
 	if (window && glcontext) {
+		if (SDL_GL_SetSwapInterval((int)v_vsync.value ? 1 : 0) < 0) {
+			CON_Printf(YELLOW,
+				"WARNING: Couldn't %s VSync.\n",
+				(int)v_vsync.value ? "enable" : "disable");
+			CON_CvarSetValue(v_vsync.name, 0);
+		}
+
 		GL_CheckAttributes();
 		GL_Configure();
 		GL_DumpTextures();
