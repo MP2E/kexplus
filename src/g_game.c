@@ -692,8 +692,11 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 						400 * i_joysensy.value) : -(pc->joylooky * 400 * i_joysensy.value);
 			}
 		} else {
-			float x = MAX_ABS(pc->joymovex, pc->joylookx);
-			float y = MAX_ABS(pc->joymovey, pc->joylooky);
+			float x = pc->joymovex + pc->joylookx;
+			float y = pc->joymovey + pc->joylooky;
+
+			x = BETWEEN(-1.0f, 1.0f, x);
+			y = BETWEEN(-1.0f, 1.0f, y);
 
 			forward -= y * forwardmove[speed];
 			cmd->angleturn -= x * 400 * i_joysensx.value;
