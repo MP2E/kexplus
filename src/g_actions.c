@@ -76,13 +76,15 @@ alist_t *CurrentActions[MAX_CURRENTACTIONS];
 
 //these must be in the order key, joy, mouse, mouse2, other
 #define KEY_ACTIONPOS       0
-#define MOUSE_ACTIONPOS     NUMKEYS
+#define GAMEPAD_ACTIONPOS	NUMKEYS
+#define MOUSE_ACTIONPOS     (GAMEPAD_ACTIONPOS+NUMGAMEPADBTNS)
 #define MOUSE2_ACTIONPOS    (MOUSE_ACTIONPOS+MOUSE_BUTTONS)
 #define NUM_ACTIONS         (MOUSE2_ACTIONPOS+MOUSE_BUTTONS)
 
-alist_t *AllActions[NUM_ACTIONS];
+alist_t *AllActions[NUM_ACTIONS] = { 0 };
 
 alist_t **KeyActions;
+alist_t **GamepadActions;
 alist_t **MouseActions;
 alist_t **Mouse2Actions;
 
@@ -103,8 +105,8 @@ static CMD(UnbindAll);
 
 void G_InitActions(void)
 {
-	dmemset(AllActions, 0, NUM_ACTIONS);
 	KeyActions = AllActions + KEY_ACTIONPOS;
+	GamepadActions = AllActions + GAMEPAD_ACTIONPOS;
 	MouseActions = AllActions + MOUSE_ACTIONPOS;
 	Mouse2Actions = AllActions + MOUSE2_ACTIONPOS;
 
@@ -395,6 +397,16 @@ dboolean G_ActionResponder(event_t * ev)
 
 		TryActions(KeyActions[ev->data1], ev->type == ev_keyup);
 		break;
+	case ev_gamepadup:
+	case ev_gamepaddown:
+		if ((ev->data1 < 0) || (ev->data1 >= NUMGAMEPADBTNS))
+			break;
+
+		TryActions(GamepadActions[ev->data1], ev->type == ev_gamepadup);
+		break;
+	case ev_gamepad:
+		G_DoCmdGamepadMove(ev->data1, ev->data2, ev->data3, ev->data4);
+		break;
 
 		// villsa 12/20/2013: properly handle mouse button actions and
 		// handle mouse movement in its own event state
@@ -409,13 +421,12 @@ dboolean G_ActionResponder(event_t * ev)
 		MouseButtons = ev->data1;
 		G_DoCmdMouseMove(ev->data2, ev->data3);
 		break;
-
 #ifdef _USE_XINPUT		// XINPUT
 	case ev_gamepad:
 		I_XInputReadActions(ev);
 		break;
 #endif
-	default:		// ev_mousedown, ev_mouseup, ev_gamepad
+	default:		// ev_mousedown, ev_mouseup
 		break;
 	}
 
@@ -565,6 +576,13 @@ alist_t **G_FindKeyByName(char *key)
 			(&key[5], MouseActions, MOUSE_BUTTONS));
 	}
 
+	for (i = 0; i < NUMGAMEPADBTNS; i++) {
+		dsprintf(buff, "joy%d", i);
+		if (dstricmp(key, buff) == 0) {
+			return (&GamepadActions[i]);
+		}
+	}
+
 	for (i = 0; i < NUMKEYS; i++) {
 		M_GetKeyName(buff, i);
 		if (dstricmp(key, buff) == 0) {
@@ -628,6 +646,10 @@ dboolean G_BindActionByEvent(event_t * ev, char *action)
 		plist = &KeyActions[ev->data1];
 		break;
 
+	case ev_gamepaddown:
+		plist = &GamepadActions[ev->data1];
+		break;
+
 	case ev_mouse:
 	case ev_mousedown:
 		button = GetBitNum(ev->data1);
@@ -687,6 +709,14 @@ void G_OutputBindings(FILE * fh)
 			continue;
 
 		M_GetKeyName(name, i);
+		OutputActions(fh, al, name);
+	}
+	for (i = 0; i < NUMGAMEPADBTNS; i++) {
+		al = GamepadActions[i];
+		if (!al)
+			continue;
+
+		dsprintf(name, "joy%d", i);
 		OutputActions(fh, al, name);
 	}
 
@@ -1173,6 +1203,10 @@ void G_GetActionName(char *buff, int n)
 		sprintf(buff, "mouse2%d", n - MOUSE_ACTIONPOS);
 		return;
 	}
+	if (n >= GAMEPAD_ACTIONPOS) {
+		sprintf(buff, "joy%d", n - GAMEPAD_ACTIONPOS);
+		return;
+	}
 	if (n >= KEY_ACTIONPOS) {
 		M_GetKeyName(buff, n - KEY_ACTIONPOS);
 		return;
@@ -1199,6 +1233,16 @@ void G_GetActionBindings(char *buff, char *action)
 
 			p += dstrlen(p);
 
+			if (p - buff >= MAX_MENUACTION_LENGTH)
+				return;
+		}
+	}
+	for (i = 0; i < NUMGAMEPADBTNS; i++) {
+		if (IsSameAction(action, GamepadActions[i])) {
+			if (p != buff)
+				*(p++) = ',';
+
+			p += dsprintf(p, "joy%d", i);
 			if (p - buff >= MAX_MENUACTION_LENGTH)
 				return;
 		}
@@ -1242,6 +1286,15 @@ void G_UnbindAction(char *action)
 			char p[16];
 
 			M_GetKeyName(p, i);
+			Unbind(p);
+			return;
+		}
+	}
+	for (i = 0; i < NUMGAMEPADBTNS; i++) {
+		if (IsSameAction(action, GamepadActions[i])) {
+			char p[16];
+
+			dsprintf(p, "joy%d", i);
 			Unbind(p);
 			return;
 		}

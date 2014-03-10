@@ -36,6 +36,8 @@
 
 #include <stdarg.h>
 
+#include "SDL.h"
+
 #include "doomstat.h"
 #include "doomdef.h"
 #include "con_console.h"
@@ -481,13 +483,21 @@ void I_StartTic(void)
 		if ((init_systems & I_VIDEO) &&
 				I_VideoEvent(&Event))
 			continue;
+
+		if ((init_systems & I_JOYSTICK) &&
+				I_JoystickEvent(&Event))
+			continue;
 	}
 
 #ifdef _USE_XINPUT
 	I_XInputPollEvent();
 #endif
 
-	I_ReadMouse();
+	if (init_systems & I_MOUSE)
+		I_ReadMouse();
+
+	if (init_systems & I_JOYSTICK)
+		I_ReadJoystick();
 }
 
 //
@@ -514,8 +524,10 @@ void I_Init(void)
 	if (!M_CheckParm("-noxinput"))
 		init_systems |= I_XINPUT;
 
-	if (!M_CheckParm("-nojoy")) // only sadness
+	if (!M_CheckParm("-nojoy")) { // only sadness
 		init_systems |= I_JOYSTICK;
+		sdl_flags |= SDL_INIT_JOYSTICK;
+	}
 
 	if (SDL_Init(sdl_flags) < 0)
 		I_Error("Couldn't initialize SDL");

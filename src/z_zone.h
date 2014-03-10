@@ -87,6 +87,8 @@ void (Z_Touch) (void *ptr, const char *, int);
 #define Z_Touch(a)          (Z_Touch)       (a,      __FILE__,__LINE__)
 #define Z_FreeAlloca()      (Z_FreeAlloca)  (        __FILE__,__LINE__)
 
+#define Z_ReallocV(a,b,c,d)	(a = Z_Realloc	(a,sizeof(*a)*b,c,d))
+
 // Get the size of a static array
 #define earrlen(a) (sizeof(a) / sizeof(*a))
 

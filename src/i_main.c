@@ -424,11 +424,7 @@ int dsprintf(char *buf, const char *format, ...)
 	int x;
 
 	va_start(arg, format);
-#ifdef HAVE_VSNPRINTF
-	x = vsnprintf(buf, dstrlen(buf), format, arg);
-#else
 	x = vsprintf(buf, format, arg);
-#endif
 	va_end(arg);
 
 	return x;

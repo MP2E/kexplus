@@ -676,8 +676,16 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 	// forward/side movement with joystick
 	//
 	if (pc->flags & PCF_GAMEPAD) {
-		forward += pc->joyy;
-		side += pc->joyx;
+		forward += pc->joymovey * forwardmove[speed];
+		side += pc->joymovex * sidemove[speed];
+
+		cmd->angleturn -= pc->joylookx * 1000;
+		if (forcefreelook != 2) {
+			if ((int)v_mlook.value || forcefreelook)
+				cmd->pitch +=
+					(int)v_mlookinvert.value ? (pc->joylooky *
+					1000) : -(pc->joylooky * 1000);
+		}
 	}
 
 	if (pc->key[PCKEY_BACK])
@@ -690,7 +698,8 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 		side -= sidemove[speed];
 
 	pc->mousex = pc->mousey = 0;
-	pc->joyx = pc->joyy = 0;
+	pc->joymovex = pc->joymovey = 0;
+	pc->joylookx = pc->joylooky = 0;
 
 	cmd->chatchar = ST_DequeueChatChar();
 
@@ -796,6 +805,33 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 		cmd->buttons =
 		    BT_SPECIAL | BTS_SAVEGAME | (savegameslot << BTS_SAVESHIFT);
 	}
+}
+
+//
+// G_DoCmdGamepadMove
+//
+void G_DoCmdGamepadMove(int lx, int ly, int rx, int ry)
+{
+	playercontrols_t *pc;
+	float x;
+	float y;
+
+	pc = &Controls;
+	pc->flags |= PCF_GAMEPAD;
+
+	x = (float)lx / INT16_MAX;
+	y = (float)ly / INT16_MAX;
+
+	pc->joymovex += x;
+	pc->joymovey += y;
+
+	x = (float)rx / INT16_MAX;
+	y = (float)ry / INT16_MAX;
+
+	pc->joylookx += x;
+	pc->joylooky += y;
+
+	return;
 }
 
 //

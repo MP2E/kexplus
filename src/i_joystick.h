@@ -23,6 +23,13 @@
 #ifndef __I_JOYSTICK__
 #define __I_JOYSTICK__
 
+#include "SDL.h"
+
 void I_InitJoystick(void);
+dboolean I_JoystickEvent(const SDL_Event *Event);
+
+void I_ReadJoystick(void);
+
+int I_JoystickToKey(int key);
 
 #endif /* __I_JOYSTICK__ */

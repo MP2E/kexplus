@@ -50,6 +50,7 @@
 #include "gl_texture.h"
 #include "gl_draw.h"
 #include "i_system.h"
+#include "i_joystick.h"
 #include "i_mouse.h"
 #include "i_video.h"
 #include "m_cheat.h"
@@ -4476,6 +4477,8 @@ dboolean M_Responder(event_t * ev)
 			ch = ev->data1;
 			shiftdown = false;
 		}
+	} else if (ev->type == ev_gamepaddown) {
+		ch = I_JoystickToKey(ev->data1);
 	} else if (ev->type == ev_mouse && (ev->data2 | ev->data3)) {
 		// handle mouse-over selection
 		if (m_menumouse.value) {
@@ -4483,6 +4486,18 @@ dboolean M_Responder(event_t * ev)
 			if (M_CursorHighlightItem(currentMenu))
 				itemOn = itemSelected;
 		}
+	}
+
+	if (MenuBindActive == true)	//key Bindings
+	{
+		if (ch == KEY_ESCAPE) {
+			MenuBindActive = false;
+			M_BuildControlMenu();
+		} else if (G_BindActionByEvent(ev, messageBindCommand)) {
+			MenuBindActive = false;
+			M_BuildControlMenu();
+		}
+		return true;
 	}
 
 	if (ch == -1)
@@ -4517,17 +4532,6 @@ dboolean M_Responder(event_t * ev)
 	}
 #endif				//XINPUT
 
-	if (MenuBindActive == true)	//key Bindings
-	{
-		if (ch == KEY_ESCAPE) {
-			MenuBindActive = false;
-			M_BuildControlMenu();
-		} else if (G_BindActionByEvent(ev, messageBindCommand)) {
-			MenuBindActive = false;
-			M_BuildControlMenu();
-		}
-		return true;
-	}
 	// save game / player name string input
 	if (inputEnter) {
 		switch (ch) {
