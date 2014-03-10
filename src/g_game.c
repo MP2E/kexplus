@@ -150,6 +150,10 @@ NETCVAR_PARAM(compat_mobjpass, 1, compatflags, COMPATF_MOBJPASS);
 NETCVAR_PARAM(compat_limitpain, 1, compatflags, COMPATF_LIMITPAIN);
 NETCVAR_PARAM(compat_grabitems, 0, compatflags, COMPATF_REACHITEMS);
 
+CVAR_EXTERNAL(i_joytwinstick);
+CVAR_EXTERNAL(i_joysensx);
+CVAR_EXTERNAL(i_joysensy);
+CVAR_EXTERNAL(v_mlook);
 CVAR_EXTERNAL(v_mlook);
 CVAR_EXTERNAL(v_mlookinvert);
 CVAR_EXTERNAL(v_yaxismove);
@@ -676,15 +680,23 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 	// forward/side movement with joystick
 	//
 	if (pc->flags & PCF_GAMEPAD) {
-		forward += pc->joymovey * forwardmove[speed];
-		side += pc->joymovex * sidemove[speed];
+		if (i_joytwinstick.value > 0) {
+			forward -= pc->joymovey * forwardmove[speed];
+			side += pc->joymovex * sidemove[speed];
 
-		cmd->angleturn -= pc->joylookx * 1000;
-		if (forcefreelook != 2) {
-			if ((int)v_mlook.value || forcefreelook)
-				cmd->pitch +=
-					(int)v_mlookinvert.value ? (pc->joylooky *
-					1000) : -(pc->joylooky * 1000);
+			cmd->angleturn -= pc->joylookx * 400 * i_joysensx.value;
+			if (forcefreelook != 2) {
+				if ((int)v_mlook.value || forcefreelook)
+					cmd->pitch +=
+						(int)v_mlookinvert.value ? (pc->joylooky *
+						400 * i_joysensy.value) : -(pc->joylooky * 400 * i_joysensy.value);
+			}
+		} else {
+			float x = MAX_ABS(pc->joymovex, pc->joylookx);
+			float y = MAX_ABS(pc->joymovey, pc->joylooky);
+
+			forward -= y * forwardmove[speed];
+			cmd->angleturn -= x * 400 * i_joysensx.value;
 		}
 	}
 

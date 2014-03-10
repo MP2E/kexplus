@@ -23,9 +23,14 @@
 #include "SDL.h"
 
 #include "doomdef.h"
+#include "con_cvar.h"
 #include "d_main.h"
 #include "i_joystick.h"
 #include "z_zone.h"
+
+CVAR(i_joysensx, 3.0f);
+CVAR(i_joysensy, 3.0f);
+CVAR(i_joytwinstick, 0);
 
 typedef int (*keyconv_t)(int);
 
@@ -226,10 +231,22 @@ void I_ReadJoystick(void)
 
 	event.type = ev_gamepad;
 	event.data1 = lx;
-	event.data2 = -ly;
+	event.data2 = ly;
 	event.data3 = rx;
 	event.data4 = ry;
 	D_PostEvent(&event);
+}
+
+//
+// I_JoystickName
+//
+
+const char *I_JoystickName(void)
+{
+	if (!num_joy || !joy[0].name)
+		return "None";
+
+	return joy[0].name;
 }
 
 //
@@ -281,4 +298,15 @@ dboolean I_JoystickEvent(const SDL_Event *Event)
 	}
 
 	return true;
+}
+
+//
+// I_RegisterJoystickCvars
+//
+
+void I_RegisterJoystickCvars(void)
+{
+	CON_CvarRegister(&i_joytwinstick);
+	CON_CvarRegister(&i_joysensx);
+	CON_CvarRegister(&i_joysensy);
 }

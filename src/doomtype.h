@@ -69,6 +69,10 @@ typedef unsigned __int64 uint64;
 #define BETWEEN(l,u,x) ((l)>(x)?(l):(x)>(u)?(u):(x))
 #endif
 
+#ifndef MAX_ABS
+#define MAX_ABS(a,b) (abs(a)>abs(b)?(a):(b))
+#endif
+
 #ifdef _WIN32
 
 #define DIR_SEPARATOR '\\'

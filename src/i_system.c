@@ -734,4 +734,5 @@ void I_RegisterCvars(void)
 
 	I_RegisterVideoCvars();
 	I_RegisterMouseCvars();
+	I_RegisterJoystickCvars();
 }

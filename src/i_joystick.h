@@ -28,7 +28,11 @@
 void I_InitJoystick(void);
 dboolean I_JoystickEvent(const SDL_Event *Event);
 
+void I_RegisterJoystickCvars(void);
+
 void I_ReadJoystick(void);
+
+const char *I_JoystickName(void);
 
 int I_JoystickToKey(int key);
 
