@@ -31,34 +31,34 @@
 
 #include "doomdef.h"
 #include "doomstat.h"
-#include "z_zone.h"
+#include "info.h"
+#include "sounds.h"
+#include "tables.h"
+#include "am_map.h"
+#include "con_console.h"
+#include "d_main.h"
+#include "d_englsh.h"
 #include "f_finale.h"
-#include "m_misc.h"
-#include "m_menu.h"
-#include "m_cheat.h"
-#include "m_random.h"
+#include "g_demo.h"
+#include "g_local.h"
 #include "i_system.h"
+#include "i_video.h"
+#include "m_cheat.h"
+#include "m_menu.h"
+#include "m_misc.h"
+#include "m_password.h"
+#include "m_random.h"
+#include "p_local.h"
 #include "p_setup.h"
 #include "p_saveg.h"
 #include "p_tick.h"
-#include "d_main.h"
-#include "wi_stuff.h"
-#include "st_stuff.h"
-#include "am_map.h"
-#include "w_wad.h"
-#include "p_local.h"
-#include "s_sound.h"
-#include "d_englsh.h"
-#include "sounds.h"
-#include "tables.h"
-#include "info.h"
 #include "r_local.h"
 #include "r_wipe.h"
-#include "con_console.h"
-#include "g_local.h"
-#include "m_password.h"
-#include "i_video.h"
-#include "g_demo.h"
+#include "st_stuff.h"
+#include "s_sound.h"
+#include "wi_stuff.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 #define DCLICK_TIME     20
 
@@ -96,6 +96,8 @@ int displayplayer;		// view being displayed
 static dboolean savenow = false;
 static int savegameflags = 0;
 static int savecompatflags = 0;
+
+static float neutral_forward = 0;
 
 // for intermission
 int totalkills, totalitems, totalsecret;
@@ -591,8 +593,8 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 {
 	int i;
 	int speed;
-	int forward;
-	int side;
+	float forward;
+	float side;
 	playercontrols_t *pc;
 
 	pc = &Controls;
@@ -608,7 +610,7 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 	if (p_autorun.value)
 		speed = !speed;
 
-	forward = side = 0;
+	forward = side = 0.0f;
 
 	// use two stage accelerative turning
 	// on the keyboard and joystick
@@ -674,15 +676,15 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 		cmd->buttons2 |= BT2_CENTER;
 
 	if (pc->key[PCKEY_FORWARD])
-		forward += forwardmove[speed];
+		forward = 1.0f;
 
 	//
 	// forward/side movement with joystick
 	//
 	if (pc->flags & PCF_GAMEPAD) {
 		if (i_joytwinstick.value > 0) {
-			forward -= pc->joymovey * forwardmove[speed];
-			side += pc->joymovex * sidemove[speed];
+			forward -= pc->joymovey;
+			side = pc->joymovex;
 
 			cmd->angleturn -= pc->joylookx * 400 * i_joysensx.value;
 			if (forcefreelook != 2) {
@@ -695,22 +697,23 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 			float x = pc->joymovex + pc->joylookx;
 			float y = pc->joymovey + pc->joylooky;
 
-			x = BETWEEN(-1.0f, 1.0f, x);
-			y = BETWEEN(-1.0f, 1.0f, y);
-
-			forward -= y * forwardmove[speed];
-			cmd->angleturn -= x * 400 * i_joysensx.value;
+			cmd->angleturn -= BETWEEN(-1.0f, 1.0f, x) * 400 * i_joysensx.value;
+			forward -= BETWEEN(-1.0f, 1.0f, y);
 		}
 	}
 
 	if (pc->key[PCKEY_BACK])
-		forward -= forwardmove[speed];
+		forward = -1.0f;
 
 	if (pc->key[PCKEY_STRAFERIGHT])
-		side += sidemove[speed];
+		side = 1.0f;
 
 	if (pc->key[PCKEY_STRAFELEFT])
-		side -= sidemove[speed];
+		side = -1.0f;
+
+	// neutral reset
+	if (pc->key[PCKEY_NEUTRALRESET])
+		neutral_forward = forward;
 
 	pc->mousex = pc->mousey = 0;
 	pc->joymovex = pc->joymovey = 0;
@@ -796,18 +799,11 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 		}
 	}
 
-	if (forward > MAXPLMOVE)
-		forward = MAXPLMOVE;
-	else if (forward < -MAXPLMOVE)
-		forward = -MAXPLMOVE;
+	forward = BETWEEN(-1.0f, 1.0f, forward);
+	side = BETWEEN(-1.0f, 1.0f, side);
 
-	if (side > MAXPLMOVE)
-		side = MAXPLMOVE;
-	else if (side < -MAXPLMOVE)
-		side = -MAXPLMOVE;
-
-	cmd->forwardmove += forward;
-	cmd->sidemove += side;
+	cmd->forwardmove += (forward - neutral_forward) * forwardmove[speed];
+	cmd->sidemove += (side) * sidemove[speed];
 
 	// special buttons
 	if (sendpause) {
@@ -1634,6 +1630,8 @@ void G_Init(void)
 	G_AddCommand("-strafeleft", CMD_Button, PCKEY_STRAFELEFT | PCKF_UP);
 	G_AddCommand("+straferight", CMD_Button, PCKEY_STRAFERIGHT);
 	G_AddCommand("-straferight", CMD_Button, PCKEY_STRAFERIGHT | PCKF_UP);
+	G_AddCommand("+neutralreset", CMD_Button, PCKEY_NEUTRALRESET);
+	G_AddCommand("-neutralreset", CMD_Button, PCKEY_NEUTRALRESET | PCKF_UP);
 	G_AddCommand("bind", CMD_Bind, 0);
 	G_AddCommand("seta", CMD_Seta, 0);
 	G_AddCommand("quit", CMD_Quit, 0);
