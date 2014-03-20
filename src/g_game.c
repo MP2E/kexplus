@@ -712,10 +712,8 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 		side = -1.0f;
 
 	// neutral reset
-	if (pc->key[PCKEY_NEUTRALRESET]) {
+	if (pc->key[PCKEY_NEUTRALRESET])
 		neutral_forward = forward;
-		I_Printf("%f\n", neutral_forward);
-	}
 
 	pc->mousex = pc->mousey = 0;
 	pc->joymovex = pc->joymovey = 0;
