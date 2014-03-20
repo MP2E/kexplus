@@ -1166,6 +1166,7 @@ CVAR_EXTERNAL(am_overlay);
 CVAR_EXTERNAL(r_skybox);
 CVAR_EXTERNAL(r_texnonpowresize);
 CVAR_EXTERNAL(i_interpolateframes);
+CVAR_EXTERNAL(p_neutralresetstrafe);
 CVAR_EXTERNAL(p_usecontext);
 CVAR_EXTERNAL(compat_collision);
 CVAR_EXTERNAL(compat_limitpain);
@@ -1183,6 +1184,7 @@ enum {
 	misc_cursorsize,
 	misc_empty2,
 	misc_header2,
+	misc_neutralresetstrafe,
 	misc_aim,
 	misc_jump,
 	misc_context,
@@ -1216,6 +1218,7 @@ menuitem_t MiscMenu[] = {
 	{3, "Cursor Scale:", M_MiscChoice, 'u'},
 	{-1, "", 0},
 	{-1, "Gameplay", 0},
+	{2, "NR Strafe:", M_MiscChoice, 'n'},
 	{2, "Auto Aim:", M_MiscChoice, 'a'},
 	{2, "Jumping:", M_MiscChoice, 'j'},
 	{2, "Use Context:", M_MiscChoice, 'u'},
@@ -1248,6 +1251,7 @@ char *MiscHints[misc_end] = {
 	"set the size of the mouse cursor",
 	NULL,
 	NULL,
+	NULL,
 	"toggle classic style auto-aiming",
 	"toggle the ability to jump",
 	"if enabled interactive objects will highlight when near",
@@ -1276,6 +1280,7 @@ menudefault_t MiscDefault[] = {
 	{&m_menufadetime, 0},
 	{&m_menumouse, 1},
 	{&m_cursorscale, 8},
+	{&p_neutralresetstrafe, 0},
 	{&p_autoaim, 1},
 	{&p_allowjump, 0},
 	{&p_usecontext, 0},
@@ -1362,6 +1367,10 @@ void M_MiscChoice(int choice)
 
 	case misc_menumouse:
 		M_SetOptionValue(choice, 0, 1, 1, &m_menumouse);
+		break;
+
+	case misc_neutralresetstrafe:
+		M_SetOptionValue(choice, 0, 1, 1, &p_neutralresetstrafe);
 		break;
 
 	case misc_aim:
@@ -1468,6 +1477,7 @@ void M_DrawMisc(void)
 
 	DRAWMISCITEM(misc_menumouse, m_menumouse.value, msgNames);
 	DRAWMISCITEM(misc_aim, p_autoaim.value, msgNames);
+	DRAWMISCITEM(misc_neutralresetstrafe, p_neutralresetstrafe.value, msgNames);
 	DRAWMISCITEM(misc_jump, p_allowjump.value, msgNames);
 	DRAWMISCITEM(misc_context, p_usecontext.value, mapdisplaytype);
 	DRAWMISCITEM(misc_wipe, r_wipe.value, msgNames);
@@ -3004,6 +3014,7 @@ static menuaction_t mPlayerActionsDef[NUM_CONTROL_ITEMS] = {
 	{"Other", NULL},
 	{"Detatch Camera", "setcamerastatic"},
 	{"Chasecam", "setcamerachase"},
+	{"Neutral Reset", "+neutralreset"},
 	{NULL, NULL}
 };
 

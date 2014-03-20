@@ -98,6 +98,7 @@ static int savegameflags = 0;
 static int savecompatflags = 0;
 
 static float neutral_forward = 0;
+static float neutral_side = 0;
 
 // for intermission
 int totalkills, totalitems, totalsecret;
@@ -152,6 +153,8 @@ NETCVAR_PARAM(compat_mobjpass, 1, compatflags, COMPATF_MOBJPASS);
 NETCVAR_PARAM(compat_limitpain, 1, compatflags, COMPATF_LIMITPAIN);
 NETCVAR_PARAM(compat_grabitems, 0, compatflags, COMPATF_REACHITEMS);
 
+CVAR(p_neutralresetstrafe, 0);
+
 CVAR_EXTERNAL(i_joytwinstick);
 CVAR_EXTERNAL(i_joysensx);
 CVAR_EXTERNAL(i_joysensy);
@@ -186,6 +189,7 @@ void G_RegisterCvars(void)
 	CON_CvarRegister(&compat_mobjpass);
 	CON_CvarRegister(&compat_limitpain);
 	CON_CvarRegister(&compat_grabitems);
+	CON_CvarRegister(&p_neutralresetstrafe);
 }
 
 //
@@ -712,8 +716,10 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 		side = -1.0f;
 
 	// neutral reset
-	if (pc->key[PCKEY_NEUTRALRESET])
+	if (pc->key[PCKEY_NEUTRALRESET]) {
 		neutral_forward = forward;
+		neutral_side = (p_neutralresetstrafe.value > 0) ? side : 0.0f;
+	}
 
 	pc->mousex = pc->mousey = 0;
 	pc->joymovex = pc->joymovey = 0;
@@ -803,7 +809,7 @@ void G_BuildTiccmd(ticcmd_t * cmd)
 	side = BETWEEN(-1.0f, 1.0f, side);
 
 	cmd->forwardmove += (forward - neutral_forward) * forwardmove[speed];
-	cmd->sidemove += (side) * sidemove[speed];
+	cmd->sidemove += (side - neutral_side) * sidemove[speed];
 
 	// special buttons
 	if (sendpause) {
