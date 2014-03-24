@@ -23,8 +23,11 @@
 #ifndef __I_XINPUT__
 #define __I_XINPUT__
 
+// XINPUT support is being re-evaluated because of SDL2 joystick support
+#if 0
 #ifdef _WIN32
 #define _USE_XINPUT
+#endif
 #endif
 
 #ifdef _USE_XINPUT
