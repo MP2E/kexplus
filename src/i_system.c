@@ -63,6 +63,10 @@ CVAR(i_interpolateframes, 0);
 
 int init_systems = 0;
 
+#define NUM_TIMERS 16
+unsigned int timers[NUM_TIMERS];
+unsigned int *timers_top = timers - 1;
+
 #ifdef USESYSCONSOLE
 #include <windows.h>
 //#include "i_launcher.h"
@@ -458,6 +462,33 @@ unsigned long I_GetRandomTimeSeed(void)
 {
 	// not exactly random....
 	return SDL_GetTicks();
+}
+
+//
+// I_StartTimer
+//
+
+void I_StartTimer(void)
+{
+	*(++timers_top) = SDL_GetTicks();
+}
+
+//
+// I_StopTimer
+//
+
+unsigned int I_StopTimer(void)
+{
+	return SDL_GetTicks() - *(timers_top--);
+}
+
+//
+// I_PeekTimer
+//
+
+unsigned int I_PeekTimer(void)
+{
+	return SDL_GetTicks() - *timers_top;
 }
 
 //

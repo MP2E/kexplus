@@ -74,6 +74,11 @@ fixed_t I_GetTimeFrac(void);
 void I_GetTime_SaveMS(void);
 unsigned long I_GetRandomTimeSeed(void);
 
+// Timers for debugging
+void I_StartTimer(void);
+unsigned int I_StopTimer(void);
+unsigned int I_PeekTimer(void);
+
 // Asynchronous interrupt functions should maintain private queues
 // that are read by the synchronous functions
 // to be converted into events.
