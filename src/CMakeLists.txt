@@ -40,6 +40,7 @@ add_executable(doom64ex
     g_settings.c
     gl_draw.c
     gl_main.c
+    gl_pixmap.c
     gl_texture.c
     i_audio.c
     i_joystick.c

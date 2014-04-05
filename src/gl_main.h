@@ -36,6 +36,14 @@ extern int gl_max_texture_size;
 extern dboolean gl_has_combiner;
 
 typedef struct {
+	short w;
+	short h;
+
+	int fmt;
+	byte *map;
+} dpixmap;
+
+typedef struct {
 	rfloat x;
 	rfloat y;
 	rfloat z;

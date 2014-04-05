@@ -64,8 +64,8 @@ CVAR(i_interpolateframes, 0);
 int init_systems = 0;
 
 #define NUM_TIMERS 16
-unsigned int timers[NUM_TIMERS];
-unsigned int *timers_top = timers - 1;
+static unsigned int timers[NUM_TIMERS];
+static unsigned int *timers_top = &timers[-1];
 
 #ifdef USESYSCONSOLE
 #include <windows.h>
@@ -489,6 +489,55 @@ unsigned int I_StopTimer(void)
 unsigned int I_PeekTimer(void)
 {
 	return SDL_GetTicks() - *timers_top;
+}
+
+//
+// I_PrintTimer
+//
+
+void I_PrintTimer(const char *fmt, ...)
+{
+	int i, j;
+	va_list args;
+	char buf[1024];
+	char buf2[1024] = { 0 };
+	dboolean time_inserted = false;
+	unsigned int timer_val;
+	size_t len;
+
+	strcpy(buf, fmt);
+	len = strlen(buf);
+
+	timer_val = I_StopTimer();
+
+	// Replace %t with the time. (eg. "Time: %t\n" -> "Time: 10ms\n")
+	for (i = 0; buf[i]; i++) {
+		if (buf[i] == '%' && buf[i+1] == 't') {
+			char time[16];
+			size_t time_len;
+			time_len = sprintf(time, "%ums", timer_val);
+
+			memmove(&buf[i + time_len], &buf[i + 2], len - time_len);
+			memcpy(&buf[i], time, time_len);
+
+			time_inserted = true;
+		}
+	}
+
+	va_start(args, fmt);
+	vsprintf(buf2, buf, args);
+	va_end(args);
+
+	if (!time_inserted) {
+		char time[16];
+
+		sprintf(time, " %ums\n", timer_val);
+		strcat(buf2, time);
+	}
+
+	printf("%s", buf2);
+	if (console_initialized)
+		CON_AddText(buf2);
 }
 
 //

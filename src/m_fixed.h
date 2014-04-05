@@ -33,6 +33,8 @@
 //
 // Fixed point, 32bit as 16.16.
 //
+#define M_FPI			(205887)	// floor(pi * 2^16)
+
 #define FRACBITS        16
 #define FRACUNIT        (1<<FRACBITS)
 

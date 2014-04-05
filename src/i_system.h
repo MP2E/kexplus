@@ -78,6 +78,7 @@ unsigned long I_GetRandomTimeSeed(void);
 void I_StartTimer(void);
 unsigned int I_StopTimer(void);
 unsigned int I_PeekTimer(void);
+void I_PrintTimer(const char *fmt, ...) attr_printf(1, 2);
 
 // Asynchronous interrupt functions should maintain private queues
 // that are read by the synchronous functions

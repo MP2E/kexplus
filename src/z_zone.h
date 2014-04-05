@@ -40,8 +40,6 @@
 #endif
 #include <assert.h>
 
-#include "psnprntf.h"
-
 // ZONE MEMORY
 
 // PU - purge tags.
