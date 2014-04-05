@@ -336,9 +336,11 @@ int M_CacheThumbNail(byte ** data)
 	buff = GL_GetScreenBuffer(0, 0, video_width, video_height);
 	tbn = Z_Calloc(SAVEGAMETBSIZE, PU_STATIC, 0);
 
+	I_StartTimer();
 	pm = GL_PixmapCreate(video_width, video_height, DPM_PFRGB, buff);
-	GL_PixmapScaleTo(pm, NULL, 128, 128);
+	GL_PixmapScaleTo(&pm, NULL, 128, 128);
 	dmemcpy(tbn, pm->map, SAVEGAMETBSIZE);
+	I_PrintTimer("GL_Pixmap: %t\n");
 
 	GL_PixmapFree(pm);
 	Z_Free(buff);

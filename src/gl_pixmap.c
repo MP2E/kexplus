@@ -319,7 +319,7 @@ byte *GL_PixmapScanline(const dpixmap *pm, short y)
 // _GL_PixmapFlipRotate
 //
 
-void _GL_PixmapFlipRotate(dpixmap *dst, const dpixmap *src, int flag)
+void _GL_PixmapFlipRotate(dpixmap **dst, const dpixmap *src, int flag)
 {
 	int i;
 
@@ -332,12 +332,15 @@ void _GL_PixmapFlipRotate(dpixmap *dst, const dpixmap *src, int flag)
 
 	dboolean free_src = false;
 
-	if (!src || dst == src) {
-		src = GL_PixmapCopy(dst);
+	if (!*dst) {
+		*dst = GL_PixmapNull(src->fmt);
+	} else if (!src || dst == src) {
+		src = *dst;
+		*dst = GL_PixmapNull(src->fmt);
 		free_src = true;
 	}
 
-	pitch = formats[dst->fmt].pitch;
+	pitch = formats[(*dst)->fmt].pitch;
 
 	if (flag == DPM_ROT90 || flag == DPM_ROT270) {
 		newwidth = src->h;
@@ -349,24 +352,24 @@ void _GL_PixmapFlipRotate(dpixmap *dst, const dpixmap *src, int flag)
 
 	PixmapResize(dst, newwidth, newheight);
 
-	for (dst_y = 0; dst_y < dst->h; dst_y++) {
+	for (dst_y = 0; dst_y < (*dst)->h; dst_y++) {
 		dst_ptr = GL_PixmapScanline(dst, dst_y);
-		for (dst_x = 0; dst_x < dst->w; dst_x++) {
+		for (dst_x = 0; dst_x < (*dst)->w; dst_x++) {
 			if (flag == DPM_ROT90) {
 				src_x = dst_y;
-				src_y = dst->w - dst_x - 1;
+				src_y = (*dst)->w - dst_x - 1;
 			} else if (flag == DPM_ROT270) {
-				src_x = dst->h - dst_y - 1;
+				src_x = (*dst)->h - dst_y - 1;
 				src_y = dst_x;
 			} else if (flag == DPM_FLIPX) {
-				src_x = dst->w - dst_x - 1;
+				src_x = (*dst)->w - dst_x - 1;
 				src_y = dst_y;
 			} else if (flag == DPM_FLIPY) {
 				src_x = dst_x;
-				src_y = dst->h - dst_y - 1;
+				src_y = (*dst)->h - dst_y - 1;
 			} else if (flag == DPM_FLIPXY) {
-				src_x = dst->w - dst_x - 1;
-				src_y = dst->h - dst_y - 1;
+				src_x = (*dst)->w - dst_x - 1;
+				src_y = (*dst)->h - dst_y - 1;
 			}
 
 			src_ptr = PixmapByte(src, src_x, src_y);
@@ -387,12 +390,12 @@ void _GL_PixmapFlipRotate(dpixmap *dst, const dpixmap *src, int flag)
 // GL_PixmapScale
 //
 
-void GL_PixmapScale(dpixmap *dst, const dpixmap *src, fixed_t scalex, fixed_t scaley)
+void GL_PixmapScale(dpixmap **dst, const dpixmap *src, fixed_t scalex, fixed_t scaley)
 {
 	short newwidth, newheight;
 
 	if (!src)
-		src = dst;
+		src = *dst;
 
 	newwidth = F2INT(src->w * scalex);
 	newheight = F2INT(src->h * scaley);
@@ -404,28 +407,31 @@ void GL_PixmapScale(dpixmap *dst, const dpixmap *src, fixed_t scalex, fixed_t sc
 // GL_PixmapScaleTo
 //
 
-void GL_PixmapScaleTo(dpixmap *dst, const dpixmap *src, short width, short height)
+void GL_PixmapScaleTo(dpixmap **dst, const dpixmap *src, short width, short height)
 {
 	if (src && (src->w == width && src->h == height) ||
-		(dst->w == width && dst->h == height)) {
+		(*dst && (*dst)->w == width && (*dst)->h == height)) {
 		return;
 	}
 
 	dboolean free_src = false;
+	if (!*dst) {
+		*dst = GL_PixmapNull(src->fmt);
+	} else if (!src || *dst == src) {
+		src = *dst;
+		*dst = GL_PixmapNull(src->fmt);
 
-	if (!src || dst == src) {
-		src = GL_PixmapCopy(dst);
 		free_src = true;
 	}
 
-	PixmapResize(dst, width, height);
+	PixmapResize(*dst, width, height);
 	if (!width || !height)
 		return;
 
-	if (src->w > dst->w && src->h > dst->h) {
-		FilterBox(dst, src);
+	if (src->w > (*dst)->w && src->h > (*dst)->h) {
+		FilterBox(*dst, src);
 	} else {
-		FilterLinear(dst, src);
+		FilterLinear(*dst, src);
 	}
 
 	if (free_src) {
