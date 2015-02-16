@@ -10,7 +10,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext
 
 if(APPLE)
     set(EXTRA_SOURCES apple/SDLMain.m)
-elseif(FREEBSD)
+elseif(BSD)
     set(EXTRA_SOURCES freebsd/m_fcvt.c unix/i_cpu_posix.c)
 elseif(WIN32)
     set(EXTRA_SOURCES win32/i_exception.c win32/i_cpu.c
