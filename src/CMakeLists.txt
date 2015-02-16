@@ -5,8 +5,8 @@
 ##-----------------------------------------------------------------------------
 
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/src/Ext
-    ${FLUIDSYNTH_INCLUDE_DIRS} ${SDL_INCLUDE_DIR} ${SDL_NET_INCLUDE_DIRS}
-    ${PNG_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
+    ${CMAKE_SOURCE_DIR}/src/freebsd ${FLUIDSYNTH_INCLUDE_DIRS} ${SDL_INCLUDE_DIR}
+    ${SDL_NET_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
 if(APPLE)
     set(EXTRA_SOURCES apple/SDLMain.m)
